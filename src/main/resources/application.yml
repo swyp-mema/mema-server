@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: jdbc:mysql://223.130.136.161:3306/mema?useSSL=false&serverTimezone=UTC
+    username: mema
+    password: mema1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+    jpa:
+      hibernate:
+        ddl-auto: create  # 데이터베이스 자동 생성/업데이트. 필요에 따라 'none'이나 'create'로 설정 가능.
+      show-sql: true      # SQL 쿼리를 콘솔에 출력할지 여부
+      properties:
+        hibernate:
+          format_sql: true
+          dialect: org.hibernate.dialect.MySQL8Dialect
