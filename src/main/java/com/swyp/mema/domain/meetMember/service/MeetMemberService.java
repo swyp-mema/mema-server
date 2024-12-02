@@ -9,7 +9,7 @@ import com.swyp.mema.domain.meet.model.Meet;
 import com.swyp.mema.domain.meetMember.converter.MeetMemberConverter;
 import com.swyp.mema.domain.meetMember.model.MeetMember;
 import com.swyp.mema.domain.meetMember.repository.MeetMemberRepository;
-import com.swyp.mema.domain.user.dto.reseponse.UserResponse;
+import com.swyp.mema.domain.user.dto.reseponse.UserRes;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,7 +27,7 @@ public class MeetMemberService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<UserResponse> getMeetMembers(Long meetId) {
+	public List<UserRes> getMeetMembers(Long meetId) {
 		return meetMemberRepository.findMeetMembersWithUserInfo(meetId);
 	}
 }

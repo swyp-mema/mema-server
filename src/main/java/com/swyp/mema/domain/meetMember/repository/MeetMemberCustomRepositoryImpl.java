@@ -5,7 +5,7 @@ import java.util.List;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.swyp.mema.domain.meetMember.model.QMeetMember;
-import com.swyp.mema.domain.user.dto.reseponse.UserResponse;
+import com.swyp.mema.domain.user.dto.reseponse.UserRes;
 import com.swyp.mema.domain.user.model.QUser;
 
 import lombok.RequiredArgsConstructor;
@@ -16,14 +16,14 @@ public class MeetMemberCustomRepositoryImpl implements MeetMemberCustomRepositor
 	private final JPAQueryFactory queryFactory;
 
 	@Override
-	public List<UserResponse> findMeetMembersWithUserInfo(Long meetId) {
+	public List<UserRes> findMeetMembersWithUserInfo(Long meetId) {
 
 		QMeetMember qMeetMember = QMeetMember.meetMember;
 		QUser qUser = QUser.user;
 
 		return queryFactory
 			.select(Projections.constructor(
-				UserResponse.class,
+				UserRes.class,
 				qUser.userId,        // userId
 				qUser.nickname,      // nickname
 				qUser.puzId,         // puzzleId
