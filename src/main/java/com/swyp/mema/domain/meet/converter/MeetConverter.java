@@ -5,11 +5,11 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 import com.swyp.mema.domain.meet.dto.request.CreateMeetReq;
-import com.swyp.mema.domain.meet.dto.response.CreateMeetResponse;
-import com.swyp.mema.domain.meet.dto.response.MeetSingleResponse;
+import com.swyp.mema.domain.meet.dto.response.CreateMeetRes;
+import com.swyp.mema.domain.meet.dto.response.MeetSingleRes;
 import com.swyp.mema.domain.meet.model.Meet;
 import com.swyp.mema.domain.meet.model.vo.State;
-import com.swyp.mema.domain.user.dto.reseponse.UserResponse;
+import com.swyp.mema.domain.user.dto.reseponse.UserRes;
 
 @Component
 public class MeetConverter {
@@ -26,15 +26,15 @@ public class MeetConverter {
 			.build();
 	}
 
-	public CreateMeetResponse toCreateMeetResponse(Meet meet) {
-		return CreateMeetResponse.builder()
+	public CreateMeetRes toCreateMeetResponse(Meet meet) {
+		return CreateMeetRes.builder()
 			.meetId(meet.getId())
 			.meetCode(meet.getCode())
 			.build();
 	}
 
-	public MeetSingleResponse toMeetSingleResponse(Meet meet, List<UserResponse> members) {
-		return MeetSingleResponse.builder()
+	public MeetSingleRes toMeetSingleResponse(Meet meet, List<UserRes> members) {
+		return MeetSingleRes.builder()
 			.meetName(meet.getName())
 			.meetState(meet.getState())
 			.meetDate(meet.getMeetDate())

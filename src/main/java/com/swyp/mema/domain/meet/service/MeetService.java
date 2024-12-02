@@ -5,14 +5,15 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.swyp.mema.domain.meet.dto.response.CreateMeetResponse;
+import com.swyp.mema.domain.meet.dto.response.CreateMeetRes;
 import com.swyp.mema.domain.meet.converter.MeetConverter;
 import com.swyp.mema.domain.meet.dto.request.CreateMeetReq;
-import com.swyp.mema.domain.meet.dto.response.MeetSingleResponse;
+import com.swyp.mema.domain.meet.dto.response.MeetSingleRes;
+import com.swyp.mema.domain.meet.exception.MeetNotFoundException;
 import com.swyp.mema.domain.meet.model.Meet;
 import com.swyp.mema.domain.meet.repository.MeetRepository;
 import com.swyp.mema.domain.meetMember.service.MeetMemberService;
-import com.swyp.mema.domain.user.dto.reseponse.UserResponse;
+import com.swyp.mema.domain.user.dto.reseponse.UserRes;
 import com.swyp.mema.global.utils.RandomCodeGenerator;
 
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,7 @@ public class MeetService {
 	 * @return meetId
 	 */
 	@Transactional
-	public CreateMeetResponse create(CreateMeetReq createMeetReq) {
+	public CreateMeetRes create(CreateMeetReq createMeetReq) {
 
 		// 참여 코드 생성
 		int code = generateUniqueMeetCode();
@@ -47,14 +48,14 @@ public class MeetService {
 	}
 
 	@Transactional(readOnly = true)
-	public MeetSingleResponse getSingle(Long meetId) {
+	public MeetSingleRes getSingle(Long meetId) {
 
 		// 아이디에 해당하는 약속 존재 유무 검증
 		Meet meet = meetRepository.findById(meetId)
-			.orElseThrow(() -> new IllegalArgumentException("해당 아이디에 대한 약속이 존재하지 않습니다."));
+			.orElseThrow(() -> new MeetNotFoundException());
 
 		// 약속원 목록 조회
-		List<UserResponse> members = meetMemberService.getMeetMembers(meetId);
+		List<UserRes> members = meetMemberService.getMeetMembers(meetId);
 
 		return meetConverter.toMeetSingleResponse(meet, members);
 
