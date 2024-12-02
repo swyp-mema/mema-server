@@ -21,14 +21,14 @@ import lombok.NoArgsConstructor;
 public abstract class BaseEntity {
 
 	@CreatedDate
-	@Column(name = "create_date", updatable = false)
+	@Column(name = "create_date", updatable = false, nullable = false)
 	private LocalDateTime createDate;
 
 	@LastModifiedDate
-	@Column(name = "update_date")
+	@Column(name = "update_date", nullable = false)
 	private LocalDateTime updateDate;
 
-	@Column(name = "delete_yn")
-	private boolean deleteYn;
+	@Column(name = "delete_yn", nullable = false)
+	private boolean deleteYn = false;
 }
 
