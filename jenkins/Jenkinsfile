@@ -10,7 +10,8 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 // GitHub에서 코드 클론
-                git branch: 'develop', url: 'https://github.com/swyp-mema/mema-server.git'
+                git branch: 'develop', url: 'https://github.com/swyp-mema/mema-server.git', credentialsId: 'github-token'
+
             }
         }
         stage('Build') {
