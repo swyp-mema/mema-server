@@ -1,0 +1,56 @@
+pipeline {
+    agent any
+
+    tools {
+        // Jenkins에 등록된 JDK 21 사용
+        jdk 'jdk21'
+    }
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                // GitHub에서 코드 클론
+                git branch: 'develop', url: 'https://github.com/swyp-mema/mema-server.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                // Gradle 빌드 실행
+                sh './gradlew clean build'
+            }
+        }
+        stage('Test') {
+            steps {
+                // Gradle 테스트 실행
+                sh './gradlew test'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                // SSH Key를 사용하여 배포
+                sshagent(['deploy-ssh-key']) {
+                    // JAR 파일을 원격 서버로 복사
+                    sh 'scp build/libs/mema-server-0.0.1-SNAPSHOT.jar root@223.130.156.230:/root/app/'
+
+                    // 기존 애플리케이션 종료
+                    sh 'ssh root@223.130.156.230 "pkill -f mema-server-0.0.1-SNAPSHOT.jar || echo No application running"'
+
+                    // 새로운 애플리케이션 실행
+                    sh 'ssh root@223.130.156.230 "nohup java -jar /root/app/mema-server-0.0.1-SNAPSHOT.jar > /root/app/app.log 2>&1 &"'
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline completed!'
+        }
+        success {
+            echo 'Pipeline executed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed!'
+        }
+    }
+}
