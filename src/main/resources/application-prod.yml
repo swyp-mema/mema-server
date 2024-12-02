@@ -1,9 +1,9 @@
 # 운영 환경
 spring:
   datasource:
-    url: jdbc:mysql://223.130.136.161:3306/prod_db
-    username: mema-prod
-    password: mema1234!
+    url: jdbc:mysql://223.130.156.230:3306/prod_db
+    username: mema
+    password: mema1234
     driver-class-name: com.mysql.cj.jdbc.Driver   # 8 버전
 
   jpa:

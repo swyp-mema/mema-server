@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "users")
 @NoArgsConstructor(access = PROTECTED)
-public class Users extends BaseEntity {
+public class User extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY) // Auto Increment
@@ -40,7 +40,7 @@ public class Users extends BaseEntity {
 	private String puzColor;
 
 	@Builder
-	public Users(String nickname, String email, String password, Long puzId, String puzColor) {
+	public User(String nickname, String email, String password, Long puzId, String puzColor) {
 		this.nickname = nickname;
 		this.email = email;
 		this.password = password;
