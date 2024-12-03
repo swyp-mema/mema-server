@@ -55,4 +55,16 @@ public class Meet extends BaseEntity {
 		this.expiredVoteDate = expiredVoteDate;
 		this.expiredVoteLocation = expiredVoteLocation;
 	}
+
+	public void changeName(String meetName) {
+
+		// 검증 로직
+		if (meetName == null || meetName.isBlank()) {
+			throw new IllegalArgumentException("약속명은 비어 있을 수 없습니다.");
+		}
+		if (meetName.length() > 20) {
+			throw new IllegalArgumentException("약속명은 20자 이하로 입력해주세요.");
+		}
+		this.name = meetName;
+	}
 }
