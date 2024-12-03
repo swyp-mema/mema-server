@@ -3,6 +3,7 @@ package com.swyp.mema.domain.meet.controller;
 import java.net.URI;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -51,16 +52,26 @@ public class MeetController {
 	@Operation(summary = "약속 단건 조회 API", description = "약속에 대한 모든 정보를 조회할 수 있습니다.")
 	@GetMapping("/{id}")
 	public ResponseEntity<MeetSingleRes> getOne(
-		@Parameter(description = "약속 Id", example = "1") @PathVariable("id") Long meetId) {
+		@Parameter(description = "약속 ID", example = "1") @PathVariable("id") Long meetId) {
 		MeetSingleRes response = meetService.getSingle(meetId);
 		return ResponseEntity.ok(response);
 	}
 
+	@Operation(summary = "약속 수정 API", description = "약속명을 수정할 수 있습니다.")
 	@PatchMapping("/{id}")
-	public ResponseEntity<MeetSingleRes> update(@PathVariable("id") Long meetId,
-										@Valid @RequestBody MeetNameReq meetNameReq) {
+	public ResponseEntity<MeetSingleRes> update(
+		@Parameter(description = "약속 ID", example = "1") @PathVariable("id") Long meetId,
+		@Valid @RequestBody MeetNameReq meetNameReq) {
 
 		MeetSingleRes response = meetService.update(meetId, meetNameReq);
 		return ResponseEntity.ok(response);
+	}
+
+	@Operation(summary = "약속 삭제 API", description = "약속을 삭제할 수 있습니다.")
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Void> deleteMeet(
+		@Parameter(description = "약속 ID", example = "1") @PathVariable("id") Long meetId) {
+		meetService.delete(meetId);
+		return ResponseEntity.noContent().build();
 	}
 }

@@ -10,7 +10,7 @@ public class MeetMemberConverter {
 
 	public MeetMember toMeetMember(Meet meet, Long userId) {
 		return MeetMember.builder()
-			.meetId(meet.getId())
+			.meet(meet)
 			.userId(userId)
 			.voteDateYn(false) // 초기값 false
 			.voteLocationYn(false) // 초기값 false

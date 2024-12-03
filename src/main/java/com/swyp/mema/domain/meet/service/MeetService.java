@@ -19,6 +19,7 @@ import com.swyp.mema.global.utils.RandomCodeGenerator;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class MeetService {
 
@@ -27,11 +28,10 @@ public class MeetService {
 	private final MeetMemberService meetMemberService;
 
 	/**
-	 * 새로운 약속 생성
+	 * 새로운 약속 생성 & 사용자는 약속원에 등록
 	 * @param meetNameReq
 	 * @return meetId
 	 */
-	@Transactional
 	public CreateMeetRes create(MeetNameReq meetNameReq) {
 
 		// 참여 코드 생성
@@ -47,6 +47,11 @@ public class MeetService {
 		return meetConverter.toCreateMeetResponse(meet);
 	}
 
+	/**
+	 * 약속 단건 조회
+	 * @param meetId
+	 * @return MeetSingleRes
+	 */
 	@Transactional(readOnly = true)
 	public MeetSingleRes getSingle(Long meetId) {
 
@@ -61,7 +66,12 @@ public class MeetService {
 
 	}
 
-	@Transactional
+	/**
+	 * 약속명 수정
+	 * @param meetId
+	 * @param meetNameReq
+	 * @return MeetSingleRes
+	 */
 	public MeetSingleRes update(Long meetId, MeetNameReq meetNameReq) {
 
 		// 아이디에 해당하는 약속 존재 유무 검증
@@ -75,6 +85,20 @@ public class MeetService {
 		List<UserRes> members = meetMemberService.getMeetMembers(meetId);
 
 		return meetConverter.toMeetSingleResponse(meet, members);
+	}
+
+	/**
+	 * 약속 삭제 (hard delete)
+	 * @param meetId
+	 */
+	public void delete(Long meetId) {
+
+		// 약속이 존재하는지 확인
+		Meet meet = meetRepository.findById(meetId)
+			.orElseThrow(MeetNotFoundException::new);
+
+		// 약속 삭제시 해당 약속의 약속원들도 삭제된다.
+		meetRepository.delete(meet);
 	}
 
 	/**
