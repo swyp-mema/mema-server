@@ -3,16 +3,21 @@ package com.swyp.mema.domain.meet.model;
 import static jakarta.persistence.GenerationType.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.swyp.mema.domain.meet.model.vo.State;
+import com.swyp.mema.domain.meetMember.model.MeetMember;
 import com.swyp.mema.global.base.domain.BaseEntity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.Builder;
@@ -44,6 +49,9 @@ public class Meet extends BaseEntity {
 	private LocalDateTime expiredVoteDate;
 	private LocalDateTime expiredVoteLocation;
 
+	@OneToMany(mappedBy = "meet", cascade = CascadeType.REMOVE, orphanRemoval = true)
+	private List<MeetMember> members = new ArrayList<>();
+
 	@Builder
 	public Meet(int code, String name, State state, LocalDateTime meetDate, String location,
 		LocalDateTime expiredVoteDate, LocalDateTime expiredVoteLocation) {
@@ -54,5 +62,17 @@ public class Meet extends BaseEntity {
 		this.location = location;
 		this.expiredVoteDate = expiredVoteDate;
 		this.expiredVoteLocation = expiredVoteLocation;
+	}
+
+	public void changeName(String meetName) {
+
+		// 검증 로직
+		if (meetName == null || meetName.isBlank()) {
+			throw new IllegalArgumentException("약속명은 비어 있을 수 없습니다.");
+		}
+		if (meetName.length() > 20) {
+			throw new IllegalArgumentException("약속명은 20자 이하로 입력해주세요.");
+		}
+		this.name = meetName;
 	}
 }

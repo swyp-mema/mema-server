@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import com.swyp.mema.domain.meet.dto.request.CreateMeetReq;
+import com.swyp.mema.domain.meet.dto.request.MeetNameReq;
 import com.swyp.mema.domain.meet.dto.response.CreateMeetRes;
 import com.swyp.mema.domain.meet.dto.response.MeetSingleRes;
 import com.swyp.mema.domain.meet.model.Meet;
@@ -14,7 +14,7 @@ import com.swyp.mema.domain.user.dto.reseponse.UserRes;
 @Component
 public class MeetConverter {
 
-	public Meet toMeet(CreateMeetReq meetReq, int code) {
+	public Meet toMeet(MeetNameReq meetReq, int code) {
 		return Meet.builder()
 			.code(code)
 			.name(meetReq.getMeetName())
@@ -35,6 +35,7 @@ public class MeetConverter {
 
 	public MeetSingleRes toMeetSingleResponse(Meet meet, List<UserRes> members) {
 		return MeetSingleRes.builder()
+			.meetId(meet.getId())
 			.meetName(meet.getName())
 			.meetState(meet.getState())
 			.meetDate(meet.getMeetDate())

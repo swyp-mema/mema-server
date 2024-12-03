@@ -31,7 +31,7 @@ public class MeetMemberCustomRepositoryImpl implements MeetMemberCustomRepositor
 			))
 			.from(qMeetMember)
 			.join(qUser).on(qMeetMember.userId.eq(qUser.userId))
-			.where(qMeetMember.meetId.eq(meetId))
+			.where(qMeetMember.meet.id.eq(meetId))
 			.fetch();
 	}
 }
