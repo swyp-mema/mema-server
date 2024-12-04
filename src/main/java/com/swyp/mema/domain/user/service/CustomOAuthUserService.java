@@ -5,7 +5,7 @@ import com.swyp.mema.domain.user.dto.converter.UserConverter;
 import com.swyp.mema.domain.user.dto.oauth2.CustomOAuthUser;
 import com.swyp.mema.domain.user.dto.oauth2.NaverResponse;
 import com.swyp.mema.domain.user.dto.oauth2.OAuthResponse;
-import com.swyp.mema.domain.user.entity.UserEntity;
+import com.swyp.mema.domain.user.model.User;
 import com.swyp.mema.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -35,7 +35,7 @@ public class CustomOAuthUserService extends DefaultOAuth2UserService {
         }
 
         // 이메일로 사용자 검색
-        UserEntity user = userRepository.findByEmail(oAuthResponse.getEmail());
+        User user = userRepository.findByEmail(oAuthResponse.getEmail());
         if(user == null) {
             user = createNewUser(oAuthResponse);
             System.out.println(user.getUserId());
@@ -58,15 +58,15 @@ public class CustomOAuthUserService extends DefaultOAuth2UserService {
         }
     }
 
-    private UserEntity createNewUser(OAuthResponse oAuthResponse) {
+    private User createNewUser(OAuthResponse oAuthResponse) {
         System.out.println("Creating new user entity");
 
-        return userRepository.save(UserEntity.builder()
+        return userRepository.save(User.builder()
                 .email(oAuthResponse.getEmail())
                 .nickname(oAuthResponse.getNickname())
                 .role(oAuthResponse.getRole())
-                .puz_id("default_puz_id") // 기본 값 설정
-                .puz_color("default_puz_color") // 기본 값 설정
+                .puzId("default_puz_id") // 기본 값 설정
+                .puzColor("default_puz_color") // 기본 값 설정
                 .password(generateRandomPassword()) // 비밀번호 생성
                 .build());
     }

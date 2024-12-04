@@ -1,48 +1,48 @@
 package com.swyp.mema.domain.user.dto.converter;
 
 import com.swyp.mema.domain.user.dto.UserDTO;
-import com.swyp.mema.domain.user.entity.UserEntity;
+import com.swyp.mema.domain.user.model.User;
 
 public class UserConverter {
 
-    public static UserEntity convertUserDTO2User(UserDTO userDTO) {
+    public static User convertUserDTO2User(UserDTO userDTO) {
 
-        UserEntity userEntity = UserEntity.builder()
+        User user = User.builder()
                 .email(userDTO.getEmail())
                 .nickname(userDTO.getNickname())
-                .puz_id(userDTO.getPuz_id())
-                .puz_color(userDTO.getPuz_color())
+                .puzId(userDTO.getPuz_id())
+                .puzColor(userDTO.getPuz_color())
                 .role(userDTO.getRole())
                 .build();
-        userEntity.setUsername(userDTO.getUsername());
-        return userEntity;
+        user.setUsername(userDTO.getUsername());
+        return user;
     }
 
-    public static UserEntity convertUserDTO2User(UserDTO userDTO, String password) {
+    public static User convertUserDTO2User(UserDTO userDTO, String password) {
 
-        UserEntity userEntity = UserEntity.builder()
+        User user = User.builder()
                 .email(userDTO.getEmail())
                 .password(password)
                 .nickname(userDTO.getNickname())
-                .puz_id(userDTO.getPuz_id())
-                .puz_color(userDTO.getPuz_color())
+                .puzId(userDTO.getPuz_id())
+                .puzColor(userDTO.getPuz_color())
                 .role(userDTO.getRole())
                 .build();
-        userEntity.setUsername(userDTO.getUsername());
-        return userEntity;
+        user.setUsername(userDTO.getUsername());
+        return user;
     }
 
 
-    public static UserDTO convertUserEntity2UserDTO(UserEntity userEntity) {
+    public static UserDTO convertUserEntity2UserDTO(User user) {
 
 
         UserDTO userDTO = new UserDTO();
-        userDTO.setUsername(userEntity.getUsername());
-        userDTO.setEmail(userEntity.getEmail());
-        userDTO.setNickname(userEntity.getNickname());
-        userDTO.setRole(userEntity.getRole());
-        userDTO.setPuz_id(userEntity.getPuz_id());
-        userDTO.setPuz_color(userEntity.getPuz_color());
+        userDTO.setUsername(user.getUsername());
+        userDTO.setEmail(user.getEmail());
+        userDTO.setNickname(user.getNickname());
+        userDTO.setRole(user.getRole());
+        userDTO.setPuz_id(user.getPuzId());
+        userDTO.setPuz_color(user.getPuzColor());
         return userDTO;
     }
 }

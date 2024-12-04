@@ -1,7 +1,7 @@
 package com.swyp.mema.domain.user.service;
 
 import com.swyp.mema.domain.user.dto.CustomUserDetails;
-import com.swyp.mema.domain.user.entity.UserEntity;
+import com.swyp.mema.domain.user.model.User;
 import com.swyp.mema.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,7 +18,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        UserEntity userData = userRepository.findByEmail(email);
+        User userData = userRepository.findByEmail(email);
 
         if(userData != null) {
 

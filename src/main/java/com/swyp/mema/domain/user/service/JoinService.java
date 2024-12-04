@@ -2,7 +2,7 @@ package com.swyp.mema.domain.user.service;
 
 import com.swyp.mema.domain.user.dto.UserDTO;
 import com.swyp.mema.domain.user.dto.converter.UserConverter;
-import com.swyp.mema.domain.user.entity.UserEntity;
+import com.swyp.mema.domain.user.model.User;
 import com.swyp.mema.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -32,13 +32,13 @@ public class JoinService {
         }
         System.out.println("join service - joinProcess - enter");
 
-        UserEntity user = UserConverter.convertUserDTO2User(userDTO, bCryptPasswordEncoder.encode(password));
+        User user = UserConverter.convertUserDTO2User(userDTO, bCryptPasswordEncoder.encode(password));
         user.setRole("ROLE_CUSTOM");
         System.out.println("email = " + user.getEmail());
         System.out.println("password = " + user.getPassword());
         System.out.println("role = " + user.getRole());
-        System.out.println("puz_color = " + user.getPuz_color());
-        System.out.println("puz_id = " + user.getPuz_id());
+        System.out.println("puz_color = " + user.getPuzColor());
+        System.out.println("puz_id = " + user.getPuzId());
         userRepository.save(user);
         return true;
     }

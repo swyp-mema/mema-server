@@ -1,7 +1,7 @@
 package com.swyp.mema.global.security.jwt.filter;
 
 import com.swyp.mema.domain.user.dto.CustomUserDetails;
-import com.swyp.mema.domain.user.entity.UserEntity;
+import com.swyp.mema.domain.user.model.User;
 import com.swyp.mema.global.security.jwt.util.JWTUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -66,12 +66,12 @@ public class JWTFilter extends OncePerRequestFilter {
         String userUsername = jwtUtil.getUsername(token);
         String role = jwtUtil.getRole(token);
 
-        UserEntity userEntity = new UserEntity();
-        userEntity.setUsername(userUsername);
-        userEntity.setPassword("tmp");
-        userEntity.setRole(role);
+        User user = new User();
+        user.setUsername(userUsername);
+        user.setPassword("tmp");
+        user.setRole(role);
 
-        CustomUserDetails customUserDetails = new CustomUserDetails(userEntity);
+        CustomUserDetails customUserDetails = new CustomUserDetails(user);
 
         Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
 

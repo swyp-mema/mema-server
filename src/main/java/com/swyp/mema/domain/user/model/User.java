@@ -1,50 +1,57 @@
 package com.swyp.mema.domain.user.model;
 
-import static jakarta.persistence.GenerationType.*;
-import static lombok.AccessLevel.*;
-
-import com.swyp.mema.global.base.domain.BaseEntity;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Getter
 @Entity
-@Table(name = "users")
-@NoArgsConstructor(access = PROTECTED)
-public class User extends BaseEntity {
+@Setter @Getter
+@Table(name="users")
+@NoArgsConstructor
+public class User {
 
-	@Id
-	@GeneratedValue(strategy = IDENTITY) // Auto Increment
-	private Long userId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long userId;
 
-	@Column(nullable = false)
-	private String nickname;
+    @Column(nullable = false)
+    private String email;
 
-	@Column(nullable = false, unique = true)
-	private String email;
+    @Column(nullable = false)
+    private String password;
 
-	@Column(nullable = false)
-	private String password;
+    @Column(nullable = false)
+    private String nickname;
 
-	@Column(nullable = false)
-	private Long puzId;
+    @Column(nullable = false)
+    private String puzId;
 
-	@Column(nullable = false)
-	private String puzColor;
+    @Column(nullable = false)
+    private String puzColor;
 
-	@Builder
-	public User(String nickname, String email, String password, Long puzId, String puzColor) {
-		this.nickname = nickname;
-		this.email = email;
-		this.password = password;
-		this.puzId = puzId;
-		this.puzColor = puzColor;
-	}
+    @Column(nullable = false)
+    private String role;
+
+    public void setUsername(String username) {
+
+        if(username == null || username.equals("")) return;
+        this.userId = Long.parseLong(username);
+    }
+    public String getUsername() {
+        return String.valueOf(userId);
+    }
+
+    @Builder
+    public User(String email, String password, String nickname, String puzId, String puzColor, String role) {
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+        this.puzId = puzId;
+        if(puzId == null) this.puzId = "default_id";
+        this.puzColor = puzColor;
+        if(puzColor == null) this.puzColor = "default_color";
+        this.role = role;
+    }
 }
