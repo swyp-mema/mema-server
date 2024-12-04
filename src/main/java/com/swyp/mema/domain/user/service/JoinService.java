@@ -1,7 +1,7 @@
 package com.swyp.mema.domain.user.service;
 
 import com.swyp.mema.domain.user.dto.UserDTO;
-import com.swyp.mema.domain.user.dto.converter.UserConverter;
+import com.swyp.mema.domain.user.dto.converter.UserDtoConverter;
 import com.swyp.mema.domain.user.model.User;
 import com.swyp.mema.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +14,7 @@ public class JoinService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final UserDtoConverter userDtoConverter;
 
     public boolean joinProcess(UserDTO userDTO) {
         System.out.println("join service - joinProcess");
@@ -32,7 +33,7 @@ public class JoinService {
         }
         System.out.println("join service - joinProcess - enter");
 
-        User user = UserConverter.convertUserDTO2User(userDTO, bCryptPasswordEncoder.encode(password));
+        User user = userDtoConverter.userDto2User(userDTO, bCryptPasswordEncoder.encode(password));
         user.setRole("ROLE_CUSTOM");
         System.out.println("email = " + user.getEmail());
         System.out.println("password = " + user.getPassword());

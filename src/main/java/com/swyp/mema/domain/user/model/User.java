@@ -34,9 +34,13 @@ public class User {
     @Column(nullable = false)
     private String role;
 
+    //모임 참여 횟수
+    @Column(nullable = false, columnDefinition = "INTEGER DEFAULT 0")
+    private Integer visitCount;
+
     public void setUsername(String username) {
 
-        if(username == null || username.equals("")) return;
+        if(username == null || username.isEmpty()) return;
         this.userId = Long.parseLong(username);
     }
     public String getUsername() {
@@ -44,7 +48,7 @@ public class User {
     }
 
     @Builder
-    public User(String email, String password, String nickname, String puzId, String puzColor, String role) {
+    public User(String email, String password, String nickname, String puzId, String puzColor, String role, Integer visitCount) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
@@ -53,5 +57,7 @@ public class User {
         this.puzColor = puzColor;
         if(puzColor == null) this.puzColor = "default_color";
         this.role = role;
+        if(visitCount == null) this.visitCount = 0;
+        this.visitCount = visitCount;
     }
 }

@@ -1,48 +1,32 @@
 package com.swyp.mema.domain.user.dto.converter;
 
-import com.swyp.mema.domain.user.dto.UserDTO;
+import com.swyp.mema.domain.badge.service.BadgeService;
+import com.swyp.mema.domain.user.dto.response.UserInfoRes;
 import com.swyp.mema.domain.user.model.User;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
+@Component
+@RequiredArgsConstructor
 public class UserConverter {
 
-    public static User convertUserDTO2User(UserDTO userDTO) {
+    private final BadgeService badgeService;
 
-        User user = User.builder()
-                .email(userDTO.getEmail())
-                .nickname(userDTO.getNickname())
-                .puzId(userDTO.getPuz_id())
-                .puzColor(userDTO.getPuz_color())
-                .role(userDTO.getRole())
+    public UserInfoRes user2UserInfoRes(User user) {
+
+        int meetCount, badgeCount;
+        meetCount = 0;
+        badgeCount = badgeService.getBadgeCount();
+
+        return UserInfoRes.builder()
+                .nickname(user.getNickname())
+                .puzId(user.getPuzId())
+                .puzColor(user.getPuzColor())
+                .role(user.getRole())
+                .visitCount(user.getVisitCount())
+                .meetCount(meetCount)
+                .badgeCount(badgeCount)
                 .build();
-        user.setUsername(userDTO.getUsername());
-        return user;
-    }
 
-    public static User convertUserDTO2User(UserDTO userDTO, String password) {
-
-        User user = User.builder()
-                .email(userDTO.getEmail())
-                .password(password)
-                .nickname(userDTO.getNickname())
-                .puzId(userDTO.getPuz_id())
-                .puzColor(userDTO.getPuz_color())
-                .role(userDTO.getRole())
-                .build();
-        user.setUsername(userDTO.getUsername());
-        return user;
-    }
-
-
-    public static UserDTO convertUserEntity2UserDTO(User user) {
-
-
-        UserDTO userDTO = new UserDTO();
-        userDTO.setUsername(user.getUsername());
-        userDTO.setEmail(user.getEmail());
-        userDTO.setNickname(user.getNickname());
-        userDTO.setRole(user.getRole());
-        userDTO.setPuz_id(user.getPuzId());
-        userDTO.setPuz_color(user.getPuzColor());
-        return userDTO;
     }
 }

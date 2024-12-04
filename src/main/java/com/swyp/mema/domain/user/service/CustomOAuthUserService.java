@@ -1,7 +1,7 @@
 package com.swyp.mema.domain.user.service;
 
 import com.swyp.mema.domain.user.dto.UserDTO;
-import com.swyp.mema.domain.user.dto.converter.UserConverter;
+import com.swyp.mema.domain.user.dto.converter.UserDtoConverter;
 import com.swyp.mema.domain.user.dto.oauth2.CustomOAuthUser;
 import com.swyp.mema.domain.user.dto.oauth2.NaverResponse;
 import com.swyp.mema.domain.user.dto.oauth2.OAuthResponse;
@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 public class CustomOAuthUserService extends DefaultOAuth2UserService {
 
     private final UserRepository userRepository;
+    private final UserDtoConverter userDtoConverter;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -44,7 +45,7 @@ public class CustomOAuthUserService extends DefaultOAuth2UserService {
         }
 
         // UserDTO로 변환 및 반환
-        UserDTO userDTO = UserConverter.convertUserEntity2UserDTO(user);
+        UserDTO userDTO = userDtoConverter.userEntity2UserDto(user);
         return new CustomOAuthUser(userDTO);
     }
 

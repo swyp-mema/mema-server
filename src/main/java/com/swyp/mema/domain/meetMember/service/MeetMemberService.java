@@ -9,7 +9,7 @@ import com.swyp.mema.domain.meet.model.Meet;
 import com.swyp.mema.domain.meetMember.converter.MeetMemberConverter;
 import com.swyp.mema.domain.meetMember.model.MeetMember;
 import com.swyp.mema.domain.meetMember.repository.MeetMemberRepository;
-import com.swyp.mema.domain.user.dto.reseponse.UserRes;
+import com.swyp.mema.domain.user.dto.response.UserRes;
 
 import lombok.RequiredArgsConstructor;
 
