@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-@Schema(description = "약속 생성 요청")
-public class CreateMeetReq {
+@Schema(description = "약속 생성 및 약속명 수정 요청")
+public class MeetNameReq {
 
 	@Schema(description = "약속명", example = "극 P들의 약속")
 	@NotBlank(message = "약속명을 입력해주세요.") // 빈 문자열 또는 공백 방지
