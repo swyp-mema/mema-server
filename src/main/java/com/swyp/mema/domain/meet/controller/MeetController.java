@@ -13,9 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.swyp.mema.domain.meet.dto.request.JoinMeetReq;
 import com.swyp.mema.domain.meet.dto.request.MeetNameReq;
 import com.swyp.mema.domain.meet.dto.response.CreateMeetRes;
-import com.swyp.mema.domain.meet.dto.response.MeetSingleRes;
+import com.swyp.mema.domain.meet.dto.response.SingleMeetRes;
 import com.swyp.mema.domain.meet.service.MeetService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,7 +40,8 @@ public class MeetController {
 	@PostMapping
 	public ResponseEntity<CreateMeetRes> create(@Valid @RequestBody MeetNameReq meetNameReq) {
 
-		CreateMeetRes response = meetService.create(meetNameReq);
+		Long userId = 1L;	// 임시값
+		CreateMeetRes response = meetService.create(meetNameReq, userId);
 
 		URI uri = UriComponentsBuilder
 			.fromPath("/meets/{id}")
@@ -49,21 +51,34 @@ public class MeetController {
 		return ResponseEntity.created(uri).body(response);
 	}
 
+	/**
+	 * 약속 참여 코드로 약속원 등록
+	 */
+	@PostMapping("/join")
+	public ResponseEntity<SingleMeetRes> joinMeet(
+		@Valid @RequestBody JoinMeetReq joinMeetReq
+		// @AuthenticationPrincipal CustomUserDetails userDetails
+	) {
+		Long userId = 2L;
+		SingleMeetRes response = meetService.joinMeet(joinMeetReq, userId);
+		return ResponseEntity.ok(response);
+	}
+
 	@Operation(summary = "약속 단건 조회 API", description = "약속에 대한 모든 정보를 조회할 수 있습니다.")
 	@GetMapping("/{id}")
-	public ResponseEntity<MeetSingleRes> getOne(
+	public ResponseEntity<SingleMeetRes> getOne(
 		@Parameter(description = "약속 ID", example = "1") @PathVariable("id") Long meetId) {
-		MeetSingleRes response = meetService.getSingle(meetId);
+		SingleMeetRes response = meetService.getSingle(meetId);
 		return ResponseEntity.ok(response);
 	}
 
 	@Operation(summary = "약속 수정 API", description = "약속명을 수정할 수 있습니다.")
 	@PatchMapping("/{id}")
-	public ResponseEntity<MeetSingleRes> update(
+	public ResponseEntity<SingleMeetRes> update(
 		@Parameter(description = "약속 ID", example = "1") @PathVariable("id") Long meetId,
 		@Valid @RequestBody MeetNameReq meetNameReq) {
 
-		MeetSingleRes response = meetService.update(meetId, meetNameReq);
+		SingleMeetRes response = meetService.update(meetId, meetNameReq);
 		return ResponseEntity.ok(response);
 	}
 

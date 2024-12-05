@@ -5,15 +5,18 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.swyp.mema.domain.meet.dto.request.JoinMeetReq;
 import com.swyp.mema.domain.meet.dto.response.CreateMeetRes;
 import com.swyp.mema.domain.meet.converter.MeetConverter;
 import com.swyp.mema.domain.meet.dto.request.MeetNameReq;
-import com.swyp.mema.domain.meet.dto.response.MeetSingleRes;
+import com.swyp.mema.domain.meet.dto.response.SingleMeetRes;
+import com.swyp.mema.domain.meet.exception.JoinCodeInvalidException;
 import com.swyp.mema.domain.meet.exception.MeetNotFoundException;
 import com.swyp.mema.domain.meet.model.Meet;
 import com.swyp.mema.domain.meet.repository.MeetRepository;
 import com.swyp.mema.domain.meetMember.dto.response.MeetMemberRes;
 import com.swyp.mema.domain.meetMember.service.MeetMemberService;
+import com.swyp.mema.domain.user.exception.UserNotFoundException;
 import com.swyp.mema.domain.user.model.User;
 import com.swyp.mema.domain.user.repository.UserRepository;
 import com.swyp.mema.global.utils.RandomCodeGenerator;
@@ -26,16 +29,16 @@ import lombok.RequiredArgsConstructor;
 public class MeetService {
 
 	private final MeetRepository meetRepository;
+	private final UserRepository userRepository;
 	private final MeetConverter meetConverter;
 	private final MeetMemberService meetMemberService;
-	private final UserRepository userRepository;
 
 	/**
 	 * 새로운 약속 생성 & 사용자는 약속원에 등록
 	 * @param meetNameReq
 	 * @return meetId
 	 */
-	public CreateMeetRes create(MeetNameReq meetNameReq) {
+	public CreateMeetRes create(MeetNameReq meetNameReq, Long userId) {
 
 		// 참여 코드 생성
 		int code = generateUniqueMeetCode();
@@ -43,13 +46,31 @@ public class MeetService {
 		Meet meet = meetConverter.toMeet(meetNameReq, code);
 		meetRepository.save(meet);
 
-		// 약속원 생성 위임
-		User user = userRepository.findById(1L)
-			.orElseThrow(() ->  new IllegalArgumentException("사용자 없음"));
+		User user = userRepository.findById(userId)
+			.orElseThrow(UserNotFoundException::new);
 
 		meetMemberService.addMeetMember(meet, user);
 
 		return meetConverter.toCreateMeetResponse(meet);
+	}
+
+	/**
+	 * 참여 코드를 통해 약속에 참여 & 약속원에 등록
+	 */
+	public SingleMeetRes joinMeet(JoinMeetReq joinMeetReq, Long userId) {
+
+		// 약속 조회
+		Meet meet = meetRepository.findByCode(joinMeetReq.getJoinCode())
+			.orElseThrow(JoinCodeInvalidException::new);
+
+		// 사용자 조회
+		User user = userRepository.findById(userId)
+			.orElseThrow(UserNotFoundException::new);
+
+		// 약속원 등록
+		meetMemberService.addMeetMember(meet, user);
+
+		return getSingle(meet.getId());
 	}
 
 	/**
@@ -58,7 +79,7 @@ public class MeetService {
 	 * @return MeetSingleRes
 	 */
 	@Transactional(readOnly = true)
-	public MeetSingleRes getSingle(Long meetId) {
+	public SingleMeetRes getSingle(Long meetId) {
 
 		// 아이디에 해당하는 약속 존재 유무 검증
 		Meet meet = meetRepository.findById(meetId)
@@ -77,7 +98,7 @@ public class MeetService {
 	 * @param meetNameReq
 	 * @return MeetSingleRes
 	 */
-	public MeetSingleRes update(Long meetId, MeetNameReq meetNameReq) {
+	public SingleMeetRes update(Long meetId, MeetNameReq meetNameReq) {
 
 		// 아이디에 해당하는 약속 존재 유무 검증
 		Meet meet = meetRepository.findById(meetId)

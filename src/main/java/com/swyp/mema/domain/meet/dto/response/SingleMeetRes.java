@@ -14,7 +14,7 @@ import lombok.Getter;
 @Getter
 @Builder
 @Schema(description = "약속 단건 조회 응답")
-public class MeetSingleRes {
+public class SingleMeetRes {
 
 	@Schema(description = "약속 ID", example = "1")
 	private Long meetId;

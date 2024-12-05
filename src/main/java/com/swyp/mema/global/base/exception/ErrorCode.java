@@ -10,11 +10,13 @@ import lombok.Getter;
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum ErrorCode {
 
-	// Member
-	MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "M001", "존재하지 않는 회원입니다."),
+	// USER
+	USER_NOT_FOUND(HttpStatus.NOT_FOUND, "M001", "존재하지 않는 회원입니다."),
+	USER_ALREADY_REGISTERED(HttpStatus.BAD_REQUEST, "U002", "사용자가 이미 등록된 약속원입니다."),
 
 	// MEET
 	MEET_NOT_FOUND(HttpStatus.NOT_FOUND, "ME001", "존재하지 않는 약속입니다."),
+	INVALID_JOIN_CODE(HttpStatus.BAD_REQUEST, "ME002", "유효하지 않은 참여 코드입니다."),
 
 	// MEET MEMBER
 	MEET_MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEM001", "존재하지 않는 약속원입니다."),
