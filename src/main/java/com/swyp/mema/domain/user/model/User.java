@@ -1,5 +1,6 @@
 package com.swyp.mema.domain.user.model;
 
+import com.swyp.mema.global.base.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +11,7 @@ import lombok.Setter;
 @Getter
 @Table(name="users")
 @NoArgsConstructor
-public class User {
+public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,7 +39,7 @@ public class User {
     private String role;
 
     //모임 참여 횟수
-    @Column(nullable = false, columnDefinition = "INTEGER DEFAULT 0")
+    @Column(nullable = false, columnDefinition = "INTEGER DEFAULT 1")
     private Integer visitCount;
 
     public void setUsername(String username) {
@@ -60,7 +61,7 @@ public class User {
         this.puzColor = puzColor;
         if(puzColor == null) this.puzColor = "default_color";
         this.role = role;
-        if(visitCount == null) this.visitCount = 0;
         this.visitCount = visitCount;
+        if(visitCount == null || visitCount == 0) this.visitCount = 1;
     }
 }

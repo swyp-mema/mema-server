@@ -28,7 +28,7 @@ public abstract class BaseEntity {
 	@Column(name = "update_date", nullable = false)
 	private LocalDateTime updateDate;
 
-	@Column(name = "delete_yn", nullable = false)
+	@Column(name = "delete_yn", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
 	private boolean deleteYn = false;
 }
 
