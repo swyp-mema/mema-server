@@ -2,7 +2,7 @@ package com.swyp.mema.domain.user.service;
 
 import com.swyp.mema.domain.user.dto.CustomUserDetails;
 import com.swyp.mema.domain.user.dto.converter.UserConverter;
-import com.swyp.mema.domain.user.dto.request.PatchUserInfoReq;
+import com.swyp.mema.domain.user.dto.request.UpdateUserInfoReq;
 import com.swyp.mema.domain.user.dto.response.UserInfoRes;
 import com.swyp.mema.domain.user.exception.UserNotFoundException;
 import com.swyp.mema.domain.user.model.User;
@@ -37,7 +37,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserInfoRes patchUserInfo(PatchUserInfoReq req,CustomUserDetails userDetails) {
+    public UserInfoRes updateUserInfo(UpdateUserInfoReq req, CustomUserDetails userDetails) {
 
         User user = getUserById(userDetails.getUserId());
         updateFieldIfNotNull(req.getNickname(), user::setNickname);

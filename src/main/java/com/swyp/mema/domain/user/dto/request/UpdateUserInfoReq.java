@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(description = "유저 정보 변경")
-public class PatchUserInfoReq {
+public class UpdateUserInfoReq {
 
     @Schema(description = "닉네임", example = "메마러버")
     private String nickname;

@@ -1,12 +1,11 @@
 package com.swyp.mema.domain.user.controller;
 
 import com.swyp.mema.domain.user.dto.CustomUserDetails;
-import com.swyp.mema.domain.user.dto.request.PatchUserInfoReq;
+import com.swyp.mema.domain.user.dto.request.UpdateUserInfoReq;
 import com.swyp.mema.domain.user.dto.response.UserInfoRes;
 import com.swyp.mema.domain.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContext;
@@ -44,11 +43,11 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    @Operation(summary = "내 정보 조회 API", description = "회원 상세정보를 조회합니다.")
+    @Operation(summary = "내 정보 수정 API", description = "회원 상세정보를 수정합니다.")
     @PatchMapping("/mypage")
-    public ResponseEntity<UserInfoRes> myInfoPatch(@RequestBody PatchUserInfoReq req, @AuthenticationPrincipal CustomUserDetails userDetails){
+    public ResponseEntity<UserInfoRes> UpdateMyInfo(@RequestBody UpdateUserInfoReq req, @AuthenticationPrincipal CustomUserDetails userDetails){
 
-        UserInfoRes userInfoRes = userService.patchUserInfo(req,userDetails);
+        UserInfoRes userInfoRes = userService.updateUserInfo(req,userDetails);
         return ResponseEntity.ok(userInfoRes);
     }
 }
