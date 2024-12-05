@@ -48,7 +48,7 @@ public class UserController {
     @PatchMapping("/mypage")
     public ResponseEntity<UserInfoRes> myInfoPatch(@RequestBody PatchUserInfoReq req, @AuthenticationPrincipal CustomUserDetails userDetails){
 
-        userService.patchUserInfo(req,userDetails);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        UserInfoRes userInfoRes = userService.patchUserInfo(req,userDetails);
+        return ResponseEntity.ok(userInfoRes);
     }
 }

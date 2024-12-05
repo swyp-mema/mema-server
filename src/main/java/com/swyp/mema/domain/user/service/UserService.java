@@ -21,6 +21,7 @@ public class UserService {
     private final UserConverter userConverter;
 
     // 사용자 조회 (예외 처리 포함)
+    @Transactional(readOnly = true)
     public User getUserById(Long userId) {
 
         return userRepository.findById(userId)
@@ -28,6 +29,7 @@ public class UserService {
     }
 
     // 내 정보 상세보기
+    @Transactional(readOnly = true)
     public UserInfoRes getUserInfoDetail(CustomUserDetails userDetails) {
 
         User user = getUserById(userDetails.getUserId());
@@ -35,12 +37,13 @@ public class UserService {
     }
 
     @Transactional
-    public void patchUserInfo(PatchUserInfoReq req,CustomUserDetails userDetails) {
+    public UserInfoRes patchUserInfo(PatchUserInfoReq req,CustomUserDetails userDetails) {
 
         User user = getUserById(userDetails.getUserId());
         updateFieldIfNotNull(req.getNickname(), user::setNickname);
         updateFieldIfNotNull(req.getPuzColor(), user::setPuzColor);
         updateFieldIfNotNull(req.getPuzId(), user::setPuzId);
+        return userConverter.user2UserInfoRes(user);
     }
 
     // 유틸리티 메서드: 값이 null이 아닐 경우 필드 업데이트
