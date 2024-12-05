@@ -1,4 +1,4 @@
-package com.swyp.mema.domain.user.dto.oauth2;
+package com.swyp.mema.domain.user.dto;
 
 import com.swyp.mema.domain.user.dto.request.UserReq;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,6 @@
 package com.swyp.mema.global.security.oauth2.util;
 
-import com.swyp.mema.domain.user.dto.oauth2.CustomOAuthUser;
+import com.swyp.mema.domain.user.dto.CustomOAuthUser;
 import com.swyp.mema.global.config.env.EnvConfig;
 import com.swyp.mema.global.security.jwt.util.JWTUtil;
 import jakarta.servlet.ServletException;
@@ -8,7 +8,6 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.env.Environment;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
