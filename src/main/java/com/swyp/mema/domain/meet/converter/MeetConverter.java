@@ -9,7 +9,7 @@ import com.swyp.mema.domain.meet.dto.response.CreateMeetRes;
 import com.swyp.mema.domain.meet.dto.response.MeetSingleRes;
 import com.swyp.mema.domain.meet.model.Meet;
 import com.swyp.mema.domain.meet.model.vo.State;
-import com.swyp.mema.domain.user.dto.reseponse.UserRes;
+import com.swyp.mema.domain.user.dto.response.UserRes;
 
 @Component
 public class MeetConverter {

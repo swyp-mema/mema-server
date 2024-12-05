@@ -20,11 +20,11 @@ public class UserReq {
     private String password;
 
     @NotBlank(message = "Nickname is required.")
-    @Size(min = 2, max = 15, message = "Nickname must be between 2 and 15 characters.")
+    @Size(min = 2, max = 20, message = "Nickname must be between 2 and 20 characters.")
     private String nickname;
     private String puz_id;
     private String puz_color;
     private String role;
-
+    private Long badgeCount;
 
 }

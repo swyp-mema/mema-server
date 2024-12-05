@@ -2,7 +2,6 @@ package com.swyp.mema.domain.meet.service;
 
 import java.util.List;
 
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,7 +13,7 @@ import com.swyp.mema.domain.meet.exception.MeetNotFoundException;
 import com.swyp.mema.domain.meet.model.Meet;
 import com.swyp.mema.domain.meet.repository.MeetRepository;
 import com.swyp.mema.domain.meetMember.service.MeetMemberService;
-import com.swyp.mema.domain.user.dto.reseponse.UserRes;
+import com.swyp.mema.domain.user.dto.response.UserRes;
 import com.swyp.mema.global.utils.RandomCodeGenerator;
 
 import lombok.RequiredArgsConstructor;

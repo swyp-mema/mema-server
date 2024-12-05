@@ -1,5 +1,6 @@
 package com.swyp.mema.domain.user.service;
 
+import com.swyp.mema.domain.user.dto.converter.UserDtoConverter;
 import com.swyp.mema.domain.user.dto.request.UserReq;
 import com.swyp.mema.domain.user.converter.UserConverter;
 import com.swyp.mema.domain.user.exception.EmailAlreadyExistException;
@@ -15,6 +16,7 @@ public class JoinService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final UserDtoConverter userDtoConverter;
 
     public boolean joinProcess(UserReq userReq) {
         System.out.println("join service - joinProcess");

@@ -5,6 +5,7 @@ import com.swyp.mema.domain.user.converter.UserConverter;
 import com.swyp.mema.domain.user.dto.CustomOAuthUser;
 import com.swyp.mema.domain.user.dto.reseponse.oauth2.NaverResponse;
 import com.swyp.mema.domain.user.dto.reseponse.oauth2.OAuthResponse;
+import com.swyp.mema.domain.user.dto.converter.UserDtoConverter;
 import com.swyp.mema.domain.user.model.User;
 import com.swyp.mema.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 public class CustomOAuthUserService extends DefaultOAuth2UserService {
 
     private final UserRepository userRepository;
+    private final UserDtoConverter userDtoConverter;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {

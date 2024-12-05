@@ -2,7 +2,6 @@ package com.swyp.mema.global.security.jwt.util;
 
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
