@@ -20,6 +20,8 @@ public enum ErrorCode {
 	MEET_MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEM001", "존재하지 않는 약속원입니다."),
 	NOT_MEET_MEMBER(HttpStatus.NOT_FOUND, "MEM002", "해당 약속의 약속원이 아닙니다."),
 
+	// DATE VOTE
+	VOTE_DATE_NOT_FOUND(HttpStatus.NOT_FOUND, "VD001", "해당 약속원 ID로 날짜 투표를 찾을 수 없습니다."),
 	// 400 Bad Request
 	INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "C001", "입력 값이 올바르지 않습니다."),
 	MISSING_INPUT_VALUE(HttpStatus.BAD_REQUEST, "C002", "필수 입력 값이 누락되었습니다."),

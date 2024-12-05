@@ -1,5 +1,6 @@
 package com.swyp.mema.domain.meet.dto.response;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class MeetSingleRes {
 	private State meetState;
 
 	@Schema(description = "약속 날짜", example = "2024-12-25")
-	private LocalDateTime meetDate;
+	private LocalDate meetDate;
 
 	@Schema(description = "약속 장소", example = "서울역")
 	private String meetLocation;

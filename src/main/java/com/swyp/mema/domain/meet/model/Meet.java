@@ -2,6 +2,7 @@ package com.swyp.mema.domain.meet.model;
 
 import static jakarta.persistence.GenerationType.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +45,7 @@ public class Meet extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private State state;
 
-	private LocalDateTime meetDate;
+	private LocalDate meetDate;
 	private String location;
 	private LocalDateTime expiredVoteDate;
 	private LocalDateTime expiredVoteLocation;
@@ -53,7 +54,7 @@ public class Meet extends BaseEntity {
 	private List<MeetMember> members = new ArrayList<>();
 
 	@Builder
-	public Meet(int code, String name, State state, LocalDateTime meetDate, String location,
+	public Meet(int code, String name, State state, LocalDate meetDate, String location,
 		LocalDateTime expiredVoteDate, LocalDateTime expiredVoteLocation) {
 		this.code = code;
 		this.name = name;
@@ -65,7 +66,6 @@ public class Meet extends BaseEntity {
 	}
 
 	public void changeName(String meetName) {
-
 		// 검증 로직
 		if (meetName == null || meetName.isBlank()) {
 			throw new IllegalArgumentException("약속명은 비어 있을 수 없습니다.");
@@ -79,4 +79,6 @@ public class Meet extends BaseEntity {
 	public void setExpiredVoteDate(LocalDateTime dateTime) {
 		this.expiredVoteDate = dateTime;
 	}
+
+	public void setMeetDate(LocalDate dateTime) {this.meetDate = dateTime; }
 }
