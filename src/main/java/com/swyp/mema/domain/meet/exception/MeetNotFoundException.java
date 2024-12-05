@@ -5,7 +5,7 @@ import com.swyp.mema.global.base.exception.ServiceException;
 
 public class MeetNotFoundException extends ServiceException {
 
-	private static final ErrorCode ERROR_CODE = ErrorCode.MEET_NOT_FOUNT;
+	private static final ErrorCode ERROR_CODE = ErrorCode.MEET_NOT_FOUND;
 
 	public MeetNotFoundException() {
 		super(ERROR_CODE);

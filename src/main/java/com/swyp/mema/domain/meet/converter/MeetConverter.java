@@ -9,7 +9,7 @@ import com.swyp.mema.domain.meet.dto.response.CreateMeetRes;
 import com.swyp.mema.domain.meet.dto.response.MeetSingleRes;
 import com.swyp.mema.domain.meet.model.Meet;
 import com.swyp.mema.domain.meet.model.vo.State;
-import com.swyp.mema.domain.user.dto.reseponse.UserRes;
+import com.swyp.mema.domain.meetMember.dto.response.MeetMemberRes;
 
 @Component
 public class MeetConverter {
@@ -33,7 +33,7 @@ public class MeetConverter {
 			.build();
 	}
 
-	public MeetSingleRes toMeetSingleResponse(Meet meet, List<UserRes> members) {
+	public MeetSingleRes toMeetSingleResponse(Meet meet, List<MeetMemberRes> members) {
 		return MeetSingleRes.builder()
 			.meetId(meet.getId())
 			.meetName(meet.getName())

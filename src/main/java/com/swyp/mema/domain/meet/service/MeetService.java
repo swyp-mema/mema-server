@@ -12,8 +12,10 @@ import com.swyp.mema.domain.meet.dto.response.MeetSingleRes;
 import com.swyp.mema.domain.meet.exception.MeetNotFoundException;
 import com.swyp.mema.domain.meet.model.Meet;
 import com.swyp.mema.domain.meet.repository.MeetRepository;
+import com.swyp.mema.domain.meetMember.dto.response.MeetMemberRes;
 import com.swyp.mema.domain.meetMember.service.MeetMemberService;
-import com.swyp.mema.domain.user.dto.reseponse.UserRes;
+import com.swyp.mema.domain.user.model.User;
+import com.swyp.mema.domain.user.repository.UserRepository;
 import com.swyp.mema.global.utils.RandomCodeGenerator;
 
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,7 @@ public class MeetService {
 	private final MeetRepository meetRepository;
 	private final MeetConverter meetConverter;
 	private final MeetMemberService meetMemberService;
+	private final UserRepository userRepository;
 
 	/**
 	 * 새로운 약속 생성 & 사용자는 약속원에 등록
@@ -41,8 +44,10 @@ public class MeetService {
 		meetRepository.save(meet);
 
 		// 약속원 생성 위임
-		Long userId = 1L; // 임시 값
-		meetMemberService.addMeetMember(meet, userId);
+		User user = userRepository.findById(1L)
+			.orElseThrow(() ->  new IllegalArgumentException("사용자 없음"));
+
+		meetMemberService.addMeetMember(meet, user);
 
 		return meetConverter.toCreateMeetResponse(meet);
 	}
@@ -60,7 +65,7 @@ public class MeetService {
 			.orElseThrow(MeetNotFoundException::new);
 
 		// 약속원 목록 조회
-		List<UserRes> members = meetMemberService.getMeetMembers(meetId);
+		List<MeetMemberRes> members = meetMemberService.getMeetMembers(meetId);
 
 		return meetConverter.toMeetSingleResponse(meet, members);
 
@@ -82,7 +87,7 @@ public class MeetService {
 		meet.changeName(meetNameReq.getMeetName());
 
 		// 약속원 목록 조회
-		List<UserRes> members = meetMemberService.getMeetMembers(meetId);
+		List<MeetMemberRes> members = meetMemberService.getMeetMembers(meetId);
 
 		return meetConverter.toMeetSingleResponse(meet, members);
 	}

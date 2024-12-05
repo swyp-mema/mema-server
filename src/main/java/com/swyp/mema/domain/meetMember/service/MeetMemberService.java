@@ -7,9 +7,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.swyp.mema.domain.meet.model.Meet;
 import com.swyp.mema.domain.meetMember.converter.MeetMemberConverter;
+import com.swyp.mema.domain.meetMember.dto.response.MeetMemberRes;
 import com.swyp.mema.domain.meetMember.model.MeetMember;
 import com.swyp.mema.domain.meetMember.repository.MeetMemberRepository;
-import com.swyp.mema.domain.user.dto.reseponse.UserRes;
+import com.swyp.mema.domain.user.model.User;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,13 +22,13 @@ public class MeetMemberService {
 	private final MeetMemberConverter meetMemberConverter;
 
 	@Transactional
-	public void addMeetMember(Meet meet, Long userId) {
-		MeetMember meetMember = meetMemberConverter.toMeetMember(meet, userId);
+	public void addMeetMember(Meet meet, User user) {
+		MeetMember meetMember = meetMemberConverter.toMeetMember(meet, user);
 		meetMemberRepository.save(meetMember);
 	}
 
 	@Transactional(readOnly = true)
-	public List<UserRes> getMeetMembers(Long meetId) {
+	public List<MeetMemberRes> getMeetMembers(Long meetId) {
 		return meetMemberRepository.findMeetMembersWithUserInfo(meetId);
 	}
 }

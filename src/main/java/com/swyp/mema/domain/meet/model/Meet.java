@@ -75,4 +75,8 @@ public class Meet extends BaseEntity {
 		}
 		this.name = meetName;
 	}
+
+	public void setExpiredVoteDate(LocalDateTime dateTime) {
+		this.expiredVoteDate = dateTime;
+	}
 }

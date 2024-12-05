@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.swyp.mema.domain.meet.model.vo.State;
-import com.swyp.mema.domain.user.dto.reseponse.UserRes;
+import com.swyp.mema.domain.meetMember.dto.response.MeetMemberRes;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
@@ -37,5 +37,5 @@ public class MeetSingleRes {
 	private LocalDateTime voteExpiredLocation;
 
 	@Schema(description = "해당 약속에 참여하는 유저 정보")
-	private List<UserRes> members;
+	private List<MeetMemberRes> members;
 }

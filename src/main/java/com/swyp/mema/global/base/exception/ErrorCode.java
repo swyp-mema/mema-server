@@ -14,7 +14,11 @@ public enum ErrorCode {
 	MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "M001", "존재하지 않는 회원입니다."),
 
 	// MEET
-	MEET_NOT_FOUNT(HttpStatus.NOT_FOUND, "M001", "존재하지 않는 약속입니다."),
+	MEET_NOT_FOUND(HttpStatus.NOT_FOUND, "ME001", "존재하지 않는 약속입니다."),
+
+	// MEET MEMBER
+	MEET_MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEM001", "존재하지 않는 약속원입니다."),
+	NOT_MEET_MEMBER(HttpStatus.NOT_FOUND, "MEM002", "해당 약속의 약속원이 아닙니다."),
 
 	// 400 Bad Request
 	INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "C001", "입력 값이 올바르지 않습니다."),
