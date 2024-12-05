@@ -1,6 +1,6 @@
 package com.swyp.mema.global.security.oauth2.filter;
 
-import com.swyp.mema.domain.user.dto.UserDTO;
+import com.swyp.mema.domain.user.dto.request.UserReq;
 import com.swyp.mema.domain.user.dto.oauth2.CustomOAuthUser;
 import com.swyp.mema.global.security.jwt.util.JWTUtil;
 import jakarta.servlet.FilterChain;
@@ -88,13 +88,13 @@ public class JWTFilterOAuth extends OncePerRequestFilter {
         String username = jwtUtil.getUsername(token);
         String role = jwtUtil.getRole(token);
 
-        UserDTO userDTO = new UserDTO();
-        userDTO.setUsername(username);
-        userDTO.setRole(role);
+        UserReq userReq = new UserReq();
+        userReq.setUsername(username);
+        userReq.setRole(role);
 
-        CustomOAuthUser customOAuthUser = new CustomOAuthUser(userDTO);
+        CustomOAuthUser customOAuthUser = new CustomOAuthUser(userReq);
 
-        Authentication authToken = new UsernamePasswordAuthenticationToken(userDTO, null, customOAuthUser.getAuthorities());
+        Authentication authToken = new UsernamePasswordAuthenticationToken(userReq, null, customOAuthUser.getAuthorities());
 
         SecurityContextHolder.getContext().setAuthentication(authToken);
 

@@ -1,7 +1,8 @@
 package com.swyp.mema.domain.user.controller;
 
-import com.swyp.mema.domain.user.dto.UserDTO;
+import com.swyp.mema.domain.user.dto.request.UserReq;
 import com.swyp.mema.domain.user.service.JoinService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,9 +16,9 @@ public class JoinController {
     private final JoinService joinService;
 
     @PostMapping("/join/custom")
-    public ResponseEntity<String> joinCustom(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<String> joinCustom(@Valid @RequestBody UserReq userReq) {
 
-        if (!joinService.joinProcess(userDTO)) {
+        if (!joinService.joinProcess(userReq)) {
             return ResponseEntity.badRequest().body("email exist");
         }
 

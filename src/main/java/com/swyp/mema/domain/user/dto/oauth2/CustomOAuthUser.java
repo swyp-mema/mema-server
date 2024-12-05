@@ -1,6 +1,6 @@
 package com.swyp.mema.domain.user.dto.oauth2;
 
-import com.swyp.mema.domain.user.dto.UserDTO;
+import com.swyp.mema.domain.user.dto.request.UserReq;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -12,7 +12,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class CustomOAuthUser implements OAuth2User {
 
-    private final UserDTO userDTO;
+    private final UserReq userReq;
 
     @Override
     public Map<String, Object> getAttributes() {
@@ -28,7 +28,7 @@ public class CustomOAuthUser implements OAuth2User {
             @Override
             public String getAuthority() {
 
-                return userDTO.getRole();
+                return userReq.getRole();
             }
         });
 
@@ -38,15 +38,15 @@ public class CustomOAuthUser implements OAuth2User {
 
     @Override
     public String getName() {
-        return userDTO.getUsername();
+        return userReq.getUsername();
     }
 
     public String getEmail(){
-        return userDTO.getEmail();
+        return userReq.getEmail();
     }
 
     public String getNickname() {
-        return userDTO.getNickname();
+        return userReq.getNickname();
     }
 
 }

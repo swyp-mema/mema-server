@@ -1,6 +1,6 @@
 package com.swyp.mema.domain.user.service;
 
-import com.swyp.mema.domain.user.dto.UserDTO;
+import com.swyp.mema.domain.user.dto.request.UserReq;
 import com.swyp.mema.domain.user.dto.converter.UserConverter;
 import com.swyp.mema.domain.user.dto.oauth2.CustomOAuthUser;
 import com.swyp.mema.domain.user.dto.oauth2.NaverResponse;
@@ -44,8 +44,8 @@ public class CustomOAuthUserService extends DefaultOAuth2UserService {
         }
 
         // UserDTO로 변환 및 반환
-        UserDTO userDTO = UserConverter.convertUserEntity2UserDTO(user);
-        return new CustomOAuthUser(userDTO);
+        UserReq userReq = UserConverter.convertUserEntity2UserDTO(user);
+        return new CustomOAuthUser(userReq);
     }
 
     private OAuthResponse getOAuthResponse(String registrationId, OAuth2User oAuth2User) {
