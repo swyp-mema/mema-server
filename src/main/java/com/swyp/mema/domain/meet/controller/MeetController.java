@@ -2,7 +2,9 @@ package com.swyp.mema.domain.meet.controller;
 
 import java.net.URI;
 
+import com.swyp.mema.domain.user.dto.CustomUserDetails;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -37,9 +39,9 @@ public class MeetController {
 	 */
 	@Operation(summary = "약속 생성 API", description = "약속을 생성하면 해당 유저는 약속원으로 등록됩니다.")
 	@PostMapping
-	public ResponseEntity<CreateMeetRes> create(@Valid @RequestBody MeetNameReq meetNameReq) {
+	public ResponseEntity<CreateMeetRes> create(@Valid @RequestBody MeetNameReq meetNameReq,@AuthenticationPrincipal CustomUserDetails user) {
 
-		CreateMeetRes response = meetService.create(meetNameReq);
+		CreateMeetRes response = meetService.create(meetNameReq, user.getUsername());
 
 		URI uri = UriComponentsBuilder
 			.fromPath("/meets/{id}")

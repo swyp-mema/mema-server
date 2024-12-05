@@ -2,6 +2,7 @@ package com.swyp.mema.domain.meet.service;
 
 import java.util.List;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,7 +33,7 @@ public class MeetService {
 	 * @param meetNameReq
 	 * @return meetId
 	 */
-	public CreateMeetRes create(MeetNameReq meetNameReq) {
+	public CreateMeetRes create(MeetNameReq meetNameReq, String userId) {
 
 		// 참여 코드 생성
 		int code = generateUniqueMeetCode();
@@ -41,8 +42,8 @@ public class MeetService {
 		meetRepository.save(meet);
 
 		// 약속원 생성 위임
-		Long userId = 1L; // 임시 값
-		meetMemberService.addMeetMember(meet, userId);
+//		Long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
+		meetMemberService.addMeetMember(meet, Long.parseLong(userId));
 
 		return meetConverter.toCreateMeetResponse(meet);
 	}
