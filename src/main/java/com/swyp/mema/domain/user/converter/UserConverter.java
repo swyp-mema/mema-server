@@ -1,4 +1,4 @@
-package com.swyp.mema.domain.user.dto.converter;
+package com.swyp.mema.domain.user.converter;
 
 import com.swyp.mema.domain.user.dto.request.UserReq;
 import com.swyp.mema.domain.user.model.User;

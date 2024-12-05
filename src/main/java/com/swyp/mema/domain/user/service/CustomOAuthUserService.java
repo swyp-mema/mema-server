@@ -1,7 +1,7 @@
 package com.swyp.mema.domain.user.service;
 
 import com.swyp.mema.domain.user.dto.request.UserReq;
-import com.swyp.mema.domain.user.dto.converter.UserConverter;
+import com.swyp.mema.domain.user.converter.UserConverter;
 import com.swyp.mema.domain.user.dto.oauth2.CustomOAuthUser;
 import com.swyp.mema.domain.user.dto.oauth2.NaverResponse;
 import com.swyp.mema.domain.user.dto.oauth2.OAuthResponse;
