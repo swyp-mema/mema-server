@@ -7,6 +7,7 @@ import com.swyp.mema.global.security.jwt.filter.JWTLoginFilter;
 import com.swyp.mema.global.security.oauth2.util.CustomSuccessHandlerCookie;
 import com.swyp.mema.global.security.jwt.util.JWTUtil;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,21 +27,13 @@ import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
-//@RequiredArgsConstructor
+@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
     private final CustomOAuthUserService customOAuthUserService;
     private final CustomSuccessHandlerCookie customSuccessHandlerCookie;
-
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil, CustomOAuthUserService customOAuthUserService, CustomSuccessHandlerCookie customSuccessHandlerCookie) {
-        System.out.println("Security Config create");
-        this.authenticationConfiguration = authenticationConfiguration;
-        this.jwtUtil = jwtUtil;
-        this.customOAuthUserService = customOAuthUserService;
-        this.customSuccessHandlerCookie = customSuccessHandlerCookie;
-    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {

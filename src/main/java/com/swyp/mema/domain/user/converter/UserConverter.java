@@ -1,13 +1,11 @@
-package com.swyp.mema.domain.user.dto.converter;
+package com.swyp.mema.domain.user.converter;
 
 import com.swyp.mema.domain.user.dto.request.UserReq;
 import com.swyp.mema.domain.user.model.User;
-import org.springframework.stereotype.Component;
 
-@Component
-public class UserDtoConverter {
+public class UserConverter {
 
-    public User userDto2User(UserReq userReq) {
+    public static User convertUserDTO2User(UserReq userReq) {
 
         User user = User.builder()
                 .email(userReq.getEmail())
@@ -20,7 +18,7 @@ public class UserDtoConverter {
         return user;
     }
 
-    public User userDto2User(UserReq userReq, String password) {
+    public static User convertUserDTO2User(UserReq userReq, String password) {
 
         User user = User.builder()
                 .email(userReq.getEmail())
@@ -35,7 +33,7 @@ public class UserDtoConverter {
     }
 
 
-    public UserReq userEntity2UserDto(User user) {
+    public static UserReq convertUserEntity2UserDTO(User user) {
 
 
         UserReq userReq = new UserReq();
