@@ -99,7 +99,8 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/", "/login", "/join/custom", "/login/naver").permitAll()
-                        .anyRequest().authenticated());
+                    .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                    .anyRequest().authenticated());
 
         http
                 .sessionManagement((session) -> session
