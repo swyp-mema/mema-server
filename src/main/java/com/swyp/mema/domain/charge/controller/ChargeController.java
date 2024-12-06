@@ -55,6 +55,8 @@ public class ChargeController {
     @Operation(summary = "내 정산 삭제", description = "나의 정산을 삭제합니다.")
     public ResponseEntity<Void> deleteCharge(@PathVariable("meetId")Long meetId, @PathVariable("chargeId")Long chargeId) {
 
+        System.out.println("Charge deleted");
+
         chargeService.deleteCharge(meetId, chargeId);
         return ResponseEntity.ok().build();
     }

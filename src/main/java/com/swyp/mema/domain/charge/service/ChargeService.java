@@ -62,6 +62,7 @@ public class ChargeService {
             해당 정산에 대한 권한이 있는지 체크
          */
 
+        System.out.println("deleted charge " + chargeId);
         chargeRepository.deleteById(chargeId);
     }
 

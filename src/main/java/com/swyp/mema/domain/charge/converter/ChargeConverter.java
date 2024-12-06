@@ -65,9 +65,18 @@ public class ChargeConverter {
     }
 
     public List<ChargeRes> toChargeReses(List<Charge> charges) {
-        return charges.stream()
-                .map(this::toChargeRes)
-                .collect(Collectors.toList());
+
+        System.out.println("ChargeConverter - toChargeReses");
+
+        List<ChargeRes> res = new ArrayList<>();
+        for(Charge charge : charges) {
+            res.add(toChargeRes(charge));
+        }
+        return res;
+//
+//        return charges.stream()
+//                .map(this::toChargeRes)
+//                .collect(Collectors.toList());
     }
 
     private PayerInfo toPayerInfo(ChargeMember chargeMember) {

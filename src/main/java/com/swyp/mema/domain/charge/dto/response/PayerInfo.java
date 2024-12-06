@@ -1,7 +1,9 @@
 package com.swyp.mema.domain.charge.dto.response;
 
 import lombok.Builder;
+import lombok.Getter;
 
+@Getter
 public class PayerInfo {
 
     private Long payerId;
