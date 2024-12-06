@@ -1,6 +1,7 @@
 package com.swyp.mema.domain.voteDate.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -22,6 +23,7 @@ import com.swyp.mema.domain.voteDate.dto.request.UpdateVoteDateReq;
 import com.swyp.mema.domain.voteDate.dto.response.TotalVoteDateListRes;
 import com.swyp.mema.domain.voteDate.dto.response.TotalVoteDateRes;
 import com.swyp.mema.domain.voteDate.dto.response.VoteDateRes;
+import com.swyp.mema.domain.voteDate.exception.VoteDateExpiredException;
 import com.swyp.mema.domain.voteDate.model.VoteDate;
 import com.swyp.mema.domain.voteDate.repository.VoteDateRepository;
 
@@ -42,6 +44,9 @@ public class VoteDateService {
 		Meet meet = meetRepository.findById(meetId)
 			.orElseThrow(MeetNotFoundException::new);
 
+		// 투표 만료일 검증
+		validateVoteDateNotExpired(meet);
+		
 		// 약속원 조회
 		MeetMember meetMember = meetMemberRepository.findById(createVoteDateReq.getMeetMemberId())
 			.orElseThrow(MeetMemberNotFoundException::new);
@@ -145,9 +150,12 @@ public class VoteDateService {
 	public TotalVoteDateListRes updateVoteDates(Long meetId, UpdateVoteDateReq updateVoteDateReq) {
 
 		// 약속 조회
-		meetRepository.findById(meetId)
+		Meet meet = meetRepository.findById(meetId)
 			.orElseThrow(MeetNotFoundException::new);
 
+		// 투표 만료일 검증
+		validateVoteDateNotExpired(meet);
+		
 		// 약속원 조회
 		MeetMember meetMember = meetMemberRepository.findById(updateVoteDateReq.getMeetMemberId())
 			.orElseThrow(MeetMemberNotFoundException::new);
@@ -189,5 +197,15 @@ public class VoteDateService {
 
 		// 최종 날짜 설정
 		meet.setMeetDate(finalVoteDateReq.getFinalDate());
+	}
+
+	/**
+	 * 투표 만료일 검증 메서드
+	 * @param meet 약속 객체
+	 */
+	private void validateVoteDateNotExpired(Meet meet) {
+		if (meet.getExpiredVoteDate() != null && meet.getExpiredVoteDate().isBefore(LocalDateTime.now())) {
+			throw new VoteDateExpiredException();
+		}
 	}
 }
