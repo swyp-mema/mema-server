@@ -3,11 +3,11 @@ package com.swyp.mema.domain.meet.exception;
 import com.swyp.mema.global.base.exception.ErrorCode;
 import com.swyp.mema.global.base.exception.ServiceException;
 
-public class MeetNotFoundException extends ServiceException {
+public class JoinCodeInvalidException extends ServiceException {
 
-	private static final ErrorCode ERROR_CODE = ErrorCode.MEET_NOT_FOUND;
+	private static final ErrorCode ERROR_CODE = ErrorCode.INVALID_JOIN_CODE;
 
-	public MeetNotFoundException() {
+	public JoinCodeInvalidException() {
 		super(ERROR_CODE);
 	}
 }
