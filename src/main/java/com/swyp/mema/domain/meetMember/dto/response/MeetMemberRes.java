@@ -1,6 +1,6 @@
 package com.swyp.mema.domain.meetMember.dto.response;
 
-import com.swyp.mema.domain.user.dto.reseponse.UserRes;
+import com.swyp.mema.domain.user.dto.response.UserRes;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

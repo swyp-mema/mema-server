@@ -29,6 +29,7 @@ public enum ErrorCode {
 	// DATE VOTE
 	VOTE_DATE_NOT_FOUND(HttpStatus.NOT_FOUND, "VD001", "해당 약속원 ID로 날짜 투표를 찾을 수 없습니다."),
 	EXPIRED_VOTE_DATE(HttpStatus.BAD_REQUEST, "VD002", "해당 투표는 이미 만료되었습니다."),
+	FAST_EXPIRATION_DATE(HttpStatus.BAD_REQUEST, "VD003", "만료일이 현재 시각보다 이전입니다."),
 
 	// 400 Bad Request
 	INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "C001", "입력 값이 올바르지 않습니다."),
