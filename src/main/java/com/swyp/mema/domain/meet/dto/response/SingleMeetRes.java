@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.swyp.mema.domain.meet.model.vo.State;
 import com.swyp.mema.domain.meetMember.dto.response.MeetMemberRes;
+import com.swyp.mema.domain.user.dto.response.UserRes;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;

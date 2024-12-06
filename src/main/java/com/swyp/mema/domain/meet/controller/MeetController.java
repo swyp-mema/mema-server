@@ -38,10 +38,9 @@ public class MeetController {
 	 */
 	@Operation(summary = "약속 생성 API", description = "약속을 생성하면 해당 유저는 약속원으로 등록됩니다.")
 	@PostMapping
-	public ResponseEntity<CreateMeetRes> create(@Valid @RequestBody MeetNameReq meetNameReq) {
+	public ResponseEntity<CreateMeetRes> create(@Valid @RequestBody MeetNameReq meetNameReq,@AuthenticationPrincipal CustomUserDetails user) {
 
-		Long userId = 1L;	// 임시값
-		CreateMeetRes response = meetService.create(meetNameReq, userId);
+		CreateMeetRes response = meetService.create(meetNameReq, user.getUsername());
 
 		URI uri = UriComponentsBuilder
 			.fromPath("/meets/{id}")

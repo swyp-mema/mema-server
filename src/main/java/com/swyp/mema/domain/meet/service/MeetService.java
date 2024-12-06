@@ -19,6 +19,7 @@ import com.swyp.mema.domain.meetMember.service.MeetMemberService;
 import com.swyp.mema.domain.user.exception.UserNotFoundException;
 import com.swyp.mema.domain.user.model.User;
 import com.swyp.mema.domain.user.repository.UserRepository;
+import com.swyp.mema.domain.user.dto.response.UserRes;
 import com.swyp.mema.global.utils.RandomCodeGenerator;
 
 import lombok.RequiredArgsConstructor;
@@ -50,6 +51,9 @@ public class MeetService {
 			.orElseThrow(UserNotFoundException::new);
 
 		meetMemberService.addMeetMember(meet, user);
+		// 약속원 생성 위임
+//		Long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
+		meetMemberService.addMeetMember(meet, Long.parseLong(userId));
 
 		return meetConverter.toCreateMeetResponse(meet);
 	}
