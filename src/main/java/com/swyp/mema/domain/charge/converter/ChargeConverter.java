@@ -57,7 +57,7 @@ public class ChargeConverter {
                 .content(charge.getContent())
                 .totalPrice(charge.getTotalPrice())
                 .peopleNumber(charge.getPeopleNum())
-                .payeeNickname(userRepository.findByUserId(charge.getPayee().getUserId()).getNickname())
+                .payeeNickname(charge.getPayee().getUser().getNickname())
                 .payers(charge.getChargeMembers().stream()
                         .map(this::toPayerInfo)
                         .collect(Collectors.toList()))
@@ -72,7 +72,7 @@ public class ChargeConverter {
 
     private PayerInfo toPayerInfo(ChargeMember chargeMember) {
         return PayerInfo.builder()
-                .payerId(chargeMember.getPayer().getUserId())
+                .payerId(chargeMember.getPayer().getUser().getUserId())
                 .payerNickname(userRepository.findByUserId(chargeMember.getPayerUser().getUserId()).getNickname())
                 .build();
     }

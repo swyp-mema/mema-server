@@ -6,10 +6,10 @@ import org.springframework.stereotype.Component;
 
 import com.swyp.mema.domain.meet.dto.request.MeetNameReq;
 import com.swyp.mema.domain.meet.dto.response.CreateMeetRes;
-import com.swyp.mema.domain.meet.dto.response.MeetSingleRes;
+import com.swyp.mema.domain.meet.dto.response.SingleMeetRes;
 import com.swyp.mema.domain.meet.model.Meet;
 import com.swyp.mema.domain.meet.model.vo.State;
-import com.swyp.mema.domain.user.dto.response.UserRes;
+import com.swyp.mema.domain.meetMember.dto.response.MeetMemberRes;
 
 @Component
 public class MeetConverter {
@@ -33,8 +33,8 @@ public class MeetConverter {
 			.build();
 	}
 
-	public MeetSingleRes toMeetSingleResponse(Meet meet, List<UserRes> members) {
-		return MeetSingleRes.builder()
+	public SingleMeetRes toMeetSingleResponse(Meet meet, List<MeetMemberRes> members) {
+		return SingleMeetRes.builder()
 			.meetId(meet.getId())
 			.meetName(meet.getName())
 			.meetState(meet.getState())

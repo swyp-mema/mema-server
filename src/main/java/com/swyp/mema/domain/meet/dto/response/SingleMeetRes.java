@@ -1,10 +1,11 @@
 package com.swyp.mema.domain.meet.dto.response;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import com.swyp.mema.domain.meet.model.vo.State;
-import com.swyp.mema.domain.user.dto.response.UserRes;
+import com.swyp.mema.domain.meetMember.dto.response.MeetMemberRes;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
@@ -13,7 +14,7 @@ import lombok.Getter;
 @Getter
 @Builder
 @Schema(description = "약속 단건 조회 응답")
-public class MeetSingleRes {
+public class SingleMeetRes {
 
 	@Schema(description = "약속 ID", example = "1")
 	private Long meetId;
@@ -25,7 +26,7 @@ public class MeetSingleRes {
 	private State meetState;
 
 	@Schema(description = "약속 날짜", example = "2024-12-25")
-	private LocalDateTime meetDate;
+	private LocalDate meetDate;
 
 	@Schema(description = "약속 장소", example = "서울역")
 	private String meetLocation;
@@ -37,5 +38,5 @@ public class MeetSingleRes {
 	private LocalDateTime voteExpiredLocation;
 
 	@Schema(description = "해당 약속에 참여하는 유저 정보")
-	private List<UserRes> members;
+	private List<MeetMemberRes> members;
 }
