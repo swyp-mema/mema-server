@@ -28,9 +28,6 @@ public class JoinService {
 
         if (isExist) {
 
-            /*
-                이 부분 exception 던지는 걸로 바꾸기
-             */
             throw new EmailAlreadyExistException();
         }
         System.out.println("join service - joinProcess - enter");
