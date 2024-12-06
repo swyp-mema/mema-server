@@ -48,8 +48,8 @@ public class MeetController {
 		CreateMeetRes response = meetService.create(meetNameReq, userId);
 
 		URI uri = UriComponentsBuilder
-			.fromPath("/meets/{id}")
-			.buildAndExpand( response.getMeetId())
+			.fromPath("/meets/{meetId}")
+			.buildAndExpand(response.getMeetId())
 			.toUri();
 
 		return ResponseEntity.created(uri).body(response);
@@ -58,6 +58,7 @@ public class MeetController {
 	/**
 	 * 약속 참여 코드로 약속원 등록
 	 */
+	@Operation(summary = "참여 코드를 통해 약속 참여 API", description = "생성된 약속을 참여코드를 통해 참여할 수 있습니다.")
 	@PostMapping("/join")
 	public ResponseEntity<SingleMeetRes> joinMeet(
 		@Valid @RequestBody JoinMeetReq joinMeetReq,
@@ -70,9 +71,9 @@ public class MeetController {
 	}
 
 	@Operation(summary = "약속 단건 조회 API", description = "약속에 대한 모든 정보를 조회할 수 있습니다.")
-	@GetMapping("/{id}")
+	@GetMapping("/{meetId}")
 	public ResponseEntity<SingleMeetRes> getOne(
-		@Parameter(description = "약속 ID", example = "1") @PathVariable("id") Long meetId,
+		@Parameter(description = "약속 ID", example = "1") @PathVariable Long meetId,
 		@AuthenticationPrincipal CustomUserDetails user) {
 
 		Long userId = Long.parseLong(user.getUsername());
@@ -81,9 +82,9 @@ public class MeetController {
 	}
 
 	@Operation(summary = "약속 수정 API", description = "약속명을 수정할 수 있습니다.")
-	@PatchMapping("/{id}")
+	@PatchMapping("/{meetId}")
 	public ResponseEntity<SingleMeetRes> update(
-		@Parameter(description = "약속 ID", example = "1") @PathVariable("id") Long meetId,
+		@Parameter(description = "약속 ID", example = "1") @PathVariable Long meetId,
 		@Valid @RequestBody MeetNameReq meetNameReq,
 		@AuthenticationPrincipal CustomUserDetails user) {
 
@@ -93,9 +94,9 @@ public class MeetController {
 	}
 
 	@Operation(summary = "약속 삭제 API", description = "약속을 삭제할 수 있습니다.")
-	@DeleteMapping("/{id}")
+	@DeleteMapping("/{meetId}")
 	public ResponseEntity<Void> deleteMeet(
-		@Parameter(description = "약속 ID", example = "1") @PathVariable("id") Long meetId,
+		@Parameter(description = "약속 ID", example = "1") @PathVariable Long meetId,
 		@AuthenticationPrincipal CustomUserDetails user) {
 
 		Long userId = Long.parseLong(user.getUsername());

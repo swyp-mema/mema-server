@@ -20,9 +20,12 @@ import com.swyp.mema.domain.voteDate.dto.response.SingleVoteDateRes;
 import com.swyp.mema.domain.voteDate.dto.response.TotalVoteDateListRes;
 import com.swyp.mema.domain.voteDate.service.VoteDateService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+@Tag(name = "일정", description = "일정 관련 API")
 @RestController
 @RequiredArgsConstructor
 public class VoteDateController {
@@ -34,6 +37,7 @@ public class VoteDateController {
 	 * @param meetId 약속 ID
 	 * @param createVoteDateReq 투표 요청 데이터
 	 */
+	@Operation(summary = "일정 생성 API", description = "특정 약속의 일정을 생성합니다.")
 	@PostMapping("/meets/{meetId}/vote/date")
 	public ResponseEntity<TotalVoteDateListRes> createVote(
 		@PathVariable Long meetId,
@@ -67,6 +71,7 @@ public class VoteDateController {
 	 * @param meetId 약속 ID
 	 * @return 날짜별 투표 데이터
 	 */
+	@Operation(summary = "일정 전체 조회 API", description = "특정 약속의 약속원들이 입력한 일정을 모두 조회할 수 있습니다.")
 	@GetMapping("/meets/{meetId}/vote/date/total")
 	public ResponseEntity<TotalVoteDateListRes> getVoteDates(
 		@PathVariable Long meetId,
@@ -80,6 +85,7 @@ public class VoteDateController {
 	/**
 	 * 내 날짜 투표 조회
 	 */
+	@Operation(summary = "내 일정 조회 API", description = "특정 약속에서 입력한 나의 일정을 조회할 수 있습니다.")
 	@GetMapping("/meets/{meetId}/vote/date/my")
 	public ResponseEntity<SingleVoteDateRes> getMyVoteDates(
 		@PathVariable Long meetId,
@@ -95,6 +101,7 @@ public class VoteDateController {
 	 * @param meetId 약속 ID
 	 * @param voteDateReq 날짜 투표 요청 DTO
 	 */
+	@Operation(summary = "일정 수정 API", description = "특정 약속에서 입력한 나의 일정을 수정할 수 있습니다.")
 	@PatchMapping("/meets/{meetId}/vote/date")
 	public ResponseEntity<TotalVoteDateListRes> updateVoteDates(
 		@PathVariable Long meetId,
@@ -115,6 +122,7 @@ public class VoteDateController {
 	 * @param meetId 약속 ID
 	 * @param finalVoteDateReq 최종 날짜 요청 DTO
 	 */
+	@Operation(summary = "최종 날짜 선택 API", description = "최종 날짜를 선택할 수 있습니다.")
 	@PatchMapping("/meets/{meetId}/vote/date/final")
 	public ResponseEntity<Void> setFinalVoteDate(
 		@PathVariable Long meetId,
