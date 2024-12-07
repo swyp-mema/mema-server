@@ -73,10 +73,6 @@ public class ChargeConverter {
             res.add(toChargeRes(charge));
         }
         return res;
-//
-//        return charges.stream()
-//                .map(this::toChargeRes)
-//                .collect(Collectors.toList());
     }
 
     private PayerInfo toPayerInfo(ChargeMember chargeMember) {

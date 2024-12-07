@@ -1,5 +1,6 @@
 package com.swyp.mema.domain.user.controller;
 
+import com.swyp.mema.domain.user.dto.request.JoinReq;
 import com.swyp.mema.domain.user.dto.request.UserReq;
 import com.swyp.mema.domain.user.service.JoinService;
 
@@ -22,9 +23,9 @@ public class JoinController {
     @Operation(summary = "이메일 회원가입", description = "사용자는 이메일과 비밀번호를 가지고 회원가입을 할 수 있다.",
         tags = "사용자", security = {}) // 보안 요구사항 제거)
     @PostMapping("/join/custom")
-    public ResponseEntity<String> joinCustom(@Valid @RequestBody UserReq userReq) {
+    public ResponseEntity<String> joinCustom(@Valid @RequestBody JoinReq joinReq) {
 
-        if (!joinService.joinProcess(userReq)) {
+        if (!joinService.joinProcess(joinReq)) {
             return ResponseEntity.badRequest().body("email exist");
         }
 

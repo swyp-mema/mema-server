@@ -1,5 +1,6 @@
 package com.swyp.mema.domain.user.converter;
 
+import com.swyp.mema.domain.user.dto.request.JoinReq;
 import com.swyp.mema.domain.user.dto.request.UserReq;
 import com.swyp.mema.domain.user.model.User;
 
@@ -29,6 +30,17 @@ public class UserConverter {
                 .role(userReq.getRole())
                 .build();
         user.setUsername(userReq.getUsername());
+        return user;
+    }
+
+    public static User convertJoinReq2User(JoinReq joinReq, String password, String role) {
+
+        User user = User.builder()
+                .email(joinReq.getEmail())
+                .password(password)
+                .nickname(joinReq.getNickname())
+                .role(role)
+                .build();
         return user;
     }
 
