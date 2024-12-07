@@ -1,4 +1,4 @@
-package com.swyp.mema.domain.user.dto.reseponse.oauth2;
+package com.swyp.mema.domain.user.dto.response.oauth2;
 
 public interface OAuthResponse {
 
