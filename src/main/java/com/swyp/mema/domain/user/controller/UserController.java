@@ -7,6 +7,7 @@ import com.swyp.mema.domain.user.dto.response.UserInfoRes;
 import com.swyp.mema.domain.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,8 +23,9 @@ public class UserController {
     @Operation(summary = "로그인 API", description = "커스텀유저의 로그인을 진행 합니다.")
     @PostMapping("/login")
     public void loginCustom(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-                            @RequestBody LoginReq loginReq) {
+                            @RequestBody LoginReq loginReq, HttpServletRequest request) {
 
+        request.getHeader("Origin");
         return ;
     }
 
