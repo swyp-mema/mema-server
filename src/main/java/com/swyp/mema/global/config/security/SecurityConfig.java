@@ -59,12 +59,11 @@ public class SecurityConfig {
                         CorsConfiguration configuration = new CorsConfiguration();
 
                         configuration.setAllowedOrigins(Arrays.asList("http://223.130.156.230", "http://localhost:3000"));  // 개발 서버와 로컬 프론트엔드 도메인 추가
-//                        configuration.setAllowedOrigins(Collections.singletonList("http://192.168.45.162:3000"));
                         configuration.setAllowedMethods(Collections.singletonList("*"));
                         configuration.setAllowCredentials(true);
                         configuration.setAllowedHeaders(Collections.singletonList("*"));
                         configuration.setMaxAge(3600L);
-                        configuration.setExposedHeaders(Arrays.asList("Set-Cookie", "Authorization"));
+                        configuration.setExposedHeaders(Arrays.asList("Set-Cookie", "Authentication"));
                         return configuration;
                     }
                 })));
