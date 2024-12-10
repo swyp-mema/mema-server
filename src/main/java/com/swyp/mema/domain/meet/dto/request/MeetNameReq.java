@@ -3,11 +3,13 @@ package com.swyp.mema.domain.meet.dto.request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @Schema(description = "약속 생성 및 약속명 수정 요청")
 public class  MeetNameReq {
 
