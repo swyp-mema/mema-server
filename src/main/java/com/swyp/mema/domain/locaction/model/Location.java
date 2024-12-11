@@ -1,15 +1,12 @@
-package com.swyp.mema.domain.voteDate.model;
+package com.swyp.mema.domain.locaction.model;
 
 import static jakarta.persistence.GenerationType.*;
 import static lombok.AccessLevel.*;
 
-import java.time.LocalDate;
-
-import com.swyp.mema.domain.meetMember.model.MeetMember;
+import com.swyp.mema.domain.meet.model.Meet;
 import com.swyp.mema.domain.user.model.User;
 import com.swyp.mema.global.base.domain.BaseEntity;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -22,27 +19,30 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @NoArgsConstructor(access = PROTECTED)
-public class VoteDate extends BaseEntity {
+public class Location extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	private Long id;
 
 	@ManyToOne
-	@JoinColumn(name = "meet_member_id", nullable = false)
-	private MeetMember meetMember;
+	@JoinColumn(name = "meet_id", nullable = false)
+	private Meet meet;
 
 	@ManyToOne
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 
-	@Column(nullable = false)
-	private LocalDate date; // 투표 가능한 날짜
+	private String stationId;		// 출발 위치 역ID
+	private String stationName;		// 출발 위치 역이름
+	private String stationRoute;	// 출발 위치 호선 정보
 
 	@Builder
-	public VoteDate(MeetMember meetMember, LocalDate date, User user) {
-		this.meetMember = meetMember;
-		this.date = date;
+	public Location(Meet meet, User user, String stationId, String stationName, String stationRoute) {
+		this.meet = meet;
 		this.user = user;
+		this.stationId = stationId;
+		this.stationName = stationName;
+		this.stationRoute = stationRoute;
 	}
 }

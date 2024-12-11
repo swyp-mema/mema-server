@@ -31,6 +31,10 @@ public enum ErrorCode {
 	EXPIRED_VOTE_DATE(HttpStatus.BAD_REQUEST, "VD002", "해당 투표는 이미 만료되었습니다."),
 	FAST_EXPIRATION_DATE(HttpStatus.BAD_REQUEST, "VD003", "만료일이 현재 시각보다 이전입니다."),
 
+	// LOCATION VOTE
+	VOTE_LOCATION_NOT_FOUND(HttpStatus.NOT_FOUND, "VL001", "존재하지 않는 위치 투표 ID 입니다."),
+
+
 	// 400 Bad Request
 	INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "C001", "입력 값이 올바르지 않습니다."),
 	MISSING_INPUT_VALUE(HttpStatus.BAD_REQUEST, "C002", "필수 입력 값이 누락되었습니다."),
