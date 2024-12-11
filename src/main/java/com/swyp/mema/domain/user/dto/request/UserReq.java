@@ -22,8 +22,8 @@ public class UserReq {
     @NotBlank(message = "Nickname is required.")
     @Size(min = 2, max = 20, message = "Nickname must be between 2 and 20 characters.")
     private String nickname;
-    private String puz_id;
-    private String puz_color;
+    private Long puzzleId;
+    private String puzzleColor;
     private String role;
     private Long badgeCount;
 

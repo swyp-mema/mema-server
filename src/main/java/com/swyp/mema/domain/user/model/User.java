@@ -29,7 +29,7 @@ public class User extends BaseEntity {
 
     @Setter
     @Column(nullable = false)
-    private String puzId;
+    private Long puzId;
 
     @Setter
     @Column(nullable = false)
@@ -52,12 +52,12 @@ public class User extends BaseEntity {
     }
 
     @Builder
-    public User(String email, String password, String nickname, String puzId, String puzColor, String role, Integer visitCount) {
+    public User(String email, String password, String nickname, Long puzId, String puzColor, String role, Integer visitCount) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
         this.puzId = puzId;
-        if(puzId == null) this.puzId = "default_id";
+        if(puzId == null) this.puzId = 0L;
         this.puzColor = puzColor;
         if(puzColor == null) this.puzColor = "default_color";
         this.role = role;
