@@ -67,7 +67,7 @@ public class CustomOAuthUserService extends DefaultOAuth2UserService {
                 .email(oAuthResponse.getEmail())
                 .nickname(oAuthResponse.getNickname())
                 .role(oAuthResponse.getRole())
-                .puzId("default_puz_id") // 기본 값 설정
+                .puzId(1L) // 기본 값 설정
                 .puzColor("default_puz_color") // 기본 값 설정
                 .password(generateRandomPassword()) // 비밀번호 생성
                 .build());

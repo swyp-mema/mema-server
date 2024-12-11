@@ -18,7 +18,7 @@ public class UserRes {
 	private String nickname;
 
 	@Schema(description = "뱃지 모양 ID", example = "5")
-	private String puzzleId;
+	private Long puzzleId;
 
 	@Schema(description = "뱃지 색깔", example = "red")
 	private String puzzleColor;

@@ -12,8 +12,8 @@ public class UserDtoConverter {
         User user = User.builder()
                 .email(userReq.getEmail())
                 .nickname(userReq.getNickname())
-                .puzId(userReq.getPuz_id())
-                .puzColor(userReq.getPuz_color())
+                .puzId(userReq.getPuzzleId())
+                .puzColor(userReq.getPuzzleColor())
                 .role(userReq.getRole())
                 .build();
         user.setUsername(userReq.getUsername());
@@ -26,8 +26,8 @@ public class UserDtoConverter {
                 .email(userReq.getEmail())
                 .password(password)
                 .nickname(userReq.getNickname())
-                .puzId(userReq.getPuz_id())
-                .puzColor(userReq.getPuz_color())
+                .puzId(userReq.getPuzzleId())
+                .puzColor(userReq.getPuzzleColor())
                 .role(userReq.getRole())
                 .build();
         user.setUsername(userReq.getUsername());
@@ -43,8 +43,8 @@ public class UserDtoConverter {
         userReq.setEmail(user.getEmail());
         userReq.setNickname(user.getNickname());
         userReq.setRole(user.getRole());
-        userReq.setPuz_id(user.getPuzId());
-        userReq.setPuz_color(user.getPuzColor());
+        userReq.setPuzzleId(user.getPuzId());
+        userReq.setPuzzleColor(user.getPuzColor());
         return userReq;
     }
 }
