@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.swyp.mema.domain.meet.exception.MeetNotFoundException;
 import com.swyp.mema.domain.meet.model.Meet;
+import com.swyp.mema.domain.meet.model.vo.State;
 import com.swyp.mema.domain.meet.repository.MeetRepository;
 import com.swyp.mema.domain.meetMember.dto.response.MeetMemberNameRes;
 import com.swyp.mema.domain.meetMember.exception.MeetMemberNotFoundException;
@@ -27,6 +28,8 @@ import com.swyp.mema.domain.voteDate.dto.response.SingleVoteDateRes;
 import com.swyp.mema.domain.voteDate.dto.response.TotalVoteDateListRes;
 import com.swyp.mema.domain.voteDate.dto.response.TotalVoteDateRes;
 import com.swyp.mema.domain.voteDate.dto.response.VoteDateRes;
+import com.swyp.mema.domain.voteDate.exception.InvalidFinalVoteDateException;
+import com.swyp.mema.domain.voteDate.exception.UnsatisfactoryFinalDateException;
 import com.swyp.mema.domain.voteDate.exception.VoteDateByMemberNotFoundException;
 import com.swyp.mema.domain.voteDate.exception.VoteDateExpiredException;
 import com.swyp.mema.domain.voteDate.exception.VoteDateFastDateException;
@@ -57,7 +60,9 @@ public class VoteDateService {
 			throw new VoteDateFastDateException();
 		}
 
+		// 약속 일정 만료일 & 상태값 변경
 		meet.setExpiredVoteDate(createVoteDateReq.getExpiredVoteDate());
+		meet.changeState(State.DATE_VOTING);
 
 		// 기존 투표 삭제 및 새로운 투표 생성
 		List<VoteDate> voteDates = recreateVoteDates(meetMember, createVoteDateReq);
@@ -199,10 +204,39 @@ public class VoteDateService {
 		User user = validateUser(userId);
 		Meet meet = validateMeet(meetId);
 		MeetMember meetMember = validateMeetMember(user, meet);
-		MeetMember meetMember1 = validateMeetMember(meetMember.getId());
+		validateMeetMember(meetMember.getId());
 
-		// 최종 날짜 설정
-		meet.setMeetDate(finalVoteDateReq.getFinalDate());
+		// 해당 약속의 약속원 수
+		int meetMemberCount = meet.getMembers().size();
+
+		// 해당 날짜에 투표한 사람 수
+		long voterCountOfDate = voteDateRepository.countByMeetIdAndDate(meetId, finalVoteDateReq.getFinalDate());
+
+		if (voterCountOfDate == meetMemberCount) {
+			// 해당 최종 날짜에 투표한 사람 수와 약속원 인원 수가 같은 경우
+			meet.setMeetDate(finalVoteDateReq.getFinalDate());
+			meet.changeState(State.READY);
+
+		} else if (meet.getExpiredVoteDate() != null && meet.getExpiredVoteDate().isBefore(LocalDateTime.now())) {
+
+			// 투표 만료일이 지난 경우
+			Long voterCount = voteDateRepository.countDistinctMeetMembers();
+
+			if (voterCountOfDate == voterCount) {
+				// 해당 날짜에 투표한 사람수와 투표에 참여한 사람수가 같은 경우
+				meet.setMeetDate(finalVoteDateReq.getFinalDate());
+				meet.changeState(State.READY);
+
+			} else {
+				// 투표 만료일은 지났지만, 투표 참여자가 모두 동의한 날짜가 아닌 경우 예외
+				throw new UnsatisfactoryFinalDateException();
+			}
+		} else {
+			// 투표 만료일 전이며, 해당 날짜에 투표한 사람 수도 약속원 인원 수보다 적은 경우
+			// 즉, 최종 날짜 선택이 불가능한 경우 예외
+			throw new UnsatisfactoryFinalDateException();
+		}
+
 	}
 
 	private List<VoteDate> recreateVoteDates(MeetMember meetMember, CreateVoteDateReq createVoteDateReq) {

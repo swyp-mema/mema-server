@@ -19,6 +19,9 @@ public class SingleMeetRes {
 	@Schema(description = "약속 ID", example = "1")
 	private Long meetId;
 
+	@Schema(description = "약속 ID", example = "1")
+	private int joinCode;
+
 	@Schema(description = "약속명", example = "극 P들의 약속")
 	private String meetName;
 

@@ -17,6 +17,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.swyp.mema.domain.meet.dto.request.JoinMeetReq;
 import com.swyp.mema.domain.meet.dto.request.MeetNameReq;
 import com.swyp.mema.domain.meet.dto.response.CreateMeetRes;
+import com.swyp.mema.domain.meet.dto.response.MeetHomeResponse;
 import com.swyp.mema.domain.meet.dto.response.SingleMeetRes;
 import com.swyp.mema.domain.meet.service.MeetService;
 import com.swyp.mema.domain.user.dto.CustomUserDetails;
@@ -27,10 +28,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-@Tag(name = "약속", description = "약속 관련 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/meets")
+@Tag(name = "약속", description = "약속 관련 API")
 public class MeetController {
 
 	private final MeetService meetService;
@@ -102,5 +103,16 @@ public class MeetController {
 		Long userId = Long.parseLong(user.getUsername());
 		meetService.delete(meetId, userId);
 		return ResponseEntity.noContent().build();
+	}
+
+	@Operation(summary = "약속 홈 API", description = "진행 혹은 마감된 약속 정보를 조회할 수 있습니다.")
+	@GetMapping("/home")
+	public ResponseEntity<MeetHomeResponse> getHome(
+		@AuthenticationPrincipal CustomUserDetails user
+	) {
+
+		Long userId = Long.parseLong(user.getUsername());
+		MeetHomeResponse response = meetService.getHome(userId);
+		return ResponseEntity.ok(response);
 	}
 }

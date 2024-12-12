@@ -29,7 +29,7 @@ public class VoteDate extends BaseEntity {
 	private Long id;
 
 	@ManyToOne
-	@JoinColumn(name = "meet_member_id", nullable = false) // 약속원과 연관
+	@JoinColumn(name = "meet_member_id", nullable = false)
 	private MeetMember meetMember;
 
 	@ManyToOne
