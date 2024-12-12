@@ -58,7 +58,7 @@ public class User extends BaseEntity {
         this.password = password;
         this.nickname = nickname;
         this.puzId = puzId;
-        if (puzId == null) this.puzId = 0L;
+        if (puzId == null || puzId == 0) this.puzId = 1L;
         this.puzColor = puzColor;
         if (puzColor == null || puzColor == "") this.puzColor = "blue";
         this.role = role;
