@@ -17,6 +17,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.swyp.mema.domain.meet.dto.request.JoinMeetReq;
 import com.swyp.mema.domain.meet.dto.request.MeetNameReq;
 import com.swyp.mema.domain.meet.dto.response.CreateMeetRes;
+import com.swyp.mema.domain.meet.dto.response.MeetHomeResponse;
 import com.swyp.mema.domain.meet.dto.response.SingleMeetRes;
 import com.swyp.mema.domain.meet.service.MeetService;
 import com.swyp.mema.domain.user.dto.CustomUserDetails;
@@ -102,5 +103,15 @@ public class MeetController {
 		Long userId = Long.parseLong(user.getUsername());
 		meetService.delete(meetId, userId);
 		return ResponseEntity.noContent().build();
+	}
+
+	@GetMapping("/home")
+	public ResponseEntity<MeetHomeResponse> getHome(
+		@AuthenticationPrincipal CustomUserDetails user
+	) {
+
+		Long userId = Long.parseLong(user.getUsername());
+		MeetHomeResponse response = meetService.getHome(userId);
+		return ResponseEntity.ok(response);
 	}
 }

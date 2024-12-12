@@ -1,15 +1,18 @@
 package com.swyp.mema.domain.meet.converter;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
 import com.swyp.mema.domain.meet.dto.request.MeetNameReq;
 import com.swyp.mema.domain.meet.dto.response.CreateMeetRes;
+import com.swyp.mema.domain.meet.dto.response.MeetHomeDetailResponse;
 import com.swyp.mema.domain.meet.dto.response.SingleMeetRes;
 import com.swyp.mema.domain.meet.model.Meet;
 import com.swyp.mema.domain.meet.model.vo.State;
 import com.swyp.mema.domain.meetMember.dto.response.MeetMemberRes;
+import com.swyp.mema.domain.user.dto.response.UserRes;
 
 @Component
 public class MeetConverter {
@@ -18,11 +21,10 @@ public class MeetConverter {
 		return Meet.builder()
 			.code(code)
 			.name(meetReq.getMeetName())
-			.state(State.READY_DATE_VOTE)	// 초기값 : 날짜 투표 중
+			.state(State.CREATED)	// 초기값 : 날짜 투표 중
 			.meetDate(null)
-			.location(null)
+			.meetLocation(null)
 			.expiredVoteDate(null)
-			.expiredVoteLocation(null)
 			.build();
 	}
 
@@ -39,10 +41,28 @@ public class MeetConverter {
 			.meetName(meet.getName())
 			.meetState(meet.getState())
 			.meetDate(meet.getMeetDate())
-			.meetLocation(meet.getLocation())
+			.meetLocation(meet.getMeetLocation())
 			.voteExpiredDate(meet.getExpiredVoteDate())
-			.voteExpiredLocation(meet.getExpiredVoteLocation())
 			.members(members)
+			.build();
+	}
+
+	public MeetHomeDetailResponse toMeetHomeDetailResponse(Meet meet){
+
+		return MeetHomeDetailResponse.builder()
+			.meetId(meet.getId())
+			.joinCode(meet.getCode())
+			.meetName(meet.getName())
+			.meetDate(meet.getMeetDate())
+			.memberCount(meet.getMembers().size())
+			.userInfo(meet.getMembers().stream()
+				.map(member -> UserRes.builder()
+					.userId(member.getUser().getUserId())
+					.nickname(member.getUser().getNickname())
+					.puzzleId(member.getUser().getPuzId())
+					.puzzleColor(member.getUser().getPuzColor())
+					.build())
+				.collect(Collectors.toList()))
 			.build();
 	}
 }

@@ -13,23 +13,24 @@ public enum ErrorCode {
 	// User
 	USER_NOT_FOUND(HttpStatus.NOT_FOUND, "U001", "존재하지 않는 유저입니다."),
 	USER_ALREADY_REGISTERED(HttpStatus.BAD_REQUEST, "U002", "사용자가 이미 등록된 약속원입니다."),
-
-	// Member
-	MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "M001", "존재하지 않는 회원입니다."),
 	EMAIL_ALREADY_EXIST(HttpStatus.CONFLICT, "M002", "이미 가입된 이메일입니다."),
 
 	// MEET
-	MEET_NOT_FOUND(HttpStatus.NOT_FOUND, "ME001", "존재하지 않는 약속입니다."),
-	INVALID_JOIN_CODE(HttpStatus.BAD_REQUEST, "ME002", "유효하지 않은 참여 코드입니다."),
+	MEET_NOT_FOUND(HttpStatus.NOT_FOUND, "M001", "존재하지 않는 약속입니다."),
+	INVALID_JOIN_CODE(HttpStatus.BAD_REQUEST, "M002", "유효하지 않은 참여 코드입니다."),
+	NOT_EMPTY_MEET_NAME(HttpStatus.BAD_REQUEST, "M003", "약속명은 비어 있을 수 없습니다."),
+	MEET_NAME_OVER_LENGTH(HttpStatus.BAD_REQUEST, "M004", "약속명은 20자 이하로 입력해주세요."),
 
 	// MEET MEMBER
-	MEET_MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEM001", "존재하지 않는 약속원입니다."),
-	NOT_MEET_MEMBER(HttpStatus.NOT_FOUND, "MEM002", "해당 약속의 약속원이 아닙니다."),
+	MEET_MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MM001", "존재하지 않는 약속원입니다."),
+	NOT_MEET_MEMBER(HttpStatus.NOT_FOUND, "MM002", "해당 약속의 약속원이 아닙니다."),
 
 	// DATE VOTE
 	VOTE_DATE_NOT_FOUND(HttpStatus.NOT_FOUND, "VD001", "해당 약속원 ID로 날짜 투표를 찾을 수 없습니다."),
 	EXPIRED_VOTE_DATE(HttpStatus.BAD_REQUEST, "VD002", "해당 투표는 이미 만료되었습니다."),
 	FAST_EXPIRATION_DATE(HttpStatus.BAD_REQUEST, "VD003", "만료일이 현재 시각보다 이전입니다."),
+	UNSATISFACTORY_FINAL_DATE(HttpStatus.BAD_REQUEST, "VD004", "약속원 모두가 만족하는 날짜가 아닙니다."),
+	INVALID_FINAL_DATE(HttpStatus.BAD_REQUEST, "VD005", "만료되지 않은 투표임으로 최종 날짜 선택이 불가능합니다."),
 
 	// LOCATION VOTE
 	VOTE_LOCATION_NOT_FOUND(HttpStatus.NOT_FOUND, "VL001", "존재하지 않는 위치 투표 ID 입니다."),

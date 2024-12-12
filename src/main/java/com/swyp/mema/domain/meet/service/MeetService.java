@@ -1,6 +1,9 @@
 package com.swyp.mema.domain.meet.service;
 
+import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,10 +12,13 @@ import com.swyp.mema.domain.meet.dto.request.JoinMeetReq;
 import com.swyp.mema.domain.meet.dto.response.CreateMeetRes;
 import com.swyp.mema.domain.meet.converter.MeetConverter;
 import com.swyp.mema.domain.meet.dto.request.MeetNameReq;
+import com.swyp.mema.domain.meet.dto.response.MeetHomeDetailResponse;
+import com.swyp.mema.domain.meet.dto.response.MeetHomeResponse;
 import com.swyp.mema.domain.meet.dto.response.SingleMeetRes;
 import com.swyp.mema.domain.meet.exception.JoinCodeInvalidException;
 import com.swyp.mema.domain.meet.exception.MeetNotFoundException;
 import com.swyp.mema.domain.meet.model.Meet;
+import com.swyp.mema.domain.meet.model.vo.State;
 import com.swyp.mema.domain.meet.repository.MeetRepository;
 import com.swyp.mema.domain.meetMember.converter.MeetMemberConverter;
 import com.swyp.mema.domain.meetMember.dto.response.MeetMemberRes;
@@ -82,6 +88,7 @@ public class MeetService {
 		// 약속원 등록
 		MeetMember meetMember = meetMemberConverter.toMeetMember(meet, user);
 		meetMemberRepository.save(meetMember);
+		meet.addMember(meetMember);
 
 		return getSingle(meet.getId(), userId);
 	}
@@ -157,6 +164,70 @@ public class MeetService {
 		// 약속 삭제시 모든 약속원들 데이터도 삭제된다.
 		meetRepository.delete(meet);
 	}
+
+	public MeetHomeResponse getHome(Long userId) {
+
+		// 존재하는 사용자인지 검증
+		userRepository.findById(userId)
+			.orElseThrow(UserNotFoundException::new);
+
+		// 사용자의 모든 약속(Meet) 조회
+		List<Meet> meets = meetMemberRepository.findMeetsByUserId(userId);
+
+		// 현재 날짜
+		LocalDate today = LocalDate.now();
+
+		// dirty checking 통해 State 업데이트
+		meets.forEach(meet -> {
+			// 만남 일자가 지나버리면 COMPLETED 로 상태값 변경
+			if (meet.getMeetDate() != null && meet.getMeetDate().isBefore(today) && meet.getState() != State.COMPLETED) {
+				meet.changeState(State.COMPLETED);
+			}
+		});
+
+		// 곧 만나요 (meetDate >= 오늘, 최신순 4개)
+		// (State.CREATED, DATE_VOTING, LOCATION_VOTING, READY 포함)
+		List<MeetHomeDetailResponse> upcomingMeets = meets.stream()
+			.filter(meet -> {
+				// meetDate가 null이거나 약속 상태가 CREATED, DATE_VOTING, LOCATION_VOTING, READY
+				return meet.getMeetDate() == null ||
+					meet.getState() == State.CREATED ||
+					meet.getState() == State.DATE_VOTING ||
+					meet.getState() == State.LOCATION_VOTING ||
+					meet.getState() == State.READY ||
+					(meet.getMeetDate() != null && !meet.getMeetDate().isBefore(today)); // meetDate가 오늘 또는 미래
+			})
+			.sorted(Comparator
+				.comparing((Meet meet) -> meet.getMeetDate() == null ? LocalDate.MAX : meet.getMeetDate()) // 날짜가 가까운 순서로 정렬
+				.thenComparing(Meet::getCreateDate) // 생성 날짜가 빠른 순서
+			)
+			.limit(4) // 최대 4개로 제한
+			.map(meetConverter::toMeetHomeDetailResponse) // DTO 변환
+			.collect(Collectors.toList());
+
+		// 즐거웠어요 (meetDate < 오늘, 최신순 4개)
+		// 즐거웠어요 (State.COMPLETED, SETTLING 포함)
+		List<MeetHomeDetailResponse> pastMeets = meets.stream()
+			.filter(meet -> {
+				// 약속 상태가 COMPLETED, SETTLING
+				return
+					meet.getState() == State.COMPLETED ||
+					meet.getState() == State.SETTLING ||
+					(meet.getMeetDate() != null && meet.getMeetDate().isBefore(today)); // meetDate가 과거
+			})
+			.sorted(Comparator
+				.comparing(Meet::getMeetDate).reversed() // 날짜가 가까운 순서로 정렬(과거부터)
+				.thenComparing(Meet::getCreateDate) // 생성 날짜가 빠른 순서
+			)
+			.limit(4) // 최대 4개로 제한
+			.map(meetConverter::toMeetHomeDetailResponse) // DTO 변환
+			.collect(Collectors.toList());
+
+		// 결과를 Response 객체로 반환
+		return new MeetHomeResponse(upcomingMeets, pastMeets);
+
+	}
+
 
 	/**
 	 * 중복되지 않는 6글자 숫자 형식의 참여 코드 생성

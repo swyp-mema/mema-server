@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.swyp.mema.domain.meet.exception.MeetNameOverLengthException;
+import com.swyp.mema.domain.meet.exception.NotEmptyMeetNameException;
 import com.swyp.mema.domain.meet.model.vo.State;
 import com.swyp.mema.domain.meetMember.model.MeetMember;
 import com.swyp.mema.global.base.domain.BaseEntity;
@@ -46,23 +48,21 @@ public class Meet extends BaseEntity {
 	private State state;
 
 	private LocalDate meetDate;
-	private String location;
+	private String meetLocation;
 	private LocalDateTime expiredVoteDate;
-	private LocalDateTime expiredVoteLocation;
 
 	@OneToMany(mappedBy = "meet", cascade = CascadeType.REMOVE, orphanRemoval = true)
 	private List<MeetMember> members = new ArrayList<>();
 
 	@Builder
-	public Meet(int code, String name, State state, LocalDate meetDate, String location,
-		LocalDateTime expiredVoteDate, LocalDateTime expiredVoteLocation) {
+	public Meet(int code, String name, State state, LocalDate meetDate, String meetLocation,
+		LocalDateTime expiredVoteDate) {
 		this.code = code;
 		this.name = name;
 		this.state = state;
 		this.meetDate = meetDate;
-		this.location = location;
+		this.meetLocation = meetLocation;
 		this.expiredVoteDate = expiredVoteDate;
-		this.expiredVoteLocation = expiredVoteLocation;
 	}
 
 	public void addMember(MeetMember member) {
@@ -73,12 +73,16 @@ public class Meet extends BaseEntity {
 	public void changeName(String meetName) {
 		// 검증 로직
 		if (meetName == null || meetName.isBlank()) {
-			throw new IllegalArgumentException("약속명은 비어 있을 수 없습니다.");
+			throw new NotEmptyMeetNameException();
 		}
 		if (meetName.length() > 20) {
-			throw new IllegalArgumentException("약속명은 20자 이하로 입력해주세요.");
+			throw new MeetNameOverLengthException();
 		}
 		this.name = meetName;
+	}
+
+	public void changeState(State state) {
+		this.state = state;
 	}
 
 	public void setExpiredVoteDate(LocalDateTime dateTime) {
