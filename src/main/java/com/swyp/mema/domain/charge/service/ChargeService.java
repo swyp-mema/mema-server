@@ -6,6 +6,8 @@ import com.swyp.mema.domain.charge.dto.response.ChargeRes;
 import com.swyp.mema.domain.charge.model.Charge;
 import com.swyp.mema.domain.charge.repository.ChargeRepository;
 import com.swyp.mema.domain.meet.exception.MeetNotFoundException;
+import com.swyp.mema.domain.meet.model.Meet;
+import com.swyp.mema.domain.meet.model.vo.State;
 import com.swyp.mema.domain.meet.repository.MeetRepository;
 import com.swyp.mema.domain.user.dto.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
@@ -25,12 +27,12 @@ public class ChargeService {
     @Transactional
     public void createCharge(Long meetId, ChargeReq req, CustomUserDetails userDetails) {
 
-        // meet_id 검증
-        if(!meetRepository.existsById(meetId)){
+        Meet meet = meetRepository.findById(meetId)
+            .orElseThrow(MeetNotFoundException::new);
 
-            throw new MeetNotFoundException();
-        }
-        chargeRepository.save(chargeConverter.generateCharge(meetId, req, userDetails.getUserId()));
+        Charge charge = chargeConverter.generateCharge(meetId, req, userDetails.getUserId());
+        chargeRepository.save(charge);
+        meet.changeState(State.SETTLING);
     }
 
     @Transactional(readOnly = true)
@@ -48,12 +50,12 @@ public class ChargeService {
         return chargeConverter.toChargeReses(charges);
     }
 
+    @Transactional
     public void deleteCharge(Long meetId, Long chargeId) {
 
-        if(!meetRepository.existsById(meetId)){
+        Meet meet = meetRepository.findById(meetId)
+            .orElseThrow(MeetNotFoundException::new);
 
-            throw new MeetNotFoundException();
-        }
 
         /*
             해당 미팅에 대한 권한이 있는지 체크
@@ -64,6 +66,7 @@ public class ChargeService {
 
         System.out.println("deleted charge " + chargeId);
         chargeRepository.deleteById(chargeId);
+        meet.changeState(State.COMPLETED);
     }
 
 }
