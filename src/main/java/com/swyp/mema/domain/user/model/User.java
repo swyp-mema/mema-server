@@ -9,7 +9,7 @@ import lombok.Setter;
 
 @Entity
 @Getter
-@Table(name="users")
+@Table(name = "users")
 @NoArgsConstructor
 public class User extends BaseEntity {
 
@@ -29,7 +29,7 @@ public class User extends BaseEntity {
 
     @Setter
     @Column(nullable = false)
-    private String puzId;
+    private Long puzId;
 
     @Setter
     @Column(nullable = false)
@@ -44,24 +44,25 @@ public class User extends BaseEntity {
 
     public void setUsername(String username) {
 
-        if(username == null || username.isEmpty()) return;
+        if (username == null || username.isEmpty()) return;
         this.userId = Long.parseLong(username);
     }
+
     public String getUsername() {
         return String.valueOf(userId);
     }
 
     @Builder
-    public User(String email, String password, String nickname, String puzId, String puzColor, String role, Integer visitCount) {
+    public User(String email, String password, String nickname, Long puzId, String puzColor, String role, Integer visitCount) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
         this.puzId = puzId;
-        if(puzId == null) this.puzId = "default_id";
+        if (puzId == null || puzId == 0) this.puzId = 1L;
         this.puzColor = puzColor;
-        if(puzColor == null) this.puzColor = "default_color";
+        if (puzColor == null || puzColor == "") this.puzColor = "blue";
         this.role = role;
         this.visitCount = visitCount;
-        if(visitCount == null || visitCount == 0) this.visitCount = 1;
+        if (visitCount == null || visitCount == 0) this.visitCount = 1;
     }
 }

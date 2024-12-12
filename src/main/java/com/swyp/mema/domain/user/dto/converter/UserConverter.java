@@ -20,8 +20,8 @@ public class UserConverter {
 
         return UserInfoRes.builder()
                 .nickname(user.getNickname())
-                .puzId(user.getPuzId())
-                .puzColor(user.getPuzColor())
+                .puzzleId(user.getPuzId())
+                .puzzleColor(user.getPuzColor())
                 .role(user.getRole())
                 .visitCount(user.getVisitCount())
                 .meetCount(meetCount)

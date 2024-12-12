@@ -37,8 +37,8 @@ public class JoinService {
         System.out.println("email = " + user.getEmail());
         System.out.println("password = " + user.getPassword());
         System.out.println("role = " + user.getRole());
-        System.out.println("puz_color = " + user.getPuzColor());
-        System.out.println("puz_id = " + user.getPuzId());
+        System.out.println("puzzleColor = " + user.getPuzColor());
+        System.out.println("puzzleId = " + user.getPuzId());
         userRepository.save(user);
         return true;
     }

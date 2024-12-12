@@ -41,8 +41,8 @@ public class UserService {
 
         User user = getUserById(userDetails.getUserId());
         updateFieldIfNotNull(req.getNickname(), user::setNickname);
-        updateFieldIfNotNull(req.getPuzColor(), user::setPuzColor);
-        updateFieldIfNotNull(req.getPuzId(), user::setPuzId);
+        updateFieldIfNotNull(req.getPuzzleColor(), user::setPuzColor);
+        updateFieldIfNotNull(req.getPuzzleId(), user::setPuzId);
         return userConverter.user2UserInfoRes(user);
     }
 
