@@ -38,6 +38,7 @@ public class MeetConverter {
 	public SingleMeetRes toMeetSingleResponse(Meet meet, List<MeetMemberRes> members) {
 		return SingleMeetRes.builder()
 			.meetId(meet.getId())
+			.joinCode(meet.getCode())
 			.meetName(meet.getName())
 			.meetState(meet.getState())
 			.meetDate(meet.getMeetDate())

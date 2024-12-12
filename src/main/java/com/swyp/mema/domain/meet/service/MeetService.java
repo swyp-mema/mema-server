@@ -125,7 +125,7 @@ public class MeetService {
 			.orElseThrow(NotMeetMemberException::new);
 
 		// 해당 약속에 소속된 모든 약속원 조회
-		List<MeetMemberRes> members = meetMemberRepository.findMeetMembersWithUserInfo(meetId);
+		List<MeetMemberRes> members = meetMemberRepository.findMeetMembersWithUserInfo(meetId, userId);
 
 		return meetConverter.toMeetSingleResponse(meet, members);
 
@@ -152,7 +152,7 @@ public class MeetService {
 		meet.changeName(meetNameReq.getMeetName());
 
 		// 약속원 목록 조회
-		List<MeetMemberRes> members = meetMemberRepository.findMeetMembersWithUserInfo(meetId);
+		List<MeetMemberRes> members = meetMemberRepository.findMeetMembersWithUserInfo(meetId, userId);
 
 		return meetConverter.toMeetSingleResponse(meet, members);
 	}
