@@ -9,7 +9,7 @@ import lombok.Setter;
 
 @Entity
 @Getter
-@Table(name="users")
+@Table(name = "users")
 @NoArgsConstructor
 public class User extends BaseEntity {
 
@@ -44,9 +44,10 @@ public class User extends BaseEntity {
 
     public void setUsername(String username) {
 
-        if(username == null || username.isEmpty()) return;
+        if (username == null || username.isEmpty()) return;
         this.userId = Long.parseLong(username);
     }
+
     public String getUsername() {
         return String.valueOf(userId);
     }
@@ -57,11 +58,11 @@ public class User extends BaseEntity {
         this.password = password;
         this.nickname = nickname;
         this.puzId = puzId;
-        if(puzId == null) this.puzId = 0L;
+        if (puzId == null) this.puzId = 0L;
         this.puzColor = puzColor;
-        if(puzColor == null) this.puzColor = "default_color";
+        if (puzColor == null || puzColor == "") this.puzColor = "blue";
         this.role = role;
         this.visitCount = visitCount;
-        if(visitCount == null || visitCount == 0) this.visitCount = 1;
+        if (visitCount == null || visitCount == 0) this.visitCount = 1;
     }
 }
