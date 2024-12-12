@@ -28,10 +28,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-@Tag(name = "약속", description = "약속 관련 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/meets")
+@Tag(name = "약속", description = "약속 관련 API")
 public class MeetController {
 
 	private final MeetService meetService;
@@ -105,6 +105,7 @@ public class MeetController {
 		return ResponseEntity.noContent().build();
 	}
 
+	@Operation(summary = "약속 홈 API", description = "진행 혹은 마감된 약속 정보를 조회할 수 있습니다.")
 	@GetMapping("/home")
 	public ResponseEntity<MeetHomeResponse> getHome(
 		@AuthenticationPrincipal CustomUserDetails user

@@ -16,6 +16,7 @@ import com.swyp.mema.domain.meet.dto.response.MeetHomeDetailResponse;
 import com.swyp.mema.domain.meet.dto.response.MeetHomeResponse;
 import com.swyp.mema.domain.meet.dto.response.SingleMeetRes;
 import com.swyp.mema.domain.meet.exception.JoinCodeInvalidException;
+import com.swyp.mema.domain.meet.exception.MaxActiveMeetsExceededException;
 import com.swyp.mema.domain.meet.exception.MeetNotFoundException;
 import com.swyp.mema.domain.meet.model.Meet;
 import com.swyp.mema.domain.meet.model.vo.State;
@@ -53,6 +54,12 @@ public class MeetService {
 		User user = userRepository.findById(userId)
 			.orElseThrow(UserNotFoundException::new);
 
+		// 진행 중인 약속은 최대 4개까지 생성되도록 검증
+		Long activeMeetCount = meetRepository.countActiveMeetsByUserId(userId);
+		if (activeMeetCount >= 4) {
+			throw new MaxActiveMeetsExceededException();
+		}
+
 		// 참여 코드 생성
 		int code = generateUniqueMeetCode();
 
@@ -83,6 +90,12 @@ public class MeetService {
 		// 이미 등록된 약속원인지 확인
 		if (meetMemberRepository.existsByMeetAndUser(meet, user)) {
 			throw new UserAlreadyRegisteredException();
+		}
+
+		// 진행 중인 약속은 최대 4개까지 생성되도록 검증
+		Long activeMeetCount = meetRepository.countActiveMeetsByUserId(userId);
+		if (activeMeetCount >= 4) {
+			throw new MaxActiveMeetsExceededException();
 		}
 
 		// 약속원 등록
@@ -180,7 +193,8 @@ public class MeetService {
 		// dirty checking 통해 State 업데이트
 		meets.forEach(meet -> {
 			// 만남 일자가 지나버리면 COMPLETED 로 상태값 변경
-			if (meet.getMeetDate() != null && meet.getMeetDate().isBefore(today) && meet.getState() != State.COMPLETED) {
+			if (meet.getMeetDate() != null && meet.getMeetDate().isBefore(today) &&
+				meet.getState() != State.SETTLING && meet.getState() != State.COMPLETED) {
 				meet.changeState(State.COMPLETED);
 			}
 		});
@@ -189,13 +203,12 @@ public class MeetService {
 		// (State.CREATED, DATE_VOTING, LOCATION_VOTING, READY 포함)
 		List<MeetHomeDetailResponse> upcomingMeets = meets.stream()
 			.filter(meet -> {
-				// meetDate가 null이거나 약속 상태가 CREATED, DATE_VOTING, LOCATION_VOTING, READY
-				return meet.getMeetDate() == null ||
+				// 약속 상태가 CREATED, DATE_VOTING, LOCATION_VOTING, READY
+				return
 					meet.getState() == State.CREATED ||
 					meet.getState() == State.DATE_VOTING ||
 					meet.getState() == State.LOCATION_VOTING ||
-					meet.getState() == State.READY ||
-					(meet.getMeetDate() != null && !meet.getMeetDate().isBefore(today)); // meetDate가 오늘 또는 미래
+					meet.getState() == State.READY;
 			})
 			.sorted(Comparator
 				.comparing((Meet meet) -> meet.getMeetDate() == null ? LocalDate.MAX : meet.getMeetDate()) // 날짜가 가까운 순서로 정렬
@@ -212,8 +225,7 @@ public class MeetService {
 				// 약속 상태가 COMPLETED, SETTLING
 				return
 					meet.getState() == State.COMPLETED ||
-					meet.getState() == State.SETTLING ||
-					(meet.getMeetDate() != null && meet.getMeetDate().isBefore(today)); // meetDate가 과거
+					meet.getState() == State.SETTLING;
 			})
 			.sorted(Comparator
 				.comparing(Meet::getMeetDate).reversed() // 날짜가 가까운 순서로 정렬(과거부터)

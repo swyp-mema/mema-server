@@ -20,6 +20,7 @@ public enum ErrorCode {
 	INVALID_JOIN_CODE(HttpStatus.BAD_REQUEST, "M002", "유효하지 않은 참여 코드입니다."),
 	NOT_EMPTY_MEET_NAME(HttpStatus.BAD_REQUEST, "M003", "약속명은 비어 있을 수 없습니다."),
 	MEET_NAME_OVER_LENGTH(HttpStatus.BAD_REQUEST, "M004", "약속명은 20자 이하로 입력해주세요."),
+	MAX_ACTIVE_MEET_COUNT(HttpStatus.BAD_REQUEST, "M005", "진행 중인 약속은 최대 4개까지 생성할 수 있습니다."),
 
 	// MEET MEMBER
 	MEET_MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MM001", "존재하지 않는 약속원입니다."),

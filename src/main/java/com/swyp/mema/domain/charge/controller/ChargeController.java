@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "정산", description = "정산 관련 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/meets/{meetId}/charge")
+@Tag(name = "정산", description = "정산 관련 API")
 public class ChargeController {
 
     private final ChargeService chargeService;

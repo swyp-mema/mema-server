@@ -25,9 +25,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-@Tag(name = "일정", description = "일정 관련 API")
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "일정", description = "일정 관련 API")
 public class VoteDateController {
 
 	private final VoteDateService voteDateService;

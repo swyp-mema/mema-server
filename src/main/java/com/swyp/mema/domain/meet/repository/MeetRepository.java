@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.swyp.mema.domain.meet.model.Meet;
 
-public interface MeetRepository extends JpaRepository<Meet, Long> {
+public interface MeetRepository extends JpaRepository<Meet, Long>, MeetCustomRepository {
 
 	//참여 코드가 중복인지 확인
 	boolean existsByCode(int code);
