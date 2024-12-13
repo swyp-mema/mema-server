@@ -41,11 +41,6 @@ public class JWTFilterOAuth extends OncePerRequestFilter {
             return;
         }
         System.out.println("jwtfilter OAuth - do internal filter - enter");
-//        if (requestUri.matches("^\\/oauth2(?:\\/.*)?$")) {
-//
-//            filterChain.doFilter(request, response);
-//            return;
-//        }
         System.out.println("jwt filter cookie");
         String authorization = null;
         Cookie[] cookies = request.getCookies();

@@ -6,7 +6,10 @@ import com.swyp.mema.domain.charge.dto.response.PayerInfo;
 import com.swyp.mema.domain.charge.model.Charge;
 import com.swyp.mema.domain.charge.model.ChargeMember;
 import com.swyp.mema.domain.meet.repository.MeetRepository;
+import com.swyp.mema.domain.meetMember.model.MeetMember;
 import com.swyp.mema.domain.meetMember.repository.MeetMemberRepository;
+import com.swyp.mema.domain.user.exception.UserNotFoundException;
+import com.swyp.mema.domain.user.model.User;
 import com.swyp.mema.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -40,10 +43,16 @@ public class ChargeConverter {
         List<Long> payerIds = req.getPayerIds();
         for(Long payerId : payerIds) {
 
+            MeetMember payer = meetMemberRepository.getReferenceById(payerId);
+            User payerUser = userRepository.findByUserId(payerId);
+            if (payerUser == null) {
+                throw new UserNotFoundException();
+            }
+
             charge.addChargeMember(ChargeMember.builder()
                     .charge(charge)
-                    .payer(meetMemberRepository.getReferenceById(payerId))
-                    .payerUser(userRepository.findByUserId(payerId))
+                    .payer(payer)
+                    .payerUser(payerUser)
                     .price(price)
                     .build());
         }

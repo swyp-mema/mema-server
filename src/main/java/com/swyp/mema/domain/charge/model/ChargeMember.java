@@ -37,6 +37,9 @@ public class ChargeMember extends BaseEntity {
 
         this.charge = charge;
         this.payer = payer;
+        if(payerUser == null) {
+            throw new IllegalArgumentException("payerUser cannot be null");
+        }
         this.payerUser = payerUser;
         this.price = price;
     }

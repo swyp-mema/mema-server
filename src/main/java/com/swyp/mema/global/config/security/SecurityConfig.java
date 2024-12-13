@@ -62,7 +62,7 @@ public class SecurityConfig {
                         configuration.setAllowedMethods(Collections.singletonList("*"));
                         configuration.setAllowCredentials(true);
                         configuration.setAllowedHeaders(Collections.singletonList("*"));
-                        configuration.setMaxAge(3600L);
+                        configuration.setMaxAge(36000L);
                         configuration.setExposedHeaders(Arrays.asList("Set-Cookie", "Authentication"));
                         return configuration;
                     }
@@ -97,7 +97,7 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/", "/login", "/join/custom", "/login/naver").permitAll()
+                        .requestMatchers("/", "/login", "/join/custom", "/join/custom/sendEmail", "/login/naver").permitAll()
                     .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                     .anyRequest().authenticated());
 

@@ -22,4 +22,13 @@ public class EnvConfig {
     public String getCilentIp() {
         return dotenv.get("CLIENT_IP");
     }
+
+
+    public String getMailAddress() {
+        return dotenv.get("GOOGLE_EMAIL");
+    }
+
+     public String getMailPassword() {
+        return dotenv.get("GOOGLE_PASSWORD");
+     }
 }
