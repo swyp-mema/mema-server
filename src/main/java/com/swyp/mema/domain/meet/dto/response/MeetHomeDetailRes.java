@@ -12,7 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class MeetHomeDetailResponse {
+public class MeetHomeDetailRes {
 
 	private Long meetId;
 	private int joinCode;

@@ -12,9 +12,10 @@ import com.swyp.mema.domain.meet.dto.request.JoinMeetReq;
 import com.swyp.mema.domain.meet.dto.response.CreateMeetRes;
 import com.swyp.mema.domain.meet.converter.MeetConverter;
 import com.swyp.mema.domain.meet.dto.request.MeetNameReq;
-import com.swyp.mema.domain.meet.dto.response.MeetHomeDetailResponse;
-import com.swyp.mema.domain.meet.dto.response.MeetHomeResponse;
+import com.swyp.mema.domain.meet.dto.response.MeetHomeDetailRes;
+import com.swyp.mema.domain.meet.dto.response.MeetHomeRes;
 import com.swyp.mema.domain.meet.dto.response.SingleMeetRes;
+import com.swyp.mema.domain.meet.dto.response.TotalMeetManageRes;
 import com.swyp.mema.domain.meet.exception.JoinCodeInvalidException;
 import com.swyp.mema.domain.meet.exception.MaxActiveMeetsExceededException;
 import com.swyp.mema.domain.meet.exception.MeetNotFoundException;
@@ -132,6 +133,37 @@ public class MeetService {
 	}
 
 	/**
+	 * 약속 관리
+	 */
+	public TotalMeetManageRes getAll(Long userId, int offset, int limit) {
+
+		// 존재하는 사용자인지 검증
+		userRepository.findById(userId)
+			.orElseThrow(UserNotFoundException::new);
+
+		// 사용자가 속한 모든 약속(meet) 가져오기 (페이징 적용)
+		List<Meet> meets = meetRepository.findMeetsByUserId(userId, offset, limit);
+
+		// hasNext 계산
+		boolean hasNext = meets.size() > limit;
+
+		// hasNext가 true면 limit까지만 데이터 반환
+		List<Meet> pagedMeets = hasNext ? meets.subList(0, limit) : meets;
+
+		// 가져온 약속을 MeetHomeDetailRes DTO 리스트로 변환
+		List<MeetHomeDetailRes> meetList = pagedMeets.stream()
+			.map(meetConverter::toMeetHomeDetailResponse)
+			.collect(Collectors.toList());
+
+		return TotalMeetManageRes.builder()
+			.meetList(meetList)
+			.hasNext(hasNext)
+			.pageSize(meetList.size())
+			.build();
+
+	}
+
+	/**
 	 * 약속명 수정
 	 */
 	public SingleMeetRes update(Long meetId, MeetNameReq meetNameReq, Long userId) {
@@ -178,7 +210,7 @@ public class MeetService {
 		meetRepository.delete(meet);
 	}
 
-	public MeetHomeResponse getHome(Long userId) {
+	public MeetHomeRes getHome(Long userId) {
 
 		// 존재하는 사용자인지 검증
 		userRepository.findById(userId)
@@ -201,7 +233,7 @@ public class MeetService {
 
 		// 곧 만나요 (meetDate >= 오늘, 최신순 4개)
 		// (State.CREATED, DATE_VOTING, LOCATION_VOTING, READY 포함)
-		List<MeetHomeDetailResponse> upcomingMeets = meets.stream()
+		List<MeetHomeDetailRes> upcomingMeets = meets.stream()
 			.filter(meet -> {
 				// 약속 상태가 CREATED, DATE_VOTING, LOCATION_VOTING, READY
 				return
@@ -220,7 +252,7 @@ public class MeetService {
 
 		// 즐거웠어요 (meetDate < 오늘, 최신순 4개)
 		// 즐거웠어요 (State.COMPLETED, SETTLING 포함)
-		List<MeetHomeDetailResponse> pastMeets = meets.stream()
+		List<MeetHomeDetailRes> pastMeets = meets.stream()
 			.filter(meet -> {
 				// 약속 상태가 COMPLETED, SETTLING
 				return
@@ -236,7 +268,7 @@ public class MeetService {
 			.collect(Collectors.toList());
 
 		// 결과를 Response 객체로 반환
-		return new MeetHomeResponse(upcomingMeets, pastMeets);
+		return new MeetHomeRes(upcomingMeets, pastMeets);
 
 	}
 

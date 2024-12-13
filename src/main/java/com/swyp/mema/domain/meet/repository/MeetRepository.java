@@ -13,4 +13,6 @@ public interface MeetRepository extends JpaRepository<Meet, Long>, MeetCustomRep
 
 	// 해당 참여 코드의 약속이 있는지 확인
 	Optional<Meet> findByCode(int code);
+
 }
+

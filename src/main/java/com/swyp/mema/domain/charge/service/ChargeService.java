@@ -66,7 +66,6 @@ public class ChargeService {
 
         System.out.println("deleted charge " + chargeId);
         chargeRepository.deleteById(chargeId);
-        meet.changeState(State.COMPLETED);
     }
 
 }

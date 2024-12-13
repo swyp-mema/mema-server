@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 import com.swyp.mema.domain.meet.dto.request.MeetNameReq;
 import com.swyp.mema.domain.meet.dto.response.CreateMeetRes;
-import com.swyp.mema.domain.meet.dto.response.MeetHomeDetailResponse;
+import com.swyp.mema.domain.meet.dto.response.MeetHomeDetailRes;
 import com.swyp.mema.domain.meet.dto.response.SingleMeetRes;
 import com.swyp.mema.domain.meet.model.Meet;
 import com.swyp.mema.domain.meet.model.vo.State;
@@ -48,9 +48,9 @@ public class MeetConverter {
 			.build();
 	}
 
-	public MeetHomeDetailResponse toMeetHomeDetailResponse(Meet meet){
+	public MeetHomeDetailRes toMeetHomeDetailResponse(Meet meet){
 
-		return MeetHomeDetailResponse.builder()
+		return MeetHomeDetailRes.builder()
 			.meetId(meet.getId())
 			.joinCode(meet.getCode())
 			.meetName(meet.getName())

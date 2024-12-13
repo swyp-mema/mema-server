@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @NoArgsConstructor(access = PROTECTED)
-public class Station extends BaseEntity {
+public class Station extends BaseEntity { // + 위/경도
 
 	@Id
 	@Column(unique = true, nullable = false)
