@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.swyp.mema.domain.meet.model.vo.State;
 import com.swyp.mema.domain.voteLocation.converter.LocationConverter;
 import com.swyp.mema.domain.voteLocation.dto.request.CreateLocationReq;
 import com.swyp.mema.domain.voteLocation.dto.response.SingleLocationResponse;
@@ -54,6 +55,7 @@ public class LocationService {
 		Location location = converter.toLocationEntity(createLocationReq, meet, user);
 
 		locationRepository.save(location);
+		meet.changeState(State.LOCATION_VOTING);
 
 		return converter.toSingleLocationResponse(location);
 	}

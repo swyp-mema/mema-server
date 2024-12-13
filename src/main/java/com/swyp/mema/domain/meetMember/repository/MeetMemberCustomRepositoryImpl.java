@@ -5,6 +5,8 @@ import java.util.List;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.swyp.mema.domain.meet.dto.response.MeetHomeDetailRes;
+import com.swyp.mema.domain.meet.dto.response.TotalMeetManageRes;
 import com.swyp.mema.domain.meet.model.Meet;
 import com.swyp.mema.domain.meet.model.QMeet;
 import com.swyp.mema.domain.meetMember.dto.response.MeetMemberRes;
@@ -60,6 +62,7 @@ public class MeetMemberCustomRepositoryImpl implements MeetMemberCustomRepositor
 			.join(meetMember.meet, meet)
 			.where(meetMember.user.userId.eq(userId)) // userId 조건
 			.distinct() // 중복 제거
+			.orderBy(meet.createDate.desc())
 			.fetch();
 	}
 }

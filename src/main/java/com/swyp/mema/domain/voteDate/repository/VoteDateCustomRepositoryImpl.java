@@ -28,7 +28,7 @@ public class VoteDateCustomRepositoryImpl implements VoteDateCustomRepository {
 					VoteDateRes.class,
 					qVoteDate.id,
 					qMeetMember.meet.id,
-					qMeetMember.user.userId,
+					qMeetMember.id,	// meetMemberId 반환
 					qMeetMember.user.nickname,
 					qVoteDate.date
 				)
