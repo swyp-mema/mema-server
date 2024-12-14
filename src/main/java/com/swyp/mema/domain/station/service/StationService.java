@@ -47,7 +47,7 @@ public class StationService {
 	private final StationConverter converter;
 	private final StationRepository stationRepository;
 
-	@Value("${api.key}")
+	@Value("${api.info.key}")
 	private String serviceKey;    // 디코딩된 API 서비스 키
 
 	public StationService(WebClient.Builder webClientBuilder, StationConverter converter,
