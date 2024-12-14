@@ -6,9 +6,11 @@ import com.swyp.mema.domain.charge.dto.response.PayerInfo;
 import com.swyp.mema.domain.charge.model.Charge;
 import com.swyp.mema.domain.charge.model.ChargeMember;
 import com.swyp.mema.domain.meet.repository.MeetRepository;
+import com.swyp.mema.domain.meetMember.model.MeetMember;
 import com.swyp.mema.domain.meetMember.repository.MeetMemberRepository;
 import com.swyp.mema.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -37,13 +39,12 @@ public class ChargeConverter {
         int price = req.getTotalPrice()/req.getPeopleNumber();
 
         //payer id를 뽑아 charge_member 생성
-        List<Long> payerIds = req.getPayerIds();
+        List<Long> payerIds = req.getMemberIds();
         for(Long payerId : payerIds) {
 
             charge.addChargeMember(ChargeMember.builder()
                     .charge(charge)
                     .payer(meetMemberRepository.getReferenceById(payerId))
-                    .payerUser(userRepository.findByUserId(payerId))
                     .price(price)
                     .build());
         }
@@ -58,7 +59,7 @@ public class ChargeConverter {
                 .totalPrice(charge.getTotalPrice())
                 .peopleNumber(charge.getPeopleNum())
                 .payeeNickname(charge.getPayee().getUser().getNickname())
-                .payers(charge.getChargeMembers().stream()
+                .members(charge.getChargeMembers().stream()
                         .map(this::toPayerInfo)
                         .collect(Collectors.toList()))
                 .build();
@@ -76,9 +77,13 @@ public class ChargeConverter {
     }
 
     private PayerInfo toPayerInfo(ChargeMember chargeMember) {
+
+        boolean isMe = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName()) == chargeMember.getPayer().getUser().getUserId();
+
         return PayerInfo.builder()
-                .payerId(chargeMember.getPayer().getUser().getUserId())
-                .payerNickname(userRepository.findByUserId(chargeMember.getPayerUser().getUserId()).getNickname())
+                .memberId(chargeMember.getPayer().getId())
+                .nickname(chargeMember.getPayer().getUser().getNickname())
+                .isMe(isMe)
                 .build();
     }
 }

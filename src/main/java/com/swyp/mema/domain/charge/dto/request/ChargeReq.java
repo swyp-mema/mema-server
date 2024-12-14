@@ -30,5 +30,5 @@ public class ChargeReq {
     // 피정산자 아이디 목록 (정산자 아이디 제외)
     @Schema(description = "피정산자 meet member id 목록 (정산자 본인 제외)", example = "[152,53,26,44]")
     @NotBlank(message = "정산 대상자를 입력해주세요.")
-    private List<Long> payerIds;
+    private List<Long> memberIds;
 }
