@@ -133,4 +133,15 @@ public class VoteDateController {
 		voteDateService.setFinalVoteDate(meetId, userId, finalVoteDateReq);
 		return ResponseEntity.ok().build(); // 성공 시 200 OK 반환
 	}
+
+	@Operation(summary = "최종 날짜 선택 API", description = "최종 날짜를 선택할 수 있습니다.")
+	@PatchMapping("/meets/{meetId}/vote/date/final")
+	public ResponseEntity<Void> deleteVodeDate(
+			@PathVariable Long meetId,
+			@AuthenticationPrincipal CustomUserDetails user	){
+
+		Long userId = Long.parseLong(user.getUsername());
+		voteDateService.deleteVote(meetId, userId);
+		return ResponseEntity.noContent().build();
+	}
 }
