@@ -32,6 +32,7 @@ public enum ErrorCode {
 	FAST_EXPIRATION_DATE(HttpStatus.BAD_REQUEST, "VD003", "만료일이 현재 시각보다 이전입니다."),
 	UNSATISFACTORY_FINAL_DATE(HttpStatus.BAD_REQUEST, "VD004", "약속원 모두가 만족하는 날짜가 아닙니다."),
 	INVALID_FINAL_DATE(HttpStatus.BAD_REQUEST, "VD005", "만료되지 않은 투표임으로 최종 날짜 선택이 불가능합니다."),
+	VOTE_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "VD006", "해당 멤버의 투표가 이미 존재합니다."),
 
 	// LOCATION VOTE
 	VOTE_LOCATION_NOT_FOUND(HttpStatus.NOT_FOUND, "VL001", "존재하지 않는 위치 투표 ID 입니다."),

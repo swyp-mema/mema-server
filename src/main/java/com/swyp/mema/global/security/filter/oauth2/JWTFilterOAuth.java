@@ -1,8 +1,8 @@
-package com.swyp.mema.global.security.oauth2.filter;
+package com.swyp.mema.global.security.filter.oauth2;
 
 import com.swyp.mema.domain.user.dto.request.UserReq;
 import com.swyp.mema.domain.user.dto.CustomOAuthUser;
-import com.swyp.mema.global.security.jwt.util.JWTUtil;
+import com.swyp.mema.global.security.util.jwt.JWTUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;

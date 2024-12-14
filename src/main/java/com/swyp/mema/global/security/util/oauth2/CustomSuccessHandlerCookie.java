@@ -1,8 +1,8 @@
-package com.swyp.mema.global.security.oauth2.util;
+package com.swyp.mema.global.security.util.oauth2;
 
 import com.swyp.mema.domain.user.dto.CustomOAuthUser;
 import com.swyp.mema.global.config.env.EnvConfig;
-import com.swyp.mema.global.security.jwt.util.JWTUtil;
+import com.swyp.mema.global.security.util.jwt.JWTUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;

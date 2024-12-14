@@ -1,9 +1,9 @@
-package com.swyp.mema.global.security.jwt.filter;
+package com.swyp.mema.global.security.filter.jwt;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.swyp.mema.domain.user.dto.CustomUserDetails;
-import com.swyp.mema.global.security.jwt.util.JWTUtil;
+import com.swyp.mema.global.security.util.jwt.JWTUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
