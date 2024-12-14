@@ -13,7 +13,7 @@ springdoc:
 
 api:
   info:
-    key: ${API_INFO_KEY}
+    key: ${API_KEY}
   time:
     key: ${API_TIME_KEY}
   master:
