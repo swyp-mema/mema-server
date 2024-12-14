@@ -12,4 +12,9 @@ springdoc:
     path: /swagger-ui.html
 
 api:
-  key: ${API_KEY}
+  info:
+    key: ${API_INFO_KEY}
+  time:
+    key: ${API_TIME_KEY}
+  master:
+    key: ${API_MASTER_KEY}
