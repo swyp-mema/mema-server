@@ -62,13 +62,6 @@ public class VoteDateService {
 		if (createVoteDateReq.getExpiredVoteDate().isBefore(LocalDateTime.now())) {
 			throw new VoteDateFastDateException();
 		}
-		if (meet.getExpiredVoteDate().isBefore(LocalDateTime.now())) {
-			throw new VoteDateFastDateException();
-		}
-
-		if (voteDateRepository.existsByMeetMember(meetMember)){
-			throw new VoteAlreadyExistException();
-		}
 
 		// 약속 일정 만료일 & 상태값 변경
 		meet.setExpiredVoteDate(createVoteDateReq.getExpiredVoteDate());
@@ -116,8 +109,6 @@ public class VoteDateService {
 			throw new NotMeetMemberException();
 		}
 
-		// 투표 만료일이 지난 투표인지 검증
-		validateVoteDateNotExpired(meet);
 		List<MeetMember> meetMembers = meetMemberRepository.findByMeetId(meetId);
 
 		// 투표 삭제
