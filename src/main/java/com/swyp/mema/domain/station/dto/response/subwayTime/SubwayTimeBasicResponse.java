@@ -1,5 +1,6 @@
-package com.swyp.mema.domain.station.dto.response;
+package com.swyp.mema.domain.station.dto.response.subwayTime;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -7,7 +8,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
-public class OpenApiBasicResponse {
+
+public class SubwayTimeBasicResponse {
 
 	@JsonProperty("response")
 	private Response response;
@@ -36,7 +38,7 @@ public class OpenApiBasicResponse {
 	public static class Body {
 
 		@JsonProperty("items")
-		private Items items;
+		private Items items = new Items(); // 기본값으로 빈 객체 초기화
 
 		@JsonProperty("pageNo")
 		private int pageNo;
@@ -50,19 +52,37 @@ public class OpenApiBasicResponse {
 	public static class Items {
 
 		@JsonProperty("item")
-		private List<Item> itemList;
+		private List<Item> itemList = new ArrayList<>(); // 기본값으로 빈 리스트 초기화;
 	}
 
 	@Data
 	public static class Item {
 
+		@JsonProperty("arrTime")
+		private String arrivalTime;
+
+		@JsonProperty("dailyTypeCode")
+		private String dailyTypeCode;
+
+		@JsonProperty("depTime")
+		private String departureTime;
+
+		@JsonProperty("endSubwayStationId")
+		private String endStationId;
+
+		@JsonProperty("endSubwayStationNm")
+		private String endStationName;
+
+		@JsonProperty("subwayRouteId")
+		private String routeId;
+
 		@JsonProperty("subwayStationId")
 		private String stationId;
 
-		@JsonProperty("subwayStationName")
+		@JsonProperty("subwayStationNm")
 		private String stationName;
 
-		@JsonProperty("subwayRouteName")
-		private String routeName;
+		@JsonProperty("upDownTypeCode")
+		private String upDownTypeCode;
 	}
 }

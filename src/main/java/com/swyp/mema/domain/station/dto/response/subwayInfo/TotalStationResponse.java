@@ -1,4 +1,4 @@
-package com.swyp.mema.domain.station.dto.response;
+package com.swyp.mema.domain.station.dto.response.subwayInfo;
 
 import java.util.List;
 

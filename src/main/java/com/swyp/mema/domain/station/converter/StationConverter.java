@@ -5,8 +5,11 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
-import com.swyp.mema.domain.station.dto.response.SingleStationResponse;
-import com.swyp.mema.domain.station.dto.response.TotalStationResponse;
+import com.swyp.mema.domain.station.dto.response.subwayInfo.SingleStationResponse;
+import com.swyp.mema.domain.station.dto.response.subwayTime.SubwayTimeBasicResponse;
+import com.swyp.mema.domain.station.dto.response.subwayTime.TotalSubwayTimeResponse;
+import com.swyp.mema.domain.station.dto.response.subwayTime.SubwayTimeResponse;
+import com.swyp.mema.domain.station.dto.response.subwayInfo.TotalStationResponse;
 import com.swyp.mema.domain.station.model.Station;
 
 @Component
@@ -32,5 +35,24 @@ public class StationConverter {
 			.totalCount(totalCount)
 			.stationList(stationResponse)
 			.build();
+	}
+
+	public TotalSubwayTimeResponse toSubwayTimeListResponse(SubwayTimeBasicResponse basicResponse) {
+
+		List<SubwayTimeResponse> list = basicResponse.getResponse().getBody().getItems().getItemList().stream()
+			.map(res -> SubwayTimeResponse.builder()
+				.stationId(res.getStationId())
+				.stationName(res.getStationName())
+				.routeId(res.getRouteId())
+				.dailyTypeCode(res.getDailyTypeCode())
+				.departureTime(res.getDepartureTime())
+				.arrivalTime(res.getArrivalTime())
+				.endStationId(res.getEndStationId())
+				.endStationName(res.getEndStationName())
+				.upDownTypeCode(res.getUpDownTypeCode())
+				.build()
+			).toList();
+
+		return new TotalSubwayTimeResponse(list);
 	}
 }
