@@ -1,4 +1,4 @@
-package com.swyp.mema.global.security.jwt.util;
+package com.swyp.mema.global.security.util.jwt;
 
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
