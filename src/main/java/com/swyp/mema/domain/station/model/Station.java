@@ -30,6 +30,10 @@ public class Station extends BaseEntity { // + 위/경도
 
 	private int toNext;			// 다음역까지 소요시간
 
+	private double lat;	// 위도
+
+	private double lot;	// 경도
+
 	@Builder
 	public Station(String stationId, String stationName, String routeName) {
 		this.stationId = stationId;

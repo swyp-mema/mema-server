@@ -10,8 +10,10 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.swyp.mema.domain.station.converter.StationConverter;
-import com.swyp.mema.domain.station.dto.response.OpenApiBasicResponse;
-import com.swyp.mema.domain.station.dto.response.TotalStationResponse;
+import com.swyp.mema.domain.station.dto.response.subwayInfo.SubwayInfoBasicResponse;
+import com.swyp.mema.domain.station.dto.response.subwayTime.SubwayTimeBasicResponse;
+import com.swyp.mema.domain.station.dto.response.subwayTime.TotalSubwayTimeResponse;
+import com.swyp.mema.domain.station.dto.response.subwayInfo.TotalStationResponse;
 import com.swyp.mema.domain.station.model.Station;
 import com.swyp.mema.domain.station.repository.StationRepository;
 import com.swyp.mema.domain.meet.exception.MeetNotFoundException;
@@ -32,7 +34,8 @@ import lombok.extern.slf4j.Slf4j;
 public class StationService {
 
 	private static final String BASE_URL = "http://apis.data.go.kr/1613000/SubwayInfoService";
-	private static final String SERVICE_NAME = "getKwrdFndSubwaySttnList";
+	private static final String SUBWAY_INFO_SERVICE_NAME = "getKwrdFndSubwaySttnList";
+	private static final String SUBWAY_TIME_SERVICE_NAME = "getSubwaySttnAcctoSchdulList";
 	private static final String TYPE = "json";
 
 
@@ -44,7 +47,7 @@ public class StationService {
 	private final StationConverter converter;
 	private final StationRepository stationRepository;
 
-	@Value("${api.key}")
+	@Value("${api.info.key}")
 	private String serviceKey;    // 디코딩된 API 서비스 키
 
 	public StationService(WebClient.Builder webClientBuilder, StationConverter converter,
@@ -76,8 +79,7 @@ public class StationService {
 
 		return converter.toTotalStationResponse(all);
 	}
-
-
+	
 	/*
 	 * OpenAPI 를 호출하여 Station 값 변경
 	 */
@@ -91,11 +93,11 @@ public class StationService {
 		validateMeetMember(meetMember.getId());
 
 		// URI 빌더로 URL 생성
-		URI uri = createUri();
-		log.info("Generated URL: {}", uri);
+		URI uri = createSubwayInfoUri();
+		log.info("Generated SubwayInfo API Request URL: {}", uri);
 
 		// OpenAPI 요청 및 JSON 확인
-		OpenApiBasicResponse result = fetchSubwayInfoFromOpenApi(uri);
+		SubwayInfoBasicResponse result = fetchOpenApiForSubwayInfo(uri);
 		log.info("result : {}", result);
 
 
@@ -111,27 +113,78 @@ public class StationService {
 
 	}
 
-	private OpenApiBasicResponse fetchSubwayInfoFromOpenApi(URI uri) {
+	/*
+	 * 해당 역ID(역이름 + 호선 정보) 통해 해당 호선에 대한 모든 시간 데이터 요청 OpenAPI
+	 * */
+	@Transactional
+	public TotalSubwayTimeResponse getSubwayTimeByStationId(String stationId, String dailyTypeCode) {
+
+		// 필수 검증 로직
+		// User user = validateUser(userId);
+		// Meet meet = validateMeet(meetId);
+		// MeetMember meetMember = validateMeetMember(user, meet);
+		// validateMeetMember(meetMember.getId());
+
+		// URI 빌더로 URL 생성
+		System.out.println("serviceKey = " + serviceKey);
+		URI uri = createSubwayTimeUri(stationId, dailyTypeCode);
+		log.info("Generated SubwayTime API Request URL: {}", uri);
+
+		// OpenAPI 요청 및 JSON 확인
+		SubwayTimeBasicResponse result = fetchOpenApiForSubwayTime(uri);
+		log.info("result : {}", result);
+
+		return converter.toSubwayTimeListResponse(result);
+	}
+
+	private SubwayTimeBasicResponse fetchOpenApiForSubwayTime(URI uri) {
 
 		// WebClient 요청
 		return webClient.get()
 			.uri(uri) // 생성한 URI를 그대로 사용
 			.retrieve() // 응답 수신
-			.bodyToMono(OpenApiBasicResponse.class)
+			.bodyToMono(SubwayTimeBasicResponse.class)
 			.block(); // 동기 방식으로 결과 받기
 	}
 
-	private URI createUri() {
+	private SubwayInfoBasicResponse fetchOpenApiForSubwayInfo(URI uri) {
+
+		// WebClient 요청
+		return webClient.get()
+			.uri(uri) // 생성한 URI를 그대로 사용
+			.retrieve() // 응답 수신
+			.bodyToMono(SubwayInfoBasicResponse.class)
+			.block(); // 동기 방식으로 결과 받기
+	}
+
+	private URI createSubwayInfoUri() {
 
 		// URI 빌더로 URL 생성
 		return UriComponentsBuilder.fromHttpUrl(BASE_URL)
-			.pathSegment(SERVICE_NAME)
+			.pathSegment(SUBWAY_INFO_SERVICE_NAME)
 			.queryParam("serviceKey", serviceKey) // 자동으로 인코딩
 			.queryParam("_type", TYPE) // 반환 타입
-			// .queryParam("numOfRows", END_INDEX) // 최대 행 수
+			.queryParam("numOfRows", 1200) // 최대 행 수
 			// .queryParam("pageNo", START_INDEX) // 시작 페이지
 			.build()
 			.toUri();
+	}
+
+	private URI createSubwayTimeUri(String stationId, String dailyTypeCode) {
+
+		// URI 빌더로 URL 생성
+		return UriComponentsBuilder.fromHttpUrl(BASE_URL)
+			.pathSegment(SUBWAY_TIME_SERVICE_NAME)
+			.queryParam("serviceKey", serviceKey) // 자동으로 인코딩
+			.queryParam("subwayStationId", stationId)
+			.queryParam("dailyTypeCode", dailyTypeCode)
+			.queryParam("_type", TYPE) // 반환 타입
+			.queryParam("upDownTypeCode", "U")	// U : 상행, D : 하행
+			.queryParam("numOfRows", 500) // 최대 행 수
+			// .queryParam("pageNo", 0) // 시작 페이지
+			.build()
+			.toUri();
+
 	}
 
 	private MeetMember validateMeetMember(User user, Meet meet) {
