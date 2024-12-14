@@ -1,11 +1,12 @@
 package com.swyp.mema.global.config.security;
 
 import com.swyp.mema.domain.user.service.CustomOAuthUserService;
-import com.swyp.mema.global.security.jwt.filter.JWTFilter;
-import com.swyp.mema.global.security.oauth2.filter.JWTFilterOAuth;
-import com.swyp.mema.global.security.jwt.filter.JWTLoginFilter;
-import com.swyp.mema.global.security.oauth2.util.CustomSuccessHandlerCookie;
-import com.swyp.mema.global.security.jwt.util.JWTUtil;
+import com.swyp.mema.global.security.filter.authentication.CustomAuthenticationEntryPoint;
+import com.swyp.mema.global.security.filter.jwt.JWTFilter;
+import com.swyp.mema.global.security.filter.oauth2.JWTFilterOAuth;
+import com.swyp.mema.global.security.filter.jwt.JWTLoginFilter;
+import com.swyp.mema.global.security.util.oauth2.CustomSuccessHandlerCookie;
+import com.swyp.mema.global.security.util.jwt.JWTUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -34,6 +35,7 @@ public class SecurityConfig {
     private final JWTUtil jwtUtil;
     private final CustomOAuthUserService customOAuthUserService;
     private final CustomSuccessHandlerCookie customSuccessHandlerCookie;
+    private final CustomAuthenticationEntryPoint authenticationEntryPoint;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -100,6 +102,12 @@ public class SecurityConfig {
                         .requestMatchers("/", "/login", "/join/custom", "/login/naver").permitAll()
                     .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                     .anyRequest().authenticated());
+
+        http
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(authenticationEntryPoint) // 401 에러 핸들러
+//                        .accessDeniedHandler(accessDeniedHandler) // 403 에러 핸들러
+                );
 
         http
                 .sessionManagement((session) -> session

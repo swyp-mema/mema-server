@@ -6,6 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.swyp.mema.domain.voteDate.exception.*;
+import com.swyp.mema.domain.voteDate.model.VoteDate;
+import com.swyp.mema.domain.voteDate.repository.VoteDateRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +32,6 @@ import com.swyp.mema.domain.voteDate.dto.response.SingleVoteDateRes;
 import com.swyp.mema.domain.voteDate.dto.response.TotalVoteDateListRes;
 import com.swyp.mema.domain.voteDate.dto.response.TotalVoteDateRes;
 import com.swyp.mema.domain.voteDate.dto.response.VoteDateRes;
-import com.swyp.mema.domain.voteDate.exception.InvalidFinalVoteDateException;
 import com.swyp.mema.domain.voteDate.exception.UnsatisfactoryFinalDateException;
 import com.swyp.mema.domain.voteDate.exception.VoteDateByMemberNotFoundException;
 import com.swyp.mema.domain.voteDate.exception.VoteDateExpiredException;
@@ -54,10 +57,17 @@ public class VoteDateService {
 		User user = validateUser(userId);
 		Meet meet = validateMeet(meetId);
 		MeetMember meetMember = validateMeetMember(user, meet);
-		
+
 		// 새로 생성하는 투표의 만료일이 현재 시각보다 이른지 검증
 		if (createVoteDateReq.getExpiredVoteDate().isBefore(LocalDateTime.now())) {
 			throw new VoteDateFastDateException();
+		}
+		if (meet.getExpiredVoteDate().isBefore(LocalDateTime.now())) {
+			throw new VoteDateFastDateException();
+		}
+
+		if (voteDateRepository.existsByMeetMember(meetMember)){
+			throw new VoteAlreadyExistException();
 		}
 
 		// 약속 일정 만료일 & 상태값 변경
@@ -70,6 +80,53 @@ public class VoteDateService {
 		// 날짜 데이터 한 번에 저장
 		voteDateRepository.saveAll(voteDates);
 	}
+
+	@Transactional
+	public void deleteVote(Long meetId, Long userId) {
+
+		// 검증 로직
+		User user = validateUser(userId);
+		Meet meet = validateMeet(meetId);
+		MeetMember meetMember = meetMemberRepository.findByUserAndMeet(user, meet).orElseThrow(NotMeetMemberException::new);
+		validateMeetMember(user, meet);
+
+		// 약속 ID와 약속원이 일치하는지 확인
+		if (!meetMember.getMeet().getId().equals(meetId)) {
+			throw new NotMeetMemberException();
+		}
+
+		// 투표 만료일이 지난 투표인지 검증
+		validateVoteDateNotExpired(meet);
+
+		// 투표 삭제
+		voteDateRepository.deleteAllByMeetMember(meetMember);
+	}
+
+	@Transactional
+	public void deleteVoteAll(Long meetId, Long userId) {
+
+		// 검증 로직
+		User user = validateUser(userId);
+		Meet meet = validateMeet(meetId);
+		MeetMember meetMember = meetMemberRepository.findByUserAndMeet(user, meet).orElseThrow(NotMeetMemberException::new);
+		validateMeetMember(user, meet);
+
+		// 약속 ID와 약속원이 일치하는지 확인
+		if (!meetMember.getMeet().getId().equals(meetId)) {
+			throw new NotMeetMemberException();
+		}
+
+		// 투표 만료일이 지난 투표인지 검증
+		validateVoteDateNotExpired(meet);
+		List<MeetMember> meetMembers = meetMemberRepository.findByMeetId(meetId);
+
+		// 투표 삭제
+		for(MeetMember m : meetMembers) {
+
+			voteDateRepository.deleteAllByMeetMember(m);
+		}
+	}
+
 
 	@Transactional
 	public void participateVote(Long meetId, CreateVoteDateReq createVoteDateReq, Long userId) {

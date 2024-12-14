@@ -1,8 +1,9 @@
-package com.swyp.mema.global.security.jwt.filter;
+package com.swyp.mema.global.security.filter.jwt;
 
 import com.swyp.mema.domain.user.dto.CustomUserDetails;
 import com.swyp.mema.domain.user.model.User;
-import com.swyp.mema.global.security.jwt.util.JWTUtil;
+import com.swyp.mema.global.exception.TokenExpiredException;
+import com.swyp.mema.global.security.util.jwt.JWTUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -51,17 +52,22 @@ public class JWTFilter extends OncePerRequestFilter {
             return;
         }
 
-        System.out.println("authorization now");
 
         String token = authorizationHeader.split(" ")[1];
 
-        if (jwtUtil.isExpired(token)) {
-
-            System.out.println("token is expired");
-            filterChain.doFilter(request, response);
-
+        System.out.println("authorization now");
+        try{
+            jwtUtil.isExpired(token);
+        } catch (Exception e){
+            System.out.println("expired");
+            SecurityContextHolder.clearContext();
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write("{\"error\": \"Invalid Token\", \"message\": \"" + e.getMessage() + "\"}");
             return;
         }
+
+        System.out.println("not expired");
 
         String userUsername = jwtUtil.getUsername(token);
         String role = jwtUtil.getRole(token);

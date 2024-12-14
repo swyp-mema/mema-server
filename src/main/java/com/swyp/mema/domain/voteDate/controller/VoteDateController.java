@@ -4,12 +4,7 @@ import java.net.URI;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.swyp.mema.domain.user.dto.CustomUserDetails;
@@ -132,5 +127,27 @@ public class VoteDateController {
 		Long userId = Long.parseLong(user.getUsername());
 		voteDateService.setFinalVoteDate(meetId, userId, finalVoteDateReq);
 		return ResponseEntity.ok().build(); // 성공 시 200 OK 반환
+	}
+
+	@Operation(summary = "나의 날짜 투표 삭제 API", description = "나의 날짜투표 내역을 삭제합니다.")
+	@DeleteMapping("/meets/{meetId}/vote/date/my")
+	public ResponseEntity<Void> deleteVodeDate(
+			@PathVariable Long meetId,
+			@AuthenticationPrincipal CustomUserDetails user	){
+
+		Long userId = Long.parseLong(user.getUsername());
+		voteDateService.deleteVote(meetId, userId);
+		return ResponseEntity.noContent().build();
+	}
+
+	@Operation(summary = "날짜 투표 전체 삭제 API", description = "미팅에 존재하는 날짜투표 내역을 전부 삭제합니다.")
+	@DeleteMapping("/meets/{meetId}/vote/date")
+	public ResponseEntity<Void> deleteVodeDateAll(
+			@PathVariable Long meetId,
+			@AuthenticationPrincipal CustomUserDetails user	){
+
+		Long userId = Long.parseLong(user.getUsername());
+		voteDateService.deleteVoteAll(meetId, userId);
+		return ResponseEntity.noContent().build();
 	}
 }
