@@ -9,6 +9,9 @@ import com.swyp.mema.domain.station.dto.response.nearSubway.NearSubwayBasicRespo
 import com.swyp.mema.domain.station.dto.response.nearSubway.NearSubwayResponse;
 import com.swyp.mema.domain.station.dto.response.nearSubway.TotalNearSubwayResponse;
 import com.swyp.mema.domain.station.dto.response.subwayInfo.SingleStationResponse;
+import com.swyp.mema.domain.station.dto.response.subwayMaster.SubwayMasterBasicResponse;
+import com.swyp.mema.domain.station.dto.response.subwayMaster.SubwayMasterResponse;
+import com.swyp.mema.domain.station.dto.response.subwayMaster.TotalSubwayMasterResponse;
 import com.swyp.mema.domain.station.dto.response.subwayTime.SubwayTimeBasicResponse;
 import com.swyp.mema.domain.station.dto.response.subwayTime.TotalSubwayTimeResponse;
 import com.swyp.mema.domain.station.dto.response.subwayTime.SubwayTimeResponse;
@@ -90,5 +93,19 @@ public class StationConverter {
 
 		// TotalNearSubwayResponse에 변환된 리스트를 설정
 		return new TotalNearSubwayResponse(responses);
+	}
+
+	public TotalSubwayMasterResponse toSubwayMasterBasicResponse(SubwayMasterBasicResponse basicResponse) {
+
+		List<SubwayMasterResponse> responses = basicResponse.getSubwayStationMaster().getRows().stream()
+			.map(res -> SubwayMasterResponse.builder()
+				.stationName(res.getBuildingName())
+				.route(res.getRoute())
+				.lat(res.getLatitude())
+				.lot(res.getLongitude())
+				.build()
+			).toList();
+
+		return new TotalSubwayMasterResponse(responses);
 	}
 }
