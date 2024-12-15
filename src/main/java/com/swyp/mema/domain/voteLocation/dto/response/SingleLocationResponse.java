@@ -9,4 +9,8 @@ public class SingleLocationResponse {
 
 	private String startStation;
 
+	private String lat;
+
+	private String lot;
+
 }

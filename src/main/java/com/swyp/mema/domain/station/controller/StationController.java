@@ -62,7 +62,7 @@ public class StationController {
 	 * 이 API 는 무시해주세요!
 	 * openAPI 통해 지하철역 시간표 조회 API
 	 // */
-	// @Hidden
+	@Hidden
 	@Operation(summary = "해당 역에 대한 모든 시간표 조회 API", description = "OpenAPI 로 해당 '역 + 호선'에 대한 모든 시간표 정보를 조회합니다.",
 		security = {})
 	@GetMapping("/station/time")
@@ -80,7 +80,7 @@ public class StationController {
 	 * 이 API 는 무시해주세요!
 	 * 지하철 실시간 시간 데이터 가져오는 API
 	 */
-	// @Hidden
+	@Hidden
 	@Operation(summary = "지하철 실시간 시간 API 통해 앞뒤 역 탐색", description = "지하철 실시간 시간 OpenAPI 로 앞뒤 역 정보를 조회합니다.",
 		security = {})
 	@GetMapping("/near/station")

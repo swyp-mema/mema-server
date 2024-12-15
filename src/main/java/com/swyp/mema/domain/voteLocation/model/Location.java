@@ -35,16 +35,19 @@ public class Location extends BaseEntity {
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 
-	private String stationId;		// 출발 위치 역ID
 	private String stationName;		// 출발 위치 역이름
 	private String stationRoute;	// 출발 위치 호선 정보
 
+	private String lat;
+	private String lot;
+
 	@Builder
-	public Location(Meet meet, User user, String stationId, String stationName, String stationRoute) {
+	public Location(Meet meet, User user, String stationName, String stationRoute, String lat, String lot) {
 		this.meet = meet;
 		this.user = user;
-		this.stationId = stationId;
 		this.stationName = stationName;
 		this.stationRoute = stationRoute;
+		this.lat = lat;
+		this.lot = lot;
 	}
 }
