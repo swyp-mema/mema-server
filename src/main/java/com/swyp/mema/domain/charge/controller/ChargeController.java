@@ -31,11 +31,29 @@ public class ChargeController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping
+    @GetMapping("/total")
     @Operation(summary = "정산 조회 API", description = "해당 미팅의 모든 정산을 조회합니다.")
     public ResponseEntity<List<ChargeRes>> getCharges(@PathVariable("meetId") Long meetId) {
 
         List<ChargeRes> res = chargeService.getCharges(meetId);
+        return ResponseEntity.ok(res);
+    }
+
+    @GetMapping("/payfor")
+    @Operation(summary = "내 피정산 조회 API", description = "사용자가 돈을 지불해야 하는 정산들을 조회합니다.")
+    public ResponseEntity<List<ChargeRes>> getPayCharges(@PathVariable("meetId") Long meetId,
+                                                         @AuthenticationPrincipal  CustomUserDetails userDetails) {
+
+        List<ChargeRes> res = chargeService.getPayCharges(meetId, userDetails);
+        return ResponseEntity.ok(res);
+    }
+
+    @GetMapping("/{chargeId}")
+    @Operation(summary = "정산 개별 조회", description = "정산을 조회합니다.")
+    public ResponseEntity<List<ChargeRes>> getCharge(@PathVariable("meetId") Long meetId,
+                                             @PathVariable("chargeId") Long chargeId) {
+
+        List<ChargeRes> res = chargeService.getCharge(meetId, chargeId);
         return ResponseEntity.ok(res);
     }
 

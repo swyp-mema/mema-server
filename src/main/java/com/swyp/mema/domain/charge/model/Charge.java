@@ -26,7 +26,7 @@ public class Charge extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "payee_id")
-    private MeetMember payee;
+    private MeetMember payee;   //돈 받을사람
 
     private String content;
 
@@ -37,11 +37,10 @@ public class Charge extends BaseEntity {
     private Integer peopleNum;
 
     @OneToMany(mappedBy = "charge", cascade = CascadeType.ALL)
-    private List<ChargeMember> chargeMembers = new ArrayList<>();
+    private List<ChargeMember> chargeMembers = new ArrayList<>();   //돈 낼사람
 
     @Builder
-    public Charge(Long id, Meet meet, MeetMember payee, String content, Integer totalPrice, Integer peopleNum) {
-        this.id = id;
+    public Charge(Meet meet, MeetMember payee, String content, Integer totalPrice, Integer peopleNum) {
         this.meet = meet;
         this.payee = payee;
         this.content = content;
