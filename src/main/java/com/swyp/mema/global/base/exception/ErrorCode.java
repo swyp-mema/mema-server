@@ -16,7 +16,7 @@ public enum ErrorCode {
 	EMAIL_ALREADY_EXIST(HttpStatus.CONFLICT, "M002", "이미 가입된 이메일입니다."),
 
 	// MEET
-	MEET_NOT_FOUND(HttpStatus.NOT_FOUND, "M001", "존재하지 않는 약속입니다."),
+	MEET_NOT_FOUND(HttpStatus.NOT_FOUND, "M001", "약속이 존재하지 않습니다."),
 	INVALID_JOIN_CODE(HttpStatus.BAD_REQUEST, "M002", "유효하지 않은 참여 코드입니다."),
 	NOT_EMPTY_MEET_NAME(HttpStatus.BAD_REQUEST, "M003", "약속명은 비어 있을 수 없습니다."),
 	MEET_NAME_OVER_LENGTH(HttpStatus.BAD_REQUEST, "M004", "약속명은 20자 이하로 입력해주세요."),

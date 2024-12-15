@@ -219,6 +219,11 @@ public class MeetService {
 		// 사용자의 모든 약속(Meet) 조회
 		List<Meet> meets = meetMemberRepository.findMeetsByUserId(userId);
 
+		// meets 가 없는 경우 MeetNotFoundException 커스텀 예외 던지기
+		if (meets == null || meets.isEmpty()) {
+			throw new MeetNotFoundException();
+		}
+
 		// 현재 날짜
 		LocalDate today = LocalDate.now();
 
