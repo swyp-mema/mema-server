@@ -22,4 +22,8 @@ public class EnvConfig {
     public String getCilentIp() {
         return dotenv.get("CLIENT_IP");
     }
+
+    public String getOpenAiApiKey() {
+        return dotenv.get("OPENAI_API_KEY");
+    }
 }

@@ -70,7 +70,7 @@ public class StationConverter {
 		List<NearSubwayResponse> responses = basicResponse.getRealtimeArrivalList().stream()
 			.map(res -> NearSubwayResponse.builder()
 				.rowNum(res.getRowNum())                        // 순서
-				.subwayHeading(res.getSubwayHeading())          // 지하철호선ID
+				.subwayLine(res.getSubwayId())          // 지하철호선ID
 				.statnFid(res.getStatnFid())                    // 이전 지하철역 ID
 				.statnTid(res.getStatnTid())                    // 다음 지하철역 ID
 				.statnId(res.getStatnId())                      // 지하철역 ID
@@ -102,7 +102,7 @@ public class StationConverter {
 		return basicResponse.getSubwayStationMaster().getRows().stream()
 			.map(res -> SubwayMasterResponse.builder()
 				.stationName(res.getBuildingName())
-				.route(res.getRoute())
+				.line(res.getRoute())
 				.lat(res.getLatitude())
 				.lot(res.getLongitude())
 				.build()

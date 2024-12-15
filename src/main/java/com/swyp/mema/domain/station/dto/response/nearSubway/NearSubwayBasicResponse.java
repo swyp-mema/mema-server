@@ -6,6 +6,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
 
+/*
+	실시간 조회
+ */
 @Data
 public class NearSubwayBasicResponse {
 
