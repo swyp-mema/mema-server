@@ -80,15 +80,15 @@ public class SecurityConfig {
                 .httpBasic((auth) -> auth.disable());
 
         //JWTFilterCookie(소셜 로그인 사용자용) 추가
-        http
-                .addFilterAfter(new JWTFilterOAuth(jwtUtil), OAuth2LoginAuthenticationFilter.class);
-
-        http
-                .oauth2Login((oauth2) -> oauth2
-                        .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
-                                .userService(customOAuthUserService))
-                                .successHandler(customSuccessHandlerCookie)
-                        );
+//        http
+//                .addFilterAfter(new JWTFilterOAuth(jwtUtil), OAuth2LoginAuthenticationFilter.class);
+//
+//        http
+//                .oauth2Login((oauth2) -> oauth2
+//                        .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
+//                                .userService(customOAuthUserService))
+//                                .successHandler(customSuccessHandlerCookie)
+//                        );
 
         //jwt 검증 필터 등록
         http
