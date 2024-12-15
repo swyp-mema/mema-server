@@ -1,6 +1,8 @@
 package com.swyp.mema.domain.station.service;
 
 import java.net.URI;
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -10,7 +12,10 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.swyp.mema.domain.station.converter.StationConverter;
 import com.swyp.mema.domain.station.dto.response.subwayMaster.SubwayMasterBasicResponse;
+import com.swyp.mema.domain.station.dto.response.subwayMaster.SubwayMasterResponse;
 import com.swyp.mema.domain.station.dto.response.subwayMaster.TotalSubwayMasterResponse;
+import com.swyp.mema.domain.station.model.Station;
+import com.swyp.mema.domain.station.repository.StationRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,13 +32,15 @@ public class StationMasterService {
 
 	private final WebClient webClient;
 	private final StationConverter converter;
+	private final StationRepository repository;
 
 	@Value("${api.master.key}")
 	private String serviceKey;    // 디코딩된 API 서비스 키
 
-	public StationMasterService(WebClient.Builder webClientBuilder, StationConverter converter) {
+	public StationMasterService(WebClient.Builder webClientBuilder, StationConverter converter, StationRepository repository) {
 		this.webClient = webClientBuilder.baseUrl(BASE_URL).build(); // 기본 URL 설정
 		this.converter = converter;
+		this.repository = repository;
 	}
 
 	/*
@@ -49,7 +56,21 @@ public class StationMasterService {
 		// OpenAPI 요청 및 JSON 확인
 		SubwayMasterBasicResponse result = fetchOpenApiForSubwayMaster(uri);
 		log.info("result : {}", result);
-		return converter.toSubwayMasterBasicResponse(result);
+
+		List<SubwayMasterResponse> responses = converter.toSubwayMasterListResponse(result);
+
+		List<Station> stations = responses.stream()
+			.map(m -> new Station(
+				m.getStationName(),
+				m.getRoute(),
+				m.getLat(),
+				m.getLat()
+			)).toList();
+
+		repository.saveAll(stations);	// 대량 Insert
+
+		return converter.toTotalSubwayMasterResponse(responses);
+
 	}
 
 	private URI createSubwayMasterUri() {

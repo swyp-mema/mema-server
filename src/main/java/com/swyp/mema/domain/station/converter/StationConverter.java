@@ -22,16 +22,18 @@ import com.swyp.mema.domain.station.model.Station;
 public class StationConverter {
 
 	private static final int START_INDEX = 1;
-	private static final int END_INDEX = 1200;
+	private static final int END_INDEX = 1000;
 
 	public TotalStationResponse toTotalStationResponse(List<Station> stationList) {
 
 		List<SingleStationResponse> stationResponse = stationList.stream()
-			.map(station -> new SingleStationResponse(
-				station.getStationId(),
-				station.getStationName(),
-				station.getRouteName()
-			))
+			.map(station -> SingleStationResponse.builder()
+				.stationName(station.getStationName())
+				.routeName(station.getRouteName())
+				.lat(station.getLat())
+				.lot(station.getLot())
+				.build()
+			)
 			.collect(Collectors.toList());
 
 		int totalCount = stationResponse.size();
@@ -95,9 +97,9 @@ public class StationConverter {
 		return new TotalNearSubwayResponse(responses);
 	}
 
-	public TotalSubwayMasterResponse toSubwayMasterBasicResponse(SubwayMasterBasicResponse basicResponse) {
+	public List<SubwayMasterResponse> toSubwayMasterListResponse(SubwayMasterBasicResponse basicResponse) {
 
-		List<SubwayMasterResponse> responses = basicResponse.getSubwayStationMaster().getRows().stream()
+		return basicResponse.getSubwayStationMaster().getRows().stream()
 			.map(res -> SubwayMasterResponse.builder()
 				.stationName(res.getBuildingName())
 				.route(res.getRoute())
@@ -106,6 +108,9 @@ public class StationConverter {
 				.build()
 			).toList();
 
+	}
+
+	public TotalSubwayMasterResponse toTotalSubwayMasterResponse(List<SubwayMasterResponse> responses) {
 		return new TotalSubwayMasterResponse(responses);
 	}
 }

@@ -83,35 +83,34 @@ public class StationService {
 	/*
 	 * OpenAPI 를 호출하여 Station 값 변경
 	 */
-	@Transactional
-	public void getSubwayInfoByAPI(Long meetId, Long userId) {
-
-		// 필수 검증 로직
-		User user = validateUser(userId);
-		Meet meet = validateMeet(meetId);
-		MeetMember meetMember = validateMeetMember(user, meet);
-		validateMeetMember(meetMember.getId());
-
-		// URI 빌더로 URL 생성
-		URI uri = createSubwayInfoUri();
-		log.info("Generated SubwayInfo API Request URL: {}", uri);
-
-		// OpenAPI 요청 및 JSON 확인
-		SubwayInfoBasicResponse result = fetchOpenApiForSubwayInfo(uri);
-		log.info("result : {}", result);
-
-
-		List<Station> stations = result.getResponse().getBody().getItems().getItemList().stream()
-			.map(item -> new Station(
-				item.getStationId(),
-				item.getStationName(),
-				item.getRouteName()
-			))
-			.toList();
-
-		stationRepository.saveAll(stations);	// 대량 Insert
-
-	}
+	// @Transactional
+	// public void getSubwayInfoByAPI(Long meetId, Long userId) {
+	//
+	// 	// 필수 검증 로직
+	// 	User user = validateUser(userId);
+	// 	Meet meet = validateMeet(meetId);
+	// 	MeetMember meetMember = validateMeetMember(user, meet);
+	// 	validateMeetMember(meetMember.getId());
+	//
+	// 	// URI 빌더로 URL 생성
+	// 	URI uri = createSubwayInfoUri();
+	// 	log.info("Generated SubwayInfo API Request URL: {}", uri);
+	//
+	// 	// OpenAPI 요청 및 JSON 확인
+	// 	SubwayInfoBasicResponse result = fetchOpenApiForSubwayInfo(uri);
+	// 	log.info("result : {}", result);
+	//
+	//
+	// 	List<Station> stations = result.getResponse().getBody().getItems().getItemList().stream()
+	// 		.map(item -> new Station(
+	// 			item.getStationName(),
+	// 			item.getRouteName())
+	// 		)
+	// 		.toList();
+	//
+	// 	stationRepository.saveAll(stations);	// 대량 Insert
+	//
+	// }
 
 	/*
 	 * 해당 역ID(역이름 + 호선 정보) 통해 해당 호선에 대한 모든 시간 데이터 요청 OpenAPI

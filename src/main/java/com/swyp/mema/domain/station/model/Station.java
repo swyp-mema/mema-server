@@ -1,11 +1,13 @@
 package com.swyp.mema.domain.station.model;
 
+import static jakarta.persistence.GenerationType.*;
 import static lombok.AccessLevel.*;
 
 import com.swyp.mema.global.base.domain.BaseEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,11 +16,11 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @NoArgsConstructor(access = PROTECTED)
-public class Station extends BaseEntity { // + 위/경도
+public class Station extends BaseEntity {
 
 	@Id
-	@Column(unique = true, nullable = false)
-	private String stationId;	// 역 ID (PK)
+	@GeneratedValue(strategy = IDENTITY)
+	private Long id;
 
 	@Column(nullable = false)
 	private String stationName;	// 역이름
@@ -30,14 +32,15 @@ public class Station extends BaseEntity { // + 위/경도
 
 	private int toNext;			// 다음역까지 소요시간
 
-	private double lat;	// 위도
+	private String lat;	// 위도
 
-	private double lot;	// 경도
+	private String lot;	// 경도
 
 	@Builder
-	public Station(String stationId, String stationName, String routeName) {
-		this.stationId = stationId;
+	public Station(String stationName, String routeName, String lat, String lot) {
 		this.stationName = stationName;
-		this.routeName = routeName.equals("공항") ? "공항철도" : routeName;
+		this.routeName = routeName;
+		this.lat = lat;
+		this.lot = lot;
 	}
 }
