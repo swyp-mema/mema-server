@@ -3,6 +3,9 @@ package com.swyp.mema.domain.station.dto.response.subwayTime;
 import lombok.Builder;
 import lombok.Getter;
 
+/*
+	시간표
+ */
 @Getter
 @Builder
 public class SubwayTimeResponse {

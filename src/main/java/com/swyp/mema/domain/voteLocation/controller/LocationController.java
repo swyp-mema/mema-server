@@ -1,5 +1,7 @@
 package com.swyp.mema.domain.voteLocation.controller;
 
+import com.swyp.mema.domain.midloc.service.MidLocService;
+import com.swyp.mema.domain.voteLocation.dto.response.MidLocationResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 public class LocationController {
 
 	private final LocationService locationService;
+	private final MidLocService midLocService;
 
 	/**
 	 * 위치 투표 생성
@@ -61,12 +64,12 @@ public class LocationController {
 	 */
 	@Operation(summary = "전체 위치 조회 API", description = "약속원의 전체 출발 위치를 조회할 수 있습니다.")
 	@GetMapping("/meets/{meetId}/vote/location/total")
-	public ResponseEntity<TotalLocationResponse> getTotalLocation(
+	public ResponseEntity<MidLocationResponse> getTotalLocation(
 		@PathVariable Long meetId,
 		@AuthenticationPrincipal CustomUserDetails userDetails
 	) {
-		Long userId = Long.parseLong(userDetails.getUsername());
-		TotalLocationResponse response = locationService.getTotalLocation(meetId, userId);
+		Long userId = userDetails.getUserId();
+		MidLocationResponse response = midLocService.getMidLocation(meetId, userId);
 		return ResponseEntity.ok(response);
 	}
 

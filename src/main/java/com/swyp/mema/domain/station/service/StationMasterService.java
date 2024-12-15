@@ -2,7 +2,6 @@ package com.swyp.mema.domain.station.service;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -19,6 +18,9 @@ import com.swyp.mema.domain.station.repository.StationRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
+/*
+	위경도
+ */
 @Slf4j
 @Service
 public class StationMasterService {
@@ -62,7 +64,7 @@ public class StationMasterService {
 		List<Station> stations = responses.stream()
 			.map(m -> new Station(
 				m.getStationName(),
-				m.getRoute(),
+				m.getLine(),
 				m.getLat(),
 				m.getLot()
 			)).toList();

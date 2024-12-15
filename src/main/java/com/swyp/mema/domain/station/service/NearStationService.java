@@ -51,6 +51,10 @@ public class NearStationService {
 
 		// OpenAPI 요청 및 JSON 확인
 		NearSubwayBasicResponse result = fetchOpenApiForNearSubway(uri);
+		if(result.getRealtimeArrivalList() == null || result.getRealtimeArrivalList().isEmpty()) {
+
+			return null;
+		}
 		log.info("result : {}", result);
 		return converter.toNearSubwayBasicResponse(result);
 	}

@@ -2,6 +2,9 @@ package com.swyp.mema.domain.voteLocation.service;
 
 import java.util.List;
 
+import com.swyp.mema.domain.midloc.service.MidLocService;
+import com.swyp.mema.domain.voteLocation.dto.response.MidLocationResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -88,25 +91,26 @@ public class LocationService {
 
 		// 중간 위치 정하는 로직 여기 포함되어야할 듯
 
+
 		return converter.toTotalLocationResponse(locations);
 	}
 
-	private MeetMember validateMeetMember(User user, Meet meet) {
+	public MeetMember validateMeetMember(User user, Meet meet) {
 		return meetMemberRepository.findByUserAndMeet(user, meet)
 			.orElseThrow(NotMeetMemberException::new);
 	}
 
-	private MeetMember validateMeetMember(Long meetMemberId) {
+	public MeetMember validateMeetMember(Long meetMemberId) {
 		return meetMemberRepository.findById(meetMemberId)
 			.orElseThrow(MeetMemberNotFoundException::new);
 	}
 
-	private Meet validateMeet(Long meetId) {
+	public Meet validateMeet(Long meetId) {
 		return meetRepository.findById(meetId)
 			.orElseThrow(MeetNotFoundException::new);
 	}
 
-	private User validateUser(Long userId) {
+	public User validateUser(Long userId) {
 		return userRepository.findById(userId)
 			.orElseThrow(UserNotFoundException::new);
 	}
