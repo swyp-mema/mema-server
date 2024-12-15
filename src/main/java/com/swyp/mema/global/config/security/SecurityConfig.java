@@ -60,7 +60,7 @@ public class SecurityConfig {
 
                         CorsConfiguration configuration = new CorsConfiguration();
 
-                        configuration.setAllowedOrigins(Arrays.asList("http://223.130.156.230", "http://localhost:3000"));  // 개발 서버와 로컬 프론트엔드 도메인 추가
+                        configuration.setAllowedOrigins(Arrays.asList("http://meet-mate.duckdns.org/", "http://localhost:3000"));  // 개발 서버와 로컬 프론트엔드 도메인 추가
                         configuration.setAllowedMethods(Collections.singletonList("*"));
                         configuration.setAllowCredentials(true);
                         configuration.setAllowedHeaders(Collections.singletonList("*"));
