@@ -32,14 +32,15 @@ public class LocationConverter {
 		return Location.builder()
 			.meet(meet)
 			.user(user)
-			.stationId(request.getStationId())
 			.stationName(request.getStationName())
 			.stationRoute(request.getRouteName())
+			.lat(request.getLat())
+			.lot(request.getLot())
 			.build();
 	}
 
 	public SingleLocationResponse toSingleLocationResponse(Location location) {
-		return new SingleLocationResponse(location.getStationName());
+		return new SingleLocationResponse(location.getStationName(), location.getLat(), location.getLot());
 	}
 
 	public TotalLocationResponse toTotalLocationResponse(List<Location> locationList) {

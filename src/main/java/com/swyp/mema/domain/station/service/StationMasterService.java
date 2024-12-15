@@ -64,7 +64,7 @@ public class StationMasterService {
 				m.getStationName(),
 				m.getRoute(),
 				m.getLat(),
-				m.getLat()
+				m.getLot()
 			)).toList();
 
 		repository.saveAll(stations);	// 대량 Insert

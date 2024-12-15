@@ -9,11 +9,12 @@ import lombok.Getter;
 public class CreateLocationReq {
 
 	@NotBlank
-	private String stationId;
-
-	@NotBlank
 	private String stationName;
 
 	@NotBlank
 	private String routeName;
+
+	private String lat;
+
+	private String lot;
 }
