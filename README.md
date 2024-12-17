@@ -13,13 +13,13 @@
 
 |                                              Developer                                              |                                               Developer                                              |
 |:----------------------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------------------------:|
-| <img alt="img_3.png" height="150" src="https://avatars.githubusercontent.com/u/59335077?v=4" width="150"/> | <img alt="img.png" height="150" src="https://github.com/user-attachments/assets/a22c3c33-53ea-4659-826b-8c59500739bf" width="150" /> |
+| <img alt="img_3.png" height="150" src="https://avatars.githubusercontent.com/u/59335077?v=4" width="145"/> | <img alt="img.png" height="150" src="https://github.com/user-attachments/assets/a0e2c1b7-6bf8-4894-9a8e-944011e83255" width="130" /> |
 |                                                    최은비                                                     |                                                    김현창                                                    |
 
 <br />
 
 ## ✨ 주요 기능
-### 1. 일정 & 정산 기능
+### 1. 일정 투표 & 정산 기능
 - 모임원들은 캘린더에서 가능한 일자를 선택하여, 약속 날짜를 잡을 수 있다.
 - 모임원들을 선택하여 여러개의 정산을 생성할 수 있다.
 
