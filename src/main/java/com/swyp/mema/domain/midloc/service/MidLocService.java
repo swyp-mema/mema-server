@@ -27,7 +27,6 @@ public class MidLocService {
 	private final LocationService locationService;
 	private final Stations stationService;
 	private final LocationRepository locationRepository;
-	private final StationConverter converter;
 
 	/**
 	 *
@@ -36,7 +35,7 @@ public class MidLocService {
 	 * @param userId
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional
 	public MidLocationResponse getMidLocation(Long meetId, Long userId) {
 
 		// 필수 검증 로직
@@ -55,9 +54,14 @@ public class MidLocService {
 				.build())
 			.toList();
 
+		SingleStationResponse midStation = getMidStation(userId, meetId);
+
+		// 미팅 중간 위치 값 저장
+		meet.setMeetLocation(midStation.getStationName());
+
 		return MidLocationResponse.builder()
 			.startStationList(userStartStations)
-			.midStation(getMidStation(userId, meetId))
+			.midStation(midStation)
 			.build();
 
 	}

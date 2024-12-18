@@ -90,4 +90,8 @@ public class Meet extends BaseEntity {
 	}
 
 	public void setMeetDate(LocalDate dateTime) {this.meetDate = dateTime; }
+
+	public void setMeetLocation(String meetLocation) {
+		this.meetLocation = meetLocation;
+	}
 }
