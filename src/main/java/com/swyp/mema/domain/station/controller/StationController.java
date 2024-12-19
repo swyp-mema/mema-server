@@ -44,7 +44,7 @@ public class StationController {
 	/**
 	 * 지하철 역사 마스터 API 통해 위도 & 경도를 포함한 지하철역 조회 API
 	 */
-	// @Hidden
+	@Hidden
 	@Operation(summary = "지하철 역사 마스터 API 통해 위도 & 경도 포함한 지하철역 조회 API", description = "지하철 역사 마스터 OpenAPI 로 해당 역의 위도 & 경도 값을 구합니다.",
 		security = {})
 	@GetMapping("/station/all")
