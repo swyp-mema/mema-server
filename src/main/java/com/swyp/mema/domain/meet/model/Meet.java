@@ -48,8 +48,12 @@ public class Meet extends BaseEntity {
 	private State state;
 
 	private LocalDate meetDate;
-	private String meetLocation;
 	private LocalDateTime expiredVoteDate;
+
+	private String meetLocation;	// 만나는 역 이름
+	private String line;			// 만나는 역 호선
+	private String lat;				// 만나는 역 위도
+	private String lot;				// 만나는 역 경도
 
 	@OneToMany(mappedBy = "meet", cascade = CascadeType.REMOVE, orphanRemoval = true)
 	private List<MeetMember> members = new ArrayList<>();
@@ -91,7 +95,10 @@ public class Meet extends BaseEntity {
 
 	public void setMeetDate(LocalDate dateTime) {this.meetDate = dateTime; }
 
-	public void setMeetLocation(String meetLocation) {
+	public void setMeetLocation(String meetLocation, String line, String lat, String lot) {
 		this.meetLocation = meetLocation;
+		this.line = line;
+		this.lat = lat;
+		this.lot = lot;
 	}
 }

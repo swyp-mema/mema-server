@@ -38,7 +38,9 @@ public enum ErrorCode {
 	VOTE_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "VD006", "해당 멤버의 투표가 이미 존재합니다."),
 
 	// LOCATION VOTE
-	VOTE_LOCATION_NOT_FOUND(HttpStatus.NOT_FOUND, "VL001", "존재하지 않는 위치 투표 ID 입니다."),
+	VOTE_LOCATION_NOT_FOUND(HttpStatus.NOT_FOUND, "VL001", "해당 위치 투표 ID는 존재하지 않습니다."),
+	DUPLICATE_LOCATION_VOTE(HttpStatus.BAD_REQUEST, "VL002", "위치 투표는 중복해서 할 수 없습니다."),
+	ONLY_ONE_LOCATION_VOTE(HttpStatus.BAD_REQUEST, "VL003", "해당 약속의 위치 투표값이 1개라서 중간 위치를 구할 수 없습니다."),
 
 	// STATION
 	STATION_NOT_FOUNT(HttpStatus.NOT_FOUND, "S001", "해당 역을 찾을 수 없습니다."),

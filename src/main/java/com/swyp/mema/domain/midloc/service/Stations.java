@@ -5,12 +5,12 @@ import com.swyp.mema.domain.midloc.service.structures.StationInfo;
 import com.swyp.mema.domain.midloc.service.structures.TransferStation;
 import com.swyp.mema.domain.station.dto.response.nearSubway.NearSubwayResponse;
 import com.swyp.mema.domain.station.dto.response.nearSubway.TotalNearSubwayResponse;
-import com.swyp.mema.domain.station.dto.response.subwayMaster.SubwayMasterResponse;
+import com.swyp.mema.domain.station.dto.response.subwayInfo.SingleStationResponse;
 import com.swyp.mema.domain.station.service.NearStationService;
-import com.swyp.mema.domain.station.service.StationMasterService;
+import com.swyp.mema.domain.station.service.StationService;
+
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -25,16 +25,15 @@ public class Stations {
     private final HashMap<String, StationInfo> stationInfos;   // code로 station info를 조회하는 해시맵
     private final HashMap<String, String> realTIme_lineMap;   //실시간 line -> 라인
     private final HashMap<String, String> realTime_codeMap;   //실시간 idx(StatnId) -> 역코드
-    @Autowired
-    private final StationMasterService stationLocrService;
-    @Autowired
+
+    private final StationService stationService;
     private final NearStationService nearStationService;
 
-    public Stations(StationMasterService stationLocrService, NearStationService nearStationService) {
+    public Stations(StationService stationService, NearStationService nearStationService) {
         this.stationInfos = new HashMap<>();
         this.realTIme_lineMap = new HashMap<>();
         this.realTime_codeMap = new HashMap<>();
-        this.stationLocrService = stationLocrService;
+        this.stationService = stationService;
         this.nearStationService = nearStationService;
     }
 
@@ -1695,10 +1694,10 @@ public class Stations {
      */
     public void makeStations() {
 
-        List<SubwayMasterResponse> reses = stationLocrService.getSubwayMasterByAPI().getMasterList();
-        for (SubwayMasterResponse res : reses) {
+        List<SingleStationResponse> reses = stationService.getSubwayInfo().getStationList();
 
-            String code = res.getLine() + "_" + res.getStationName();
+        for (SingleStationResponse res : reses) {
+            String code = res.getRouteName() + "_" + res.getStationName();
             StationInfo stationInfo = makeStation(res);
             this.stationInfos.put(code, stationInfo);
             stationInfo.printInfo();
@@ -1708,11 +1707,11 @@ public class Stations {
     /*
         단일 stationInfo 생성
      */
-    public StationInfo makeStation(SubwayMasterResponse res) {
+    public StationInfo makeStation(SingleStationResponse res) {
 
         StationInfo stationInfo = StationInfo.builder()
                 .stationName(res.getStationName())
-                .line(res.getLine())
+                .line(res.getRouteName())
                 .lat(res.getLat())
                 .lot(res.getLot())
                 .build();

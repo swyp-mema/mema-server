@@ -33,21 +33,18 @@ public class StationController {
 	 * 모든 지하철역 조회 API
 	 */
 	@Operation(summary = "모든 지하철역 조회 API", description = "역DB 로 모든 지하철역 정보를 조회합니다.")
-	@GetMapping("/meets/{meetId}/station/total")
+	@GetMapping("/station/total")
 	public ResponseEntity<TotalStationResponse> getAllStation(
-		@PathVariable Long meetId,
 		@AuthenticationPrincipal CustomUserDetails userDetails
 	) {
-
-		Long userId = Long.parseLong(userDetails.getUsername());
-		TotalStationResponse response = stationService.getSubwayInfo(meetId, userId);
+		TotalStationResponse response = stationService.getSubwayInfo();
 		return ResponseEntity.ok(response);
 	}
 
 	/**
 	 * 지하철 역사 마스터 API 통해 위도 & 경도를 포함한 지하철역 조회 API
 	 */
-	@Hidden
+	// @Hidden
 	@Operation(summary = "지하철 역사 마스터 API 통해 위도 & 경도 포함한 지하철역 조회 API", description = "지하철 역사 마스터 OpenAPI 로 해당 역의 위도 & 경도 값을 구합니다.",
 		security = {})
 	@GetMapping("/station/all")

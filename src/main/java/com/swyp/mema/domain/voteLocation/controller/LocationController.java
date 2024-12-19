@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.swyp.mema.domain.voteLocation.dto.request.CreateLocationReq;
 import com.swyp.mema.domain.voteLocation.dto.response.SingleLocationResponse;
-import com.swyp.mema.domain.voteLocation.dto.response.TotalLocationResponse;
 import com.swyp.mema.domain.voteLocation.service.LocationService;
 import com.swyp.mema.domain.user.dto.CustomUserDetails;
 
@@ -69,6 +68,7 @@ public class LocationController {
 		@AuthenticationPrincipal CustomUserDetails userDetails
 	) {
 		Long userId = userDetails.getUserId();
+		locationService.getTotalLocation(meetId, userId);
 		MidLocationResponse response = midLocService.getMidLocation(meetId, userId);
 		return ResponseEntity.ok(response);
 	}

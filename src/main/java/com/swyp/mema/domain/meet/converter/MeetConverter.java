@@ -43,6 +43,9 @@ public class MeetConverter {
 			.meetState(meet.getState())
 			.meetDate(meet.getMeetDate())
 			.meetLocation(meet.getMeetLocation())
+			.routeName(meet.getLine())
+			.lat(meet.getLat())
+			.lot(meet.getLot())
 			.voteExpiredDate(meet.getExpiredVoteDate())
 			.members(members)
 			.build();

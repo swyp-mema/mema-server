@@ -32,8 +32,17 @@ public class SingleMeetRes {
 	@Schema(description = "약속 날짜", example = "2025-01-10")
 	private LocalDate meetDate;
 
-	@Schema(description = "약속 장소", example = "서울역")
+	@Schema(description = "만나는 역 이름", example = "서울역")
 	private String meetLocation;
+
+	@Schema(description = "만나는 역 호선", example = "1호선")
+	private String routeName;
+
+	@Schema(description = "만나는 역 위도", example = "37.556228")
+	private String lat;
+
+	@Schema(description = "만나는 역 경도", example = "126.972135")
+	private String lot;
 
 	@Schema(description = "날짜 투표 만료일", example = "2025-01-01T02:11:00")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")	// 직렬화
