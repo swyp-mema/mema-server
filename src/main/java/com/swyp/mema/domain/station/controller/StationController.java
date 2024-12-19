@@ -33,14 +33,11 @@ public class StationController {
 	 * 모든 지하철역 조회 API
 	 */
 	@Operation(summary = "모든 지하철역 조회 API", description = "역DB 로 모든 지하철역 정보를 조회합니다.")
-	@GetMapping("/meets/{meetId}/station/total")
+	@GetMapping("/station/total")
 	public ResponseEntity<TotalStationResponse> getAllStation(
-		@PathVariable Long meetId,
 		@AuthenticationPrincipal CustomUserDetails userDetails
 	) {
-
-		Long userId = Long.parseLong(userDetails.getUsername());
-		TotalStationResponse response = stationService.getSubwayInfo(meetId, userId);
+		TotalStationResponse response = stationService.getSubwayInfo();
 		return ResponseEntity.ok(response);
 	}
 

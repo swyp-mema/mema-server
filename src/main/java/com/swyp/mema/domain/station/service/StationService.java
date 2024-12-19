@@ -67,13 +67,7 @@ public class StationService {
 	 * Station 테이블 저장
 	 */
 	@Transactional(readOnly = true)
-	public TotalStationResponse getSubwayInfo(Long meetId, Long userId) {
-
-		// 필수 검증 로직
-		User user = validateUser(userId);
-		Meet meet = validateMeet(meetId);
-		MeetMember meetMember = validateMeetMember(user, meet);
-		validateMeetMember(meetMember.getId());
+	public TotalStationResponse getSubwayInfo() {
 
 		List<Station> all = stationRepository.findAll();
 
