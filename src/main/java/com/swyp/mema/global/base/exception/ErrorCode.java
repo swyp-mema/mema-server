@@ -36,6 +36,7 @@ public enum ErrorCode {
 	UNSATISFACTORY_FINAL_DATE(HttpStatus.BAD_REQUEST, "VD004", "약속원 모두가 만족하는 날짜가 아닙니다."),
 	INVALID_FINAL_DATE(HttpStatus.BAD_REQUEST, "VD005", "만료되지 않은 투표임으로 최종 날짜 선택이 불가능합니다."),
 	VOTE_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "VD006", "해당 멤버의 투표가 이미 존재합니다."),
+	DUPLICATE_DATE_VOTE(HttpStatus.BAD_REQUEST, "VD007", "일정 투표를 중복 생성할 수 없습니다."),
 
 	// LOCATION VOTE
 	VOTE_LOCATION_NOT_FOUND(HttpStatus.NOT_FOUND, "VL001", "해당 위치 투표 ID는 존재하지 않습니다."),

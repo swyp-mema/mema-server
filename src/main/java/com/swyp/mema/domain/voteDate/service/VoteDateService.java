@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.swyp.mema.domain.voteDate.exception.DuplicateDateVoteException;
 import com.swyp.mema.domain.voteDate.model.VoteDate;
 import com.swyp.mema.domain.voteDate.repository.VoteDateRepository;
 
@@ -60,6 +61,12 @@ public class VoteDateService {
 			throw new NotMeetMemberException();
 		}
 
+		// 이미 해당 미팅의 만료일자가 존재한다면 예외 발생
+		if (meet.getExpiredVoteDate() != null) {
+			// 중복 생성할 수 없다.
+			throw new DuplicateDateVoteException();
+		}
+
 		// 새로 생성하는 투표의 만료일이 현재 시각보다 이른지 검증
 		if (createVoteDateReq.getExpiredVoteDate().isBefore(LocalDateTime.now())) {
 			throw new VoteDateFastDateException();
@@ -69,6 +76,9 @@ public class VoteDateService {
 		meet.setExpiredVoteDate(createVoteDateReq.getExpiredVoteDate());
 		meet.changeState(State.DATE_VOTING);
 
+		// 해당 약속원 투표 여부 true 변경
+		meetMember1.setVoteDateYn(true);
+
 		// 기존 투표 삭제 및 새로운 투표 생성
 		List<VoteDate> voteDates = recreateVoteDates(meetMember2, createVoteDateReq.getVoteDates());
 
@@ -77,7 +87,7 @@ public class VoteDateService {
 	}
 
 	/**
-	 * 날짜 투표 수정
+	 * 날짜 투표 생성 및 수정
 	 * @param meetId 약속 ID
 	 * @param updateVoteDateReq 날짜 투표 요청 DTO
 	 */
@@ -117,10 +127,11 @@ public class VoteDateService {
 			throw new NotMeetMemberException();
 		}
 
-		// 투표 만료일이 지난 투표인지 검증
-		validateVoteDateNotExpired(meet);
+		// // 투표 만료일이 지난 투표인지 검증
+		// validateVoteDateNotExpired(meet);
 
 		// 투표 삭제
+		meetMember.setVoteDateYn(false);
 		voteDateRepository.deleteAllByMeetMember(meetMember);
 	}
 
@@ -137,13 +148,18 @@ public class VoteDateService {
 			throw new NotMeetMemberException();
 		}
 
-		List<MeetMember> meetMembers = meetMemberRepository.findByMeetId(meetId);
-
 		// 투표 삭제
-		for(MeetMember m : meetMembers) {
+		meetMemberRepository.findByMeetId(meetId)
+			.forEach(
+				member -> {
+					voteDateRepository.deleteAllByMeetMember(member);
 
-			voteDateRepository.deleteAllByMeetMember(m);
-		}
+					// 해당 약속원 투표 여부 false
+					member.setVoteDateYn(false);
+				});
+
+		// 만료일 NULL 로 초기화
+		meet.setExpiredVoteDate(null);
 	}
 
 	@Transactional(readOnly = true)

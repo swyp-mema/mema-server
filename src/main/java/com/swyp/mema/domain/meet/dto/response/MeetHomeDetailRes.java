@@ -3,7 +3,7 @@ package com.swyp.mema.domain.meet.dto.response;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.swyp.mema.domain.user.dto.response.UserRes;
+import com.swyp.mema.domain.meetMember.dto.response.MeetMemberRes;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -19,6 +19,5 @@ public class MeetHomeDetailRes {
 	private String meetName;
 	private LocalDate meetDate;
 	private int memberCount;
-	private List<UserRes> userInfo;
-
+	private List<MeetMemberRes> members;
 }

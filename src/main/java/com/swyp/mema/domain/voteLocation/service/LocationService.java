@@ -13,7 +13,7 @@ import com.swyp.mema.domain.meet.model.vo.State;
 import com.swyp.mema.domain.voteLocation.converter.LocationConverter;
 import com.swyp.mema.domain.voteLocation.dto.request.CreateLocationReq;
 import com.swyp.mema.domain.voteLocation.dto.response.SingleLocationResponse;
-import com.swyp.mema.domain.voteLocation.exception.DuplicateVoteException;
+import com.swyp.mema.domain.voteLocation.exception.DuplicateLocationVoteException;
 import com.swyp.mema.domain.voteLocation.exception.LocationNotFoundException;
 import com.swyp.mema.domain.voteLocation.model.Location;
 import com.swyp.mema.domain.voteLocation.repository.LocationRepository;
@@ -50,7 +50,7 @@ public class LocationService {
 
 		// 투표가 이미 존재하는지 검증
 		if (locationRepository.findByUserAndMeet(user, meet).isPresent()) {
-			throw new DuplicateVoteException();
+			throw new DuplicateLocationVoteException();
 		}
 
 		Location location = converter.toLocationEntity(createLocationReq, meet, user);
