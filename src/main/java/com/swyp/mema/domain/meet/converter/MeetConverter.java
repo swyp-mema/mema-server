@@ -57,19 +57,16 @@ public class MeetConverter {
 			.map(
 				member -> {
 					boolean result = member.getUser().getUserId() == userId;
-					return MeetMemberRes.builder()
-						.meetMemberId(member.getId())
-						.me(result)
-						.userInfo
-							(
-								UserRes.builder()
-									.userId(member.getUser().getUserId())
-									.nickname(member.getUser().getNickname())
-									.puzzleId(member.getUser().getPuzId())
-									.puzzleColor(member.getUser().getPuzColor())
-									.build()
-							)
-						.build();
+					return new MeetMemberRes(
+						member.getId(), // meetMemberId
+						result,         // me
+						new UserRes(    // userInfo
+							member.getUser().getUserId(),   // userId
+							member.getUser().getNickname(), // nickname
+							member.getUser().getPuzId(),    // puzzleId
+							member.getUser().getPuzColor()  // puzzleColor
+						)
+					);
 				})
 			.toList();
 
