@@ -1,7 +1,6 @@
 package com.swyp.mema.domain.meet.converter;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
@@ -21,7 +20,7 @@ public class MeetConverter {
 		return Meet.builder()
 			.code(code)
 			.name(meetReq.getMeetName())
-			.state(State.CREATED)	// 초기값 : 날짜 투표 중
+			.state(State.CREATED)    // 초기값 : 날짜 투표 중
 			.meetDate(null)
 			.meetLocation(null)
 			.expiredVoteDate(null)
@@ -51,7 +50,28 @@ public class MeetConverter {
 			.build();
 	}
 
-	public MeetHomeDetailRes toMeetHomeDetailResponse(Meet meet){
+	public MeetHomeDetailRes toMeetHomeDetailResponse(Meet meet, Long userId) {
+
+		// MeetMemberRes
+		List<MeetMemberRes> meetMemberRes = meet.getMembers().stream()
+			.map(
+				member -> {
+					boolean result = member.getUser().getUserId() == userId;
+					return MeetMemberRes.builder()
+						.meetMemberId(member.getId())
+						.me(result)
+						.userInfo
+							(
+								UserRes.builder()
+									.userId(member.getUser().getUserId())
+									.nickname(member.getUser().getNickname())
+									.puzzleId(member.getUser().getPuzId())
+									.puzzleColor(member.getUser().getPuzColor())
+									.build()
+							)
+						.build();
+				})
+			.toList();
 
 		return MeetHomeDetailRes.builder()
 			.meetId(meet.getId())
@@ -59,14 +79,7 @@ public class MeetConverter {
 			.meetName(meet.getName())
 			.meetDate(meet.getMeetDate())
 			.memberCount(meet.getMembers().size())
-			.userInfo(meet.getMembers().stream()
-				.map(member -> UserRes.builder()
-					.userId(member.getUser().getUserId())
-					.nickname(member.getUser().getNickname())
-					.puzzleId(member.getUser().getPuzId())
-					.puzzleColor(member.getUser().getPuzColor())
-					.build())
-				.collect(Collectors.toList()))
+			.members(meetMemberRes)
 			.build();
 	}
 }

@@ -58,4 +58,8 @@ public class MeetMember extends BaseEntity {
 	public void setVoteLocationYn(boolean voteLocationYn) {
 		this.voteLocationYn = voteLocationYn;
 	}
+
+	public void setVoteDateYn(boolean voteDateYn) {
+		this.voteDateYn = voteDateYn;
+	}
 }

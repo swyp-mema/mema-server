@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.swyp.mema.domain.user.dto.response.UserRes;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
+@Builder
 @JsonPropertyOrder({ "meetMemberId", "isMe", "userInfo" }) // 필드 순서 지정
 public class MeetMemberRes {
 

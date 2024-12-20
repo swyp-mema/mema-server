@@ -27,6 +27,7 @@ import com.swyp.mema.domain.meetMember.dto.response.MeetMemberRes;
 import com.swyp.mema.domain.meetMember.exception.NotMeetMemberException;
 import com.swyp.mema.domain.meetMember.model.MeetMember;
 import com.swyp.mema.domain.meetMember.repository.MeetMemberRepository;
+import com.swyp.mema.domain.user.dto.converter.UserConverter;
 import com.swyp.mema.domain.user.exception.UserAlreadyRegisteredException;
 import com.swyp.mema.domain.user.exception.UserNotFoundException;
 import com.swyp.mema.domain.user.model.User;
@@ -45,6 +46,7 @@ public class MeetService {
 	private final MeetMemberRepository meetMemberRepository;
 	private final MeetMemberConverter meetMemberConverter;
 	private final UserRepository userRepository;
+	private final UserConverter userConverter;
 
 	/**
 	 * 새로운 약속 생성 & 사용자는 약속원에 등록
@@ -152,7 +154,7 @@ public class MeetService {
 
 		// 가져온 약속을 MeetHomeDetailRes DTO 리스트로 변환
 		List<MeetHomeDetailRes> meetList = pagedMeets.stream()
-			.map(meetConverter::toMeetHomeDetailResponse)
+			.map(m -> meetConverter.toMeetHomeDetailResponse(m, userId))
 			.collect(Collectors.toList());
 
 		return TotalMeetManageRes.builder()
@@ -213,7 +215,7 @@ public class MeetService {
 	public MeetHomeRes getHome(Long userId) {
 
 		// 존재하는 사용자인지 검증
-		userRepository.findById(userId)
+		User user = userRepository.findById(userId)
 			.orElseThrow(UserNotFoundException::new);
 
 		// 사용자의 모든 약속(Meet) 조회
@@ -223,7 +225,6 @@ public class MeetService {
 		if (meets == null || meets.isEmpty()) {
 			throw new MeetNotFoundException();
 		}
-
 		// 현재 날짜
 		LocalDate today = LocalDate.now();
 
@@ -252,7 +253,7 @@ public class MeetService {
 				.thenComparing(Meet::getCreateDate) // 생성 날짜가 빠른 순서
 			)
 			.limit(4) // 최대 4개로 제한
-			.map(meetConverter::toMeetHomeDetailResponse) // DTO 변환
+			.map(m -> meetConverter.toMeetHomeDetailResponse(m, userId)) // DTO 변환
 			.collect(Collectors.toList());
 
 		// 즐거웠어요 (meetDate < 오늘, 최신순 4개)
@@ -269,7 +270,7 @@ public class MeetService {
 				.thenComparing(Meet::getCreateDate) // 생성 날짜가 빠른 순서
 			)
 			.limit(4) // 최대 4개로 제한
-			.map(meetConverter::toMeetHomeDetailResponse) // DTO 변환
+			.map(m -> meetConverter.toMeetHomeDetailResponse(m, userId)) // DTO 변환
 			.collect(Collectors.toList());
 
 		// 결과를 Response 객체로 반환
