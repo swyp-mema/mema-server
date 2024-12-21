@@ -60,12 +60,12 @@ public class SecurityConfig {
 
                         CorsConfiguration configuration = new CorsConfiguration();
 
-                        configuration.setAllowedOrigins(Arrays.asList("https://meet-mate-mema.vercel.app", "http://localhost:3000"));  // 개발 서버와 로컬 프론트엔드 도메인 추가
+                        configuration.setAllowedOrigins(Arrays.asList("https://meet-mate-mema.vercel.app", "https://localhost:3000"));  // 개발 서버와 로컬 프론트엔드 도메인 추가
                         configuration.setAllowedMethods(Collections.singletonList("*"));
                         configuration.setAllowCredentials(true);
                         configuration.setAllowedHeaders(Collections.singletonList("*"));
-                        configuration.setMaxAge(3600L);
-                        configuration.setExposedHeaders(Arrays.asList("Set-Cookie", "Authentication"));
+                        configuration.setMaxAge(36000L);
+                        configuration.setExposedHeaders(Arrays.asList("Set-Cookie", "Authentication", "Authorization", "JSESSIONID"));
                         return configuration;
                     }
                 })));
@@ -99,7 +99,7 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/", "/login", "/join/custom", "/login/naver").permitAll()
+                        .requestMatchers("/", "/login", "/join/custom", "/join/custom/test", "/login/naver", "/join/custom/sendEmail", "/join/custom/checkEmail").permitAll()
                     .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                     .anyRequest().authenticated());
 
@@ -109,9 +109,14 @@ public class SecurityConfig {
 //                        .accessDeniedHandler(accessDeniedHandler) // 403 에러 핸들러
                 );
 
+//        http
+//                .sessionManagement((session) -> session
+//                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
         http
                 .sessionManagement((session) -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                        .sessionCreationPolicy(SessionCreationPolicy.ALWAYS));
+
 
         return http.build();
     }

@@ -1,8 +1,6 @@
 package com.swyp.mema.domain.user.service;
 
-import com.swyp.mema.domain.user.dto.converter.UserDtoConverter;
 import com.swyp.mema.domain.user.dto.request.JoinReq;
-import com.swyp.mema.domain.user.dto.request.UserReq;
 import com.swyp.mema.domain.user.converter.UserConverter;
 import com.swyp.mema.domain.user.exception.EmailAlreadyExistException;
 import com.swyp.mema.domain.user.model.User;
@@ -17,7 +15,13 @@ public class JoinService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final UserDtoConverter userDtoConverter;
+
+    public void checkEmail(String email) {
+
+        if(userRepository.existsByEmail(email)){
+            throw new EmailAlreadyExistException();
+        }
+    }
 
     public boolean joinProcess(JoinReq joinReq) {
         System.out.println("join service - joinProcess");
@@ -25,12 +29,7 @@ public class JoinService {
         String email = joinReq.getEmail();
         String password = joinReq.getPassword();
 
-        Boolean isExist = userRepository.existsByEmail(email);
-
-        if (isExist) {
-
-            throw new EmailAlreadyExistException();
-        }
+        checkEmail(email);
         System.out.println("join service - joinProcess - enter");
 
         User user = UserConverter.convertJoinReq2User(joinReq, bCryptPasswordEncoder.encode(password), "ROLE_CUSTOM");

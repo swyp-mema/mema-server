@@ -1,5 +1,6 @@
 package com.swyp.mema.global.base.exception;
 
+import com.swyp.mema.domain.user.exception.EmailAuthSessionNotexist;
 import org.springframework.http.HttpStatus;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -14,6 +15,8 @@ public enum ErrorCode {
 	USER_NOT_FOUND(HttpStatus.NOT_FOUND, "U001", "존재하지 않는 유저입니다."),
 	USER_ALREADY_REGISTERED(HttpStatus.BAD_REQUEST, "U002", "사용자가 이미 등록된 약속원입니다."),
 	EMAIL_ALREADY_EXIST(HttpStatus.CONFLICT, "M002", "이미 가입된 이메일입니다."),
+	EMAIL_AUTH_SESSION_NOT_EXIST(HttpStatus.BAD_REQUEST, "M003", "타임아웃 혹은 잘못된 요청입니다."),
+	EMAIL_AUTH_CODE_FAIL(HttpStatus.BAD_REQUEST, "M004", "인증 코드가 틀렸습니다."),
 
 	// MEET
 	MEET_NOT_FOUND(HttpStatus.NOT_FOUND, "M001", "약속이 존재하지 않습니다."),

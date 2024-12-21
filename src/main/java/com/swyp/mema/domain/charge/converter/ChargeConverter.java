@@ -8,6 +8,8 @@ import com.swyp.mema.domain.charge.model.ChargeMember;
 import com.swyp.mema.domain.meet.repository.MeetRepository;
 import com.swyp.mema.domain.meetMember.model.MeetMember;
 import com.swyp.mema.domain.meetMember.repository.MeetMemberRepository;
+import com.swyp.mema.domain.user.exception.UserNotFoundException;
+import com.swyp.mema.domain.user.model.User;
 import com.swyp.mema.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -41,6 +43,12 @@ public class ChargeConverter {
         //payer id를 뽑아 charge_member 생성
         List<Long> payerIds = req.getMemberIds();
         for(Long payerId : payerIds) {
+
+            MeetMember payer = meetMemberRepository.getReferenceById(payerId);
+            User payerUser = userRepository.findByUserId(payerId);
+            if (payerUser == null) {
+                throw new UserNotFoundException();
+            }
 
             charge.addChargeMember(ChargeMember.builder()
                     .charge(charge)
