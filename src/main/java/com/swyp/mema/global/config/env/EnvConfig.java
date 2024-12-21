@@ -25,10 +25,14 @@ public class EnvConfig {
 
 
     public String getMailAddress() {
-        return dotenv.get("GOOGLE_EMAIL");
+        return dotenv.get("NAVER_EMAIL");
     }
 
      public String getMailPassword() {
-        return dotenv.get("GOOGLE_PASSWORD");
+        return dotenv.get("NAVER_PASSWORD");
      }
+
+    public String getOpenAiApiKey() {
+        return dotenv.get("OPENAI_API_KEY");
+    }
 }

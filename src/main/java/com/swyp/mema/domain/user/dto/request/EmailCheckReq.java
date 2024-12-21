@@ -9,4 +9,5 @@ import lombok.Setter;
 public class EmailCheckReq {
 
     private String code;
+    private String email;
 }

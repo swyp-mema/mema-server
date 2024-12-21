@@ -11,13 +11,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.swyp.mema.domain.meet.dto.request.JoinMeetReq;
 import com.swyp.mema.domain.meet.dto.request.MeetNameReq;
 import com.swyp.mema.domain.meet.dto.response.CreateMeetRes;
+import com.swyp.mema.domain.meet.dto.response.MeetHomeRes;
 import com.swyp.mema.domain.meet.dto.response.SingleMeetRes;
+import com.swyp.mema.domain.meet.dto.response.TotalMeetManageRes;
 import com.swyp.mema.domain.meet.service.MeetService;
 import com.swyp.mema.domain.user.dto.CustomUserDetails;
 
@@ -27,10 +30,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-@Tag(name = "약속", description = "약속 관련 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/meets")
+@Tag(name = "약속", description = "약속 관련 API")
 public class MeetController {
 
 	private final MeetService meetService;
@@ -81,6 +84,18 @@ public class MeetController {
 		return ResponseEntity.ok(response);
 	}
 
+	@Operation(summary = "내 약속 전체 조회 API", description = "사용자가 속한 모든 약속을 조회할 수 있습니다.")
+	@GetMapping
+	public ResponseEntity<TotalMeetManageRes> getAll(
+		@RequestParam int offset,
+		@RequestParam int limit,
+		@AuthenticationPrincipal CustomUserDetails user
+	) {
+		Long userId = Long.parseLong(user.getUsername());
+		TotalMeetManageRes response = meetService.getAll(userId, offset, limit);
+		return ResponseEntity.ok(response);
+	}
+
 	@Operation(summary = "약속 수정 API", description = "약속명을 수정할 수 있습니다.")
 	@PatchMapping("/{meetId}")
 	public ResponseEntity<SingleMeetRes> update(
@@ -102,5 +117,16 @@ public class MeetController {
 		Long userId = Long.parseLong(user.getUsername());
 		meetService.delete(meetId, userId);
 		return ResponseEntity.noContent().build();
+	}
+
+	@Operation(summary = "약속 홈 API", description = "진행 혹은 마감된 약속 정보를 조회할 수 있습니다.")
+	@GetMapping("/home")
+	public ResponseEntity<MeetHomeRes> getHome(
+		@AuthenticationPrincipal CustomUserDetails user
+	) {
+
+		Long userId = Long.parseLong(user.getUsername());
+		MeetHomeRes response = meetService.getHome(userId);
+		return ResponseEntity.ok(response);
 	}
 }

@@ -1,5 +1,6 @@
 package com.swyp.mema.domain.meetMember.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,5 +14,7 @@ public interface MeetMemberRepository extends JpaRepository<MeetMember, Long>, M
 	boolean existsByMeetAndUser(Meet meet, User user);
 
 	Optional<MeetMember> findByUserAndMeet(User user, Meet meet);
+
+	List<MeetMember> findByMeetId(Long meetId);
 
 }

@@ -25,22 +25,14 @@ public class ChargeMember extends BaseEntity {
     @JoinColumn(name = "payer_id")
     private MeetMember payer;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "payer_user_id")
-    private User payerUser;
-
     @Column(nullable = false)
     private Integer price;
 
     @Builder
-    public ChargeMember (Charge charge, MeetMember payer, User payerUser, Integer price) {
+    public ChargeMember (Charge charge, MeetMember payer, Integer price) {
 
         this.charge = charge;
         this.payer = payer;
-        if(payerUser == null) {
-            throw new IllegalArgumentException("payerUser cannot be null");
-        }
-        this.payerUser = payerUser;
         this.price = price;
     }
 }

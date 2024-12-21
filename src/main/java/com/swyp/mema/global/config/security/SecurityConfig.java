@@ -1,11 +1,12 @@
 package com.swyp.mema.global.config.security;
 
 import com.swyp.mema.domain.user.service.CustomOAuthUserService;
-import com.swyp.mema.global.security.jwt.filter.JWTFilter;
-import com.swyp.mema.global.security.oauth2.filter.JWTFilterOAuth;
-import com.swyp.mema.global.security.jwt.filter.JWTLoginFilter;
-import com.swyp.mema.global.security.oauth2.util.CustomSuccessHandlerCookie;
-import com.swyp.mema.global.security.jwt.util.JWTUtil;
+import com.swyp.mema.global.security.filter.authentication.CustomAuthenticationEntryPoint;
+import com.swyp.mema.global.security.filter.jwt.JWTFilter;
+import com.swyp.mema.global.security.filter.oauth2.JWTFilterOAuth;
+import com.swyp.mema.global.security.filter.jwt.JWTLoginFilter;
+import com.swyp.mema.global.security.util.oauth2.CustomSuccessHandlerCookie;
+import com.swyp.mema.global.security.util.jwt.JWTUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -34,6 +35,7 @@ public class SecurityConfig {
     private final JWTUtil jwtUtil;
     private final CustomOAuthUserService customOAuthUserService;
     private final CustomSuccessHandlerCookie customSuccessHandlerCookie;
+    private final CustomAuthenticationEntryPoint authenticationEntryPoint;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -58,12 +60,12 @@ public class SecurityConfig {
 
                         CorsConfiguration configuration = new CorsConfiguration();
 
-                        configuration.setAllowedOrigins(Arrays.asList("http://223.130.156.230", "http://localhost:3000"));  // 개발 서버와 로컬 프론트엔드 도메인 추가
+                        configuration.setAllowedOrigins(Arrays.asList("https://meet-mate-mema.vercel.app", "https://localhost:3000"));  // 개발 서버와 로컬 프론트엔드 도메인 추가
                         configuration.setAllowedMethods(Collections.singletonList("*"));
                         configuration.setAllowCredentials(true);
                         configuration.setAllowedHeaders(Collections.singletonList("*"));
                         configuration.setMaxAge(36000L);
-                        configuration.setExposedHeaders(Arrays.asList("Set-Cookie", "Authentication"));
+                        configuration.setExposedHeaders(Arrays.asList("Set-Cookie", "Authentication", "Authorization", "JSESSIONID"));
                         return configuration;
                     }
                 })));
@@ -78,15 +80,15 @@ public class SecurityConfig {
                 .httpBasic((auth) -> auth.disable());
 
         //JWTFilterCookie(소셜 로그인 사용자용) 추가
-        http
-                .addFilterAfter(new JWTFilterOAuth(jwtUtil), OAuth2LoginAuthenticationFilter.class);
-
-        http
-                .oauth2Login((oauth2) -> oauth2
-                        .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
-                                .userService(customOAuthUserService))
-                                .successHandler(customSuccessHandlerCookie)
-                        );
+//        http
+//                .addFilterAfter(new JWTFilterOAuth(jwtUtil), OAuth2LoginAuthenticationFilter.class);
+//
+//        http
+//                .oauth2Login((oauth2) -> oauth2
+//                        .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
+//                                .userService(customOAuthUserService))
+//                                .successHandler(customSuccessHandlerCookie)
+//                        );
 
         //jwt 검증 필터 등록
         http
@@ -97,13 +99,24 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/", "/login", "/join/custom", "/join/custom/sendEmail", "/login/naver").permitAll()
+                        .requestMatchers("/", "/login", "/join/custom", "/join/custom/test", "/login/naver", "/join/custom/sendEmail", "/join/custom/checkEmail").permitAll()
                     .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                     .anyRequest().authenticated());
 
         http
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(authenticationEntryPoint) // 401 에러 핸들러
+//                        .accessDeniedHandler(accessDeniedHandler) // 403 에러 핸들러
+                );
+
+//        http
+//                .sessionManagement((session) -> session
+//                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+        http
                 .sessionManagement((session) -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                        .sessionCreationPolicy(SessionCreationPolicy.ALWAYS));
+
 
         return http.build();
     }

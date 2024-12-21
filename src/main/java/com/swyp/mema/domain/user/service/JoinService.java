@@ -1,8 +1,6 @@
 package com.swyp.mema.domain.user.service;
 
-import com.swyp.mema.domain.user.dto.converter.UserDtoConverter;
 import com.swyp.mema.domain.user.dto.request.JoinReq;
-import com.swyp.mema.domain.user.dto.request.UserReq;
 import com.swyp.mema.domain.user.converter.UserConverter;
 import com.swyp.mema.domain.user.exception.EmailAlreadyExistException;
 import com.swyp.mema.domain.user.model.User;

@@ -13,4 +13,7 @@ public interface VoteDateRepository extends JpaRepository<VoteDate, Long>, VoteD
 
 	//특정 약속원 ID 기준으로 날짜 투표 조회
 	List<VoteDate> findAllByMeetMemberId(Long meetMemberId);
+
+	//약속원 객체로 조회
+	boolean existsByMeetMember(MeetMember meetMember);
 }

@@ -1,101 +1,156 @@
 package com.swyp.mema.domain.user.service;
 
 import com.swyp.mema.domain.user.dto.request.EmailCheckReq;
+import com.swyp.mema.domain.user.exception.EmailAuthCodeFail;
+import com.swyp.mema.domain.user.exception.EmailAuthSessionNotexist;
+import com.swyp.mema.global.config.emailsender.NaverEmailConfig;
 import com.swyp.mema.global.config.env.EnvConfig;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Objects;
+import java.util.Properties;
+
 
 @Service
 public class EmailAuthService {
 
     @Autowired
-    private final EnvConfig envConfig;
+    private final Properties props;
+    private final NaverEmailConfig.SimpleAuthenticator authenticator;
+//    private final String emailSender = "Mema@naver.com";
 
-    @Autowired
-    private final JavaMailSender javaMailSender;
-
-    Map<String, HashMap<String,Object>> emailSessionRepo;
-    String senderEmail;
-
-    public EmailAuthService(EnvConfig envConfig, JavaMailSender javaMailSender) {
-        this.envConfig = envConfig;
-        this.javaMailSender = javaMailSender;
-        emailSessionRepo = new ConcurrentHashMap<>();
-        senderEmail=envConfig.getCilentIp();
+    public EmailAuthService(EnvConfig envConfig, JavaMailSender javaMailSender, NaverEmailConfig.SimpleAuthenticator authenticator) {
+        this.authenticator = authenticator;
+        props = System.getProperties();
     }
 
-    public String createSession(HttpServletResponse response) {
+    public void sendMail(String recipientsEmail, HttpServletRequest request, HttpServletResponse response) {
 
-        HashMap<String, Object> sessionData = new HashMap<>();
-        sessionData.put("time", System.currentTimeMillis());
-        String sessionId = UUID.randomUUID().toString();
-        emailSessionRepo.put(sessionId, sessionData);
+        System.out.println("sendMail - "+recipientsEmail);
+        // 인증 코드 생성
+        int code = createNumber();
 
-        response.addHeader("sessionId", sessionId);
-        return sessionId;
-    }
-
-    public int createNumber() {
-        return (int)(Math.random() * (90000)) + 100000;
-    }
-
-    public MimeMessage createMail(String mail, int code, HttpServletResponse response) {
-
-        MimeMessage message = javaMailSender.createMimeMessage();
+        Session mailSession = Session.getInstance(props, authenticator);
+        Message message = new MimeMessage(mailSession);
 
         try{
-            message.setFrom(new InternetAddress(senderEmail));
-            message.setRecipients(Message.RecipientType.TO, mail);
-            message.setSubject("Mema 이메일 인증");
-            String body = "";
-            body += "<h3>" + "Mema 인증번호 입니다." + "</h3>";
-            body += "<h1>" + code + "</h1>";
-            body += "<h3>" + "인증번호는 5분간 유효합니다." + "</h3>";
-            message.setText(body,"UTF-8", "html");
+            // 발신자, 수신자 설정
+            System.out.println(props.getProperty("mail.username"));
+            message.setFrom(new InternetAddress(props.getProperty("mail.username")));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientsEmail));
 
-            String sessionId = createSession(response);
-            emailSessionRepo.get(sessionId).put("code",code);
-            System.out.println(emailSessionRepo.get(sessionId).toString());
+            // 메일 제목, 내용 설정
+            message.setSubject(createSubject());
+            message.setContent(createBody(code),"text/html; charset=utf-8");
 
+            // 인증 세선 셜정
+            setSession(request, response,code);
+            System.out.println("mailAuth: "+request.getSession().getAttribute("mailAuth") + ", session id :" + request.getSession().getId());
+
+            // 전송
+            Transport.send(message);
         } catch (MessagingException e) {
             System.out.println("error in mail creation");
             e.printStackTrace();
         }
-
-
-
-        return message;
     }
 
-    public void sendMail(String mail, HttpServletResponse response) {
+    /**
+     * 메일 인증 코드 검증 함수
+     * 오류시 throw error
+     * 인증 성공시 return void
+     * @param emailCheckReq dto
+     * @param request
+     */
+    public void checkCode(EmailCheckReq emailCheckReq, HttpServletRequest request){
 
-        System.out.println("sendMail - "+mail);
+        System.out.println("code check request headers:" + request.getHeaderNames().toString());
+        System.out.println("code check request cookies:" + request.getCookies());
+        HttpSession session = request.getSession();
+        System.out.println("mailAuth:" + session.getAttribute("mailAuth") + ", session id :" + session.getId());
 
-        int code = createNumber();
-        MimeMessage message = createMail(mail, code, response);
-        javaMailSender.send(message);
+//        if(session == null || session.getAttribute("code") == null){
+//
+//            // 인증제한시간 초과 혹은 잘못된 요청
+//            throw new EmailAuthSessionNotexist();
+//        }
+        String code = session.getAttribute("mailAuth").toString();
+        if(code == null){
+
+            // 인증제한시간 초과 혹은 잘못된 요청
+            throw new EmailAuthSessionNotexist();
+        }
+
+        if (!Objects.equals(emailCheckReq.getCode(), code)) {
+
+            // 인증 코드 틀림
+            throw new EmailAuthCodeFail();
+        }
+
+        //인증 성공
     }
 
-    public boolean checkCode(EmailCheckReq emailCheckReq, HttpServletRequest request){
+    /**
+     * 메일 제목 생성 함수
+     * @return  메일 제목
+     */
+    private String createSubject(){
 
-        //  헤더에서 세션 아이디 추출
-        String sessionId = request.getHeader("sessionId");
+        return "Mema 이메일 인증";
+    }
 
-        //  이메일 세션 저장소에서 세션 호출 및 검증
-        String code = (String) emailSessionRepo.get(sessionId).get("code");
-        return code.equals(emailCheckReq.getCode());
+    /**
+     * 메일 본문 생성 함수
+     * @param code 인증코드
+     * @return 메일 본문
+     */
+    private String createBody(int code){
+
+        String body = "";
+        body += "<h2>" + "Mema 인증번호 입니다." + "</h2>";
+        body += "<h1>" + code + "</h1>";
+        body += "<h3>" + "인증번호는 5분간 유효합니다." + "</h3>";
+        return body;
+    }
+
+    /**
+     * 인증코드 생성 함수
+     * @return 랜덤 숫자 6글자
+     */
+    private int createNumber() {
+        return (int)(Math.random() * (90000)) + 100000;
+    }
+
+    /**
+     * 인증 세션 생성
+     * 인증 유효시간 5분
+     * @param request
+     * @param code 인증코드
+     */
+    private void setSession(HttpServletRequest request, HttpServletResponse response, int code){
+
+        HttpSession session = request.getSession();
+        session.setAttribute("mailAuth",code);
+        session.setMaxInactiveInterval(5 * 60 * 1000);
+        Cookie cookie = new Cookie("JSESSIONID", session.getId());
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setMaxAge(5 * 60 * 1000);
+        response.addCookie(cookie);
+        System.out.println("send mail response headers: " + response.getHeaderNames());
+        System.out.println("send mail response headers: " + response.getHeaders("Set-Cookie"));
     }
 }

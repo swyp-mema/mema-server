@@ -15,7 +15,7 @@ public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long userId;
+    private Long userId;
 
     @Column(nullable = false)
     private String email;
@@ -58,7 +58,7 @@ public class User extends BaseEntity {
         this.password = password;
         this.nickname = nickname;
         this.puzId = puzId;
-        if (puzId == null) this.puzId = 0L;
+        if (puzId == null || puzId == 0) this.puzId = 1L;
         this.puzColor = puzColor;
         if (puzColor == null || puzColor == "") this.puzColor = "blue";
         this.role = role;

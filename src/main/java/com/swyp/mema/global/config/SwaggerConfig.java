@@ -36,7 +36,8 @@ public class SwaggerConfig {
 			.components(new io.swagger.v3.oas.models.Components()
 				.addSecuritySchemes("BearerAuth", securityScheme))
 			.tags(List.of( // 태그 추가
-				new Tag().name("사용자").description("사용자 관련 API")
+				new Tag().name("사용자").description("사용자 관련 API"),
+				new Tag().name("위치").description("위치 관련 API")
 			)
 			);
 	}

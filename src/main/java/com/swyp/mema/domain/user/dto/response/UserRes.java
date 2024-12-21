@@ -1,13 +1,11 @@
 package com.swyp.mema.domain.user.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 @Schema(description = "유저 프로필 응답")
 public class UserRes {
 
@@ -22,4 +20,11 @@ public class UserRes {
 
 	@Schema(description = "뱃지 색깔", example = "red")
 	private String puzzleColor;
+
+	public UserRes(Long userId, String nickname, Long puzzleId, String puzzleColor) {
+		this.userId = userId;
+		this.nickname = nickname;
+		this.puzzleId = puzzleId;
+		this.puzzleColor = puzzleColor;
+	}
 }
