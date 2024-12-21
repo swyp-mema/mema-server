@@ -32,7 +32,9 @@ public class JoinController {
     @PostMapping("/join/custom")
     public ResponseEntity<String> joinCustom(@Valid @RequestBody JoinReq joinReq) {
 
-        joinService.joinProcess(joinReq);
+        if (!joinService.joinProcess(joinReq)) {
+            return ResponseEntity.badRequest().body("email exist");
+        }
         return ResponseEntity.ok("OK");
     }
 
