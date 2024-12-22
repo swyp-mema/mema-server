@@ -3,11 +3,11 @@ package com.swyp.mema.domain.user.exception;
 import com.swyp.mema.global.base.exception.ErrorCode;
 import com.swyp.mema.global.base.exception.ServiceException;
 
-public class EmailAuthCodeFail extends ServiceException {
+public class PasswordNotChangedException extends ServiceException {
 
-    private static final ErrorCode ERROR_CODE = ErrorCode.EMAIL_AUTH_CODE_FAIL;
+    private static final ErrorCode ERROR_CODE = ErrorCode.PASSWORD_NOT_CHANGED;
 
-    public EmailAuthCodeFail() {
+    public PasswordNotChangedException() {
         super(ERROR_CODE);
     }
 }

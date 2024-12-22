@@ -1,8 +1,8 @@
 package com.swyp.mema.domain.user.service;
 
 import com.swyp.mema.domain.user.dto.request.EmailCheckReq;
-import com.swyp.mema.domain.user.exception.EmailAuthCodeFail;
-import com.swyp.mema.domain.user.exception.EmailAuthSessionNotexist;
+import com.swyp.mema.domain.user.exception.EmailAuthCodeFailException;
+import com.swyp.mema.domain.user.exception.EmailAuthSessionNotexistException;
 import com.swyp.mema.global.config.emailsender.NaverEmailConfig;
 import com.swyp.mema.global.config.env.EnvConfig;
 import jakarta.mail.Message;
@@ -11,10 +11,8 @@ import jakarta.mail.Session;
 import jakarta.mail.Transport;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -81,12 +79,12 @@ public class EmailAuthServiceCustom {
 
         if(customSession.get(emailCheckReq.getEmail()) == null){
 
-            throw new EmailAuthSessionNotexist();
+            throw new EmailAuthSessionNotexistException();
         }
 
         if(!Objects.equals(customSession.get(emailCheckReq.getEmail()), emailCheckReq.getCode())){
 
-            throw new EmailAuthCodeFail();
+            throw new EmailAuthCodeFailException();
         }
     }
 

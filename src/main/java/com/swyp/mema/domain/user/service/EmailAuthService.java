@@ -1,8 +1,8 @@
 package com.swyp.mema.domain.user.service;
 
 import com.swyp.mema.domain.user.dto.request.EmailCheckReq;
-import com.swyp.mema.domain.user.exception.EmailAuthCodeFail;
-import com.swyp.mema.domain.user.exception.EmailAuthSessionNotexist;
+import com.swyp.mema.domain.user.exception.EmailAuthCodeFailException;
+import com.swyp.mema.domain.user.exception.EmailAuthSessionNotexistException;
 import com.swyp.mema.global.config.emailsender.NaverEmailConfig;
 import com.swyp.mema.global.config.env.EnvConfig;
 import jakarta.mail.Message;
@@ -84,19 +84,19 @@ public class EmailAuthService {
 //        if(session == null || session.getAttribute("code") == null){
 //
 //            // 인증제한시간 초과 혹은 잘못된 요청
-//            throw new EmailAuthSessionNotexist();
+//            throw new EmailAuthSessionNotexistException();
 //        }
         String code = session.getAttribute("mailAuth").toString();
         if(code == null){
 
             // 인증제한시간 초과 혹은 잘못된 요청
-            throw new EmailAuthSessionNotexist();
+            throw new EmailAuthSessionNotexistException();
         }
 
         if (!Objects.equals(emailCheckReq.getCode(), code)) {
 
             // 인증 코드 틀림
-            throw new EmailAuthCodeFail();
+            throw new EmailAuthCodeFailException();
         }
 
         //인증 성공

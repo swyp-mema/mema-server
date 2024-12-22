@@ -1,5 +1,6 @@
 package com.swyp.mema.domain.user.model;
 
+import com.swyp.mema.domain.user.exception.PasswordNotChangedException;
 import com.swyp.mema.global.base.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -41,6 +42,14 @@ public class User extends BaseEntity {
     //모임 참여 횟수
     @Column(nullable = false, columnDefinition = "INTEGER DEFAULT 1")
     private Integer visitCount;
+
+    public void updatePassword(String password) {
+
+        if(this.password.equals(password)) {
+            throw new PasswordNotChangedException();
+        }
+        this.password = password;
+    }
 
     public void setUsername(String username) {
 
