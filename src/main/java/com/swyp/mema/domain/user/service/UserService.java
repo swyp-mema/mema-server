@@ -40,6 +40,7 @@ public class UserService {
         return userConverter.user2UserInfoRes(user);
     }
 
+    // 유저정보 수정
     @Transactional
     public UserInfoRes updateUserInfo(UpdateUserInfoReq req, CustomUserDetails userDetails) {
 
