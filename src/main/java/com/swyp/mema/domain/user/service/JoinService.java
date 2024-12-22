@@ -1,5 +1,7 @@
 package com.swyp.mema.domain.user.service;
 
+import com.swyp.mema.domain.badge.model.Badge;
+import com.swyp.mema.domain.badge.repository.BadgeRepository;
 import com.swyp.mema.domain.user.dto.request.JoinReq;
 import com.swyp.mema.domain.user.converter.UserConverter;
 import com.swyp.mema.domain.user.exception.EmailAlreadyExistException;
@@ -15,6 +17,7 @@ public class JoinService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final BadgeRepository badgeRepository;
 
     public void checkEmail(String email) {
 
@@ -39,6 +42,9 @@ public class JoinService {
         System.out.println("puzzleColor = " + user.getPuzColor());
         System.out.println("puzzleId = " + user.getPuzId());
         userRepository.save(user);
+        badgeRepository.save(Badge.builder()
+                .user(user)
+                .build());
         return true;
     }
 }
