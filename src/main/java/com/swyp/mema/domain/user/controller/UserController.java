@@ -86,7 +86,9 @@ public class UserController {
             throw new EmailNotMineException();
         }
         emailAuthService.sendMail(email, request, response);
-        return ResponseEntity.ok("OK");
+        return ResponseEntity.
+
+                ok("OK");
     }
 
     @Operation(summary = "이메일 인증 코드 검증 API", description = "비밀번호 변경 시 이메일 인증 코드를 검증합니다.",

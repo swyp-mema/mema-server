@@ -21,7 +21,16 @@ public class BadgeService {
 
     // 보유 뱃지수 조회
     public int getBadgeCount(){
-        return 1;
+
+        Long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
+        Badge badge = badgeRepository.findByUser(userRepository.findByUserId(userId));
+
+        int badgeCount = 0;
+        for (boolean flag : badge.getAllBadges()) {
+
+            if (flag) badgeCount++;
+        }
+        return badgeCount;
     }
 
     // 보유 뱃지 현황 조회
