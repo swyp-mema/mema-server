@@ -26,6 +26,7 @@ public class UserConverter {
                 .visitCount(user.getVisitCount())
                 .meetCount(meetCount)
                 .badgeCount(badgeCount)
+                .email(user.getEmail())
                 .build();
 
     }
