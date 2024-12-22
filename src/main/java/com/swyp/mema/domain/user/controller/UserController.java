@@ -97,4 +97,13 @@ public class UserController {
         emailAuthService.checkCode(emailCheckReq, request);
         return ResponseEntity.ok("OK");
     }
+
+    @Operation(summary = "회원 탈퇴", description = "사용자의 회원 정보를 삭제합니다.",
+            tags = "사용자", security = {})
+    @DeleteMapping("/mypage/resign")
+    public ResponseEntity<String> resign(){
+
+        userService.deleteUser();
+        return ResponseEntity.ok("OK");
+    }
 }

@@ -9,6 +9,7 @@ import com.swyp.mema.domain.user.exception.UserNotFoundException;
 import com.swyp.mema.domain.user.model.User;
 import com.swyp.mema.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,6 +55,13 @@ public class UserService {
 
         User user = getUserById(userDetails.getUserId());
         user.updatePassword(bCryptPasswordEncoder.encode(req.getPassword()));
+    }
+
+    @Transactional
+    public void deleteUser(){
+
+        Long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
+        userRepository.deleteById(userId);
     }
 
     // 유틸리티 메서드: 값이 null이 아닐 경우 필드 업데이트
