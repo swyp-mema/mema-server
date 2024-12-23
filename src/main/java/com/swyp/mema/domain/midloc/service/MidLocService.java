@@ -71,7 +71,12 @@ public class MidLocService {
 				.build())
 			.toList();
 
-		SingleStationResponse midStation = getMidStation(userId, meetId);
+		SingleStationResponse midStation = SingleStationResponse.builder()
+			.stationName(meet.getMeetLocation())
+			.routeName(meet.getLine())
+			.lat(meet.getLat())
+			.lot(meet.getLot())
+			.build();
 
 		return MidLocationResponse.builder()
 			.startStationList(userStartStations)
