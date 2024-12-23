@@ -79,7 +79,7 @@ public class MeetService {
 		meetMemberRepository.save(meetMember);
 
 		// 뱃지 설정
-		badgeRepository.findByBadgeId(userId).createMeet();
+		badgeRepository.findByUser(user).createMeet();
 
 		return meetConverter.toCreateMeetResponse(meet);
 	}
