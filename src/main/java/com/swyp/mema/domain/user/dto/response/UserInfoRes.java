@@ -33,4 +33,7 @@ public class UserInfoRes {
 
     @Schema(description = "보유 뱃지 수", example = "4")
     private Integer badgeCount;
+
+    @Schema(description = "이메일", example = "mema@naver.com")
+    private String email;
 }

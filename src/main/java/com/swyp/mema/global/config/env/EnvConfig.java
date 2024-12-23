@@ -23,6 +23,15 @@ public class EnvConfig {
         return dotenv.get("CLIENT_IP");
     }
 
+
+    public String getMailAddress() {
+        return dotenv.get("NAVER_EMAIL");
+    }
+
+     public String getMailPassword() {
+        return dotenv.get("NAVER_PASSWORD");
+     }
+
     public String getOpenAiApiKey() {
         return dotenv.get("OPENAI_API_KEY");
     }

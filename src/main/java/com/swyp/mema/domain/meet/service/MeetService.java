@@ -5,6 +5,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.swyp.mema.domain.badge.repository.BadgeRepository;
+import com.swyp.mema.domain.badge.service.BadgeService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,6 +49,8 @@ public class MeetService {
 	private final MeetMemberConverter meetMemberConverter;
 	private final UserRepository userRepository;
 	private final UserConverter userConverter;
+	private final BadgeRepository badgeRepository;
+	private final BadgeService badgeService;
 
 	/**
 	 * 새로운 약속 생성 & 사용자는 약속원에 등록
@@ -73,6 +77,9 @@ public class MeetService {
 		// 생성된 약속에 약속원으로 등록
 		MeetMember meetMember = meetMemberConverter.toMeetMember(meet, user);
 		meetMemberRepository.save(meetMember);
+
+		// 뱃지 설정
+		badgeRepository.findByBadgeId(userId).createMeet();
 
 		return meetConverter.toCreateMeetResponse(meet);
 	}
