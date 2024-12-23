@@ -50,6 +50,9 @@ public enum ErrorCode {
 	// STATION
 	STATION_NOT_FOUNT(HttpStatus.NOT_FOUND, "S001", "해당 역을 찾을 수 없습니다."),
 
+	// RECOMMEND STORE
+	NOT_RECOMMEND_STORE(HttpStatus.BAD_REQUEST, "ST001", "맛집을 추천받을 수 없습니다."),
+
 	// 400 Bad Request
 	INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "C001", "입력 값이 올바르지 않습니다."),
 	MISSING_INPUT_VALUE(HttpStatus.BAD_REQUEST, "C002", "필수 입력 값이 누락되었습니다."),

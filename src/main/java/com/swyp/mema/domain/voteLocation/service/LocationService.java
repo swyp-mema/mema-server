@@ -60,11 +60,10 @@ public class LocationService {
 		meetMember.setVoteLocationYn(true);
 
 		// 중간 지점 구하기 위해 GPT 요청
-		MidLocationResponse midLocation = midLocService.getMidLocation(meetId, userId);
+		SingleStationResponse midStation = midLocService.getMidStation(meetId);
 
 		// 해당 미팅 중간 지점 변경
-		meet.setMeetLocation(midLocation.getMidStation().getStationName(), midLocation.getMidStation().getRouteName()
-		,midLocation.getMidStation().getLat(), midLocation.getMidStation().getLot());
+		meet.setMeetLocation(midStation.getStationName(), midStation.getRouteName(), midStation.getLat(), midStation.getLot());
 
 		return converter.toSingleLocationResponse(location);
 	}
