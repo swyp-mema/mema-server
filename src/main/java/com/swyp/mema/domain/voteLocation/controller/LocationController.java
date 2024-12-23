@@ -1,6 +1,8 @@
 package com.swyp.mema.domain.voteLocation.controller;
 
 import com.swyp.mema.domain.midloc.service.MidLocService;
+import com.swyp.mema.domain.store.dto.TotalStoreRes;
+import com.swyp.mema.domain.store.service.StoreService;
 import com.swyp.mema.domain.voteLocation.dto.response.MidLocationResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -27,6 +29,7 @@ public class LocationController {
 
 	private final LocationService locationService;
 	private final MidLocService midLocService;
+	private final StoreService storeService;
 
 	/**
 	 * 위치 투표 생성
@@ -61,7 +64,7 @@ public class LocationController {
 	/**
 	 * 출발 위치 전체 조회
 	 */
-	@Operation(summary = "전체 위치 조회 API", description = "약속원의 전체 출발 위치를 조회할 수 있습니다.")
+	@Operation(summary = "전체 위치 조회 API", description = "약속원의 전체 출발 위치와 중간 지점역을 조회할 수 있습니다.")
 	@GetMapping("/meets/{meetId}/vote/location/total")
 	public ResponseEntity<MidLocationResponse> getTotalLocation(
 		@PathVariable Long meetId,
@@ -73,4 +76,17 @@ public class LocationController {
 		return ResponseEntity.ok(response);
 	}
 
+	/**
+	 * 출발 위치 전체 조회
+	 */
+	@Operation(summary = "맛집 추천 API", description = "중간 지점 역 근처의 맛집을 추천받을 수 있다.")
+	@GetMapping("/meets/{meetId}/recommend")
+	public ResponseEntity<TotalStoreRes> recommendStore(
+		@PathVariable Long meetId,
+		@AuthenticationPrincipal CustomUserDetails userDetails
+	) {
+		Long userId = userDetails.getUserId();
+		TotalStoreRes response = storeService.recommendStore(userId, meetId);
+		return ResponseEntity.ok(response);
+	}
 }

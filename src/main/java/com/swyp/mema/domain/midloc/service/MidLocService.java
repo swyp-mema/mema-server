@@ -60,7 +60,9 @@ public class MidLocService {
 		List<Location> locations = locationRepository.findByMeetId(meetId);
 
 		// 유저들의 출발 위치가 없는 경우 예외
-		if (locations.isEmpty()) { throw new LocationNotFoundException(); }
+		if (locations.isEmpty()) {
+			throw new LocationNotFoundException();
+		}
 
 		List<SingleStationResponse> userStartStations = locations.stream()
 			.map(location -> SingleStationResponse.builder()
@@ -71,7 +73,12 @@ public class MidLocService {
 				.build())
 			.toList();
 
-		SingleStationResponse midStation = getMidStation(userId, meetId);
+		SingleStationResponse midStation = SingleStationResponse.builder()
+			.stationName(meet.getMeetLocation())
+			.routeName(meet.getLine())
+			.lat(meet.getLat())
+			.lot(meet.getLot())
+			.build();
 
 		return MidLocationResponse.builder()
 			.startStationList(userStartStations)
@@ -82,20 +89,29 @@ public class MidLocService {
 
 	/**
 	 * meetId 미팅의 중간역을 반환하는 메서드
-	 * @param userId
 	 * @param meetId
 	 * @return 이름, 혹은 라인이 매칭되지 않으면 null 반환
 	 */
-	public SingleStationResponse getMidStation(Long userId, Long meetId) {
+	public SingleStationResponse getMidStation(Long meetId) {
 
 		int maxRetry = 100;
-		List<String> locs = locationRepository.findByMeetId(meetId).stream()
+
+		List<Location> locations = locationRepository.findByMeetId(meetId);
+
+		if (locations.isEmpty()) {
+			throw new IllegalArgumentException("출발 위치 데이터가 없습니다.");
+		} else if (locations.size() == 1) {
+			return SingleStationResponse.builder()
+				.stationName(locations.get(0).getStationName())
+				.routeName(locations.get(0).getStationRoute())
+				.lat(locations.get(0).getLat())
+				.lot(locations.get(0).getLot())
+				.build();
+		}
+
+		List<String> locs = locations.stream()
 			.map(Location::getStationName)
 			.toList();
-
-		if (locs.isEmpty()) {
-			throw new IllegalArgumentException("출발 위치 데이터가 없습니다.");
-		}
 
 		int peopleNum = locs.size();
 		String basePrompt = "우리는 지금 " + peopleNum + "명이 모이려고 해. 우리의 출발 위치는 모두 지하철 역이야. 우리는 각각 ";
@@ -213,6 +229,7 @@ public class MidLocService {
 		}
 		return cleanedLine;
 	}
+
 	private MeetMember validateMeetMember(User user, Meet meet) {
 		return meetMemberRepository.findByUserAndMeet(user, meet)
 			.orElseThrow(NotMeetMemberException::new);
