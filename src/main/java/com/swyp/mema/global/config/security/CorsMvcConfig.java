@@ -12,7 +12,7 @@ public class CorsMvcConfig implements WebMvcConfigurer {
 
 		corsRegistry.addMapping("/**")
 			.exposedHeaders("Set-Cookie","Authentication")
-			.allowedOrigins("https://localhost:3000","https://meet-mate-mema.vercel.app")
+			.allowedOrigins("http://localhost:3000", "https://localhost:3000","https://meet-mate-mema.vercel.app")
 			.allowedMethods("OPTIONS", "GET", "POST", "PUT", "PATCH", "DELETE")
 			.allowedHeaders("*") // 모든 헤더 허용
 			.allowCredentials(true); // 인증 정보 허용 (쿠키 등)
