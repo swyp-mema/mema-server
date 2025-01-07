@@ -91,13 +91,13 @@ public class GlobalExceptionHandler {
 		return ErrorResponse.of(ErrorCode.API_NOT_FOUND);
 	}
 
-	/**
-	 * 7. 기타 모든 예외 (서버 내부 오류)
-	 */
-	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-	@ExceptionHandler(Exception.class)
-	public ErrorResponse handleGenericException(HttpServletRequest request, Exception e) {
-		logException(request, e);
-		return ErrorResponse.of(ErrorCode.INTERNAL_SERVER_ERROR);
-	}
+	// /**
+	//  * 7. 기타 모든 예외 (서버 내부 오류)
+	//  */
+	// @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	// @ExceptionHandler(Exception.class)
+	// public ErrorResponse handleGenericException(HttpServletRequest request, Exception e) {
+	// 	logException(request, e);
+	// 	return ErrorResponse.of(ErrorCode.INTERNAL_SERVER_ERROR);
+	// }
 }

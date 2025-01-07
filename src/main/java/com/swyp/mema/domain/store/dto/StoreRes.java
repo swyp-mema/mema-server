@@ -4,21 +4,33 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@Builder
 public class StoreRes {
 
 	private String name;
 
-	private String description;
+	private String link;
 
 	private String category;
 
 	private String address;
 
-	private String time;
+	private String mapx;
 
-	private String phone;
+	private String mapy;
 
-	private String score;
+	private ImageRes imageInfo;
 
+	@Builder
+	public StoreRes(String name, String link, String category, String address, String mapx, String mapy) {
+		this.name = name;
+		this.link = link;
+		this.category = category;
+		this.address = address;
+		this.mapx = mapx;
+		this.mapy = mapy;
+	}
+
+	public void setImageInfo(ImageRes imageInfo) {
+		this.imageInfo = imageInfo;
+	}
 }
