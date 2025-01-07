@@ -1,9 +1,13 @@
 package com.swyp.mema.domain.voteLocation.service;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import com.swyp.mema.domain.midloc.service.MidLocService;
 import com.swyp.mema.domain.station.dto.response.subwayInfo.SingleStationResponse;
+import com.swyp.mema.domain.store.dto.TotalStoreRes;
+import com.swyp.mema.domain.store.exception.NotRecommendStore;
+import com.swyp.mema.domain.store.service.NaverStoreSearchService;
 import com.swyp.mema.domain.voteLocation.dto.response.MidLocationResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -38,6 +42,7 @@ public class LocationService {
 	private final LocationRepository locationRepository;
 	private final LocationConverter converter;
 	private final MidLocService midLocService;
+	private final NaverStoreSearchService storeSearchService;
 
 
 	@Transactional
@@ -123,6 +128,22 @@ public class LocationService {
 			.startStationList(userStartStations)
 			.midStation(midStation)
 			.build();
+	}
+
+	@Transactional(readOnly = true)
+	public TotalStoreRes recommendStore(Long userId, Long meetId) {
+
+		// 필수 검증 로직
+		User user = validateUser(userId);
+		Meet meet = validateMeet(meetId);
+		validateMeetMember(user, meet);
+
+		// 만남 장소가 없는 경우 가게 추천 못하는 예외
+		if (meet.getMeetLocation() == null) {
+			throw new NotRecommendStore();
+		}
+
+		return storeSearchService.search(meet.getMeetLocation());
 	}
 
 	private MeetMember validateMeetMember(User user, Meet meet) {
