@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:mysql://${DB_DEV_IP}/dev_db?useSSL=false&serverTimezone=UTC
-    username: ${DB_DEV_USERNAME}
-    password: ${DB_DEV_PASSWORD}
+    url: jdbc:mysql://${AWS_DEV_IP}/dev_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: ${AWS_DEV_USERNAME}
+    password: ${AWS_DEV_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver   # 8 버전
 
   jpa:
