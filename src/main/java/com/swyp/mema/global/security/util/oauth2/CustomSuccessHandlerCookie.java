@@ -8,6 +8,8 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -17,6 +19,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class CustomSuccessHandlerCookie extends SimpleUrlAuthenticationSuccessHandler {
@@ -24,13 +27,12 @@ public class CustomSuccessHandlerCookie extends SimpleUrlAuthenticationSuccessHa
     private final JWTUtil jwtUtil;
     private final EnvConfig envConfig;
 
-
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        System.out.println("custom success handler cookie");
+
+        log.info("custom success handler cookie");
 
         CustomOAuthUser customOAuthUser = (CustomOAuthUser) authentication.getPrincipal();
-
         String email = customOAuthUser.getEmail();
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
@@ -41,13 +43,13 @@ public class CustomSuccessHandlerCookie extends SimpleUrlAuthenticationSuccessHa
         String token = jwtUtil.createToken(email, role, 60 * 60 * 6000L);
 
         String redirect = "http://" + envConfig.getCilentIp() + ":3000";
-        System.out.println("redirect = " + redirect);
+        log.info("redirect : {}" + redirect);
         response.addCookie(createCookie("Authorization", token));
         response.sendRedirect(redirect);
     }
 
     private Cookie createCookie(String key, String value){
-        System.out.println("custom success handler cookie - create cookie");
+
         Cookie cookie = new Cookie(key, value);
         cookie.setMaxAge(60 * 60 * 60);
         //cookie.setSecure(true);

@@ -1,14 +1,13 @@
 package com.swyp.mema.global.config.security;
 
-import com.swyp.mema.domain.user.service.CustomOAuthUserService;
 import com.swyp.mema.global.security.filter.authentication.CustomAuthenticationEntryPoint;
 import com.swyp.mema.global.security.filter.jwt.JWTFilter;
-import com.swyp.mema.global.security.filter.oauth2.JWTFilterOAuth;
 import com.swyp.mema.global.security.filter.jwt.JWTLoginFilter;
-import com.swyp.mema.global.security.util.oauth2.CustomSuccessHandlerCookie;
 import com.swyp.mema.global.security.util.jwt.JWTUtil;
-import jakarta.servlet.http.HttpServletRequest;
+
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,108 +16,120 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
-import java.util.Collections;
 
+@Slf4j
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
-    private final CustomOAuthUserService customOAuthUserService;
-    private final CustomSuccessHandlerCookie customSuccessHandlerCookie;
-    private final CustomAuthenticationEntryPoint authenticationEntryPoint;
+	private final AuthenticationConfiguration authenticationConfiguration;
+	private final CustomAuthenticationEntryPoint authenticationEntryPoint;
+    // private final CustomOAuthUserService customOAuthUserService;
+    // private final CustomSuccessHandlerCookie customSuccessHandlerCookie;
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+	@Bean
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+		return configuration.getAuthenticationManager();
+	}
 
-        return configuration.getAuthenticationManager();
-    }
+	@Bean
+	public BCryptPasswordEncoder bCryptPasswordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 
-    @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+	@Bean
+	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        return new BCryptPasswordEncoder();
-    }
+		log.info("=== filter chain start ===");
 
-    @Bean
-    public SecurityFilterChain filterChain (HttpSecurity http) throws Exception{
-        System.out.println("filter chain");
+		http
+			.cors(cors -> cors.configurationSource(corsConfigurationSource())) // ✅ Spring Security에서 CORS 처리
+			.csrf(csrf -> csrf.disable()) // CSRF 비활성화
+			.formLogin(formLogin -> formLogin.disable())
+			.httpBasic(httpBasic -> httpBasic.disable());
 
-        http
-                .cors((corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
-                    @Override
-                    public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+		//jwt 검증 필터 등록
+		http
+			.addFilterBefore(new JWTFilter(jwtUtil), JWTLoginFilter.class)
+			.addFilterAt(new JWTLoginFilter(authenticationManager(authenticationConfiguration), jwtUtil),
+				UsernamePasswordAuthenticationFilter.class);
 
-                        CorsConfiguration configuration = new CorsConfiguration();
+		// 예외 처리 핸들러
+		http
+			.exceptionHandling(exception -> exception
+					.authenticationEntryPoint(authenticationEntryPoint) // 401 에러 핸들러
+				//.accessDeniedHandler(accessDeniedHandler) // 403 에러 핸들러
+			);
 
-                        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "https://meet-mate-mema.vercel.app", "https://localhost:3000"));  // 개발 서버와 로컬 프론트엔드 도메인 추가
-                        configuration.setAllowedMethods(Collections.singletonList("*"));
-                        configuration.setAllowCredentials(true);
-                        configuration.setAllowedHeaders(Collections.singletonList("*"));
-                        configuration.setMaxAge(36000L);
-                        configuration.setExposedHeaders(Arrays.asList("Set-Cookie", "Authentication", "Authorization", "JSESSIONID"));
-                        return configuration;
-                    }
-                })));
+		// 세션 정책 설정
+		http
+			.sessionManagement(session -> session
+				.sessionCreationPolicy(SessionCreationPolicy.ALWAYS));
 
-        http
-                .csrf((auth) -> auth.disable());
+		// 요청 인증 정책 설정
+		http
+			.authorizeHttpRequests(auth -> auth
+				.requestMatchers("/", "/login", "/join/custom", "/join/custom/test", "/login/naver",
+					"/join/custom/sendEmail", "/join/custom/checkEmail").permitAll()
+				.requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+				.anyRequest().authenticated()
+			);
 
-        http
-                .formLogin((auth) -> auth.disable());
-
-        http
-                .httpBasic((auth) -> auth.disable());
+		//        http
+		//                .sessionManagement((session) -> session
+		//                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         //JWTFilterCookie(소셜 로그인 사용자용) 추가
-//        http
-//                .addFilterAfter(new JWTFilterOAuth(jwtUtil), OAuth2LoginAuthenticationFilter.class);
-//
-//        http
-//                .oauth2Login((oauth2) -> oauth2
-//                        .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
-//                                .userService(customOAuthUserService))
-//                                .successHandler(customSuccessHandlerCookie)
-//                        );
+        //        http
+        //                .addFilterAfter(new JWTFilterOAuth(jwtUtil), OAuth2LoginAuthenticationFilter.class);
+        //
+        //        http
+        //                .oauth2Login((oauth2) -> oauth2
+        //                        .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
+        //                                .userService(customOAuthUserService))
+        //                                .successHandler(customSuccessHandlerCookie)
+        //                        );
 
-        //jwt 검증 필터 등록
-        http
-                .addFilterBefore(new JWTFilter(jwtUtil), JWTLoginFilter.class);
+		return http.build();
+	}
 
-        http
-                .addFilterAt(new JWTLoginFilter(authenticationManager(authenticationConfiguration),jwtUtil), UsernamePasswordAuthenticationFilter.class);
+    // CORS 설정을 별도의 Bean으로 관리
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
 
-        http
-                .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/", "/login", "/join/custom", "/join/custom/test", "/login/naver", "/join/custom/sendEmail", "/join/custom/checkEmail").permitAll()
-                    .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                    .anyRequest().authenticated());
+        // 허용할 도메인 (프론트엔드 도메인)
+        configuration.setAllowedOrigins(Arrays.asList(
+            "http://localhost:3000",
+            "https://localhost:3000",
+            "https://meet-mate-mema.vercel.app"
+        ));
 
-        http
-                .exceptionHandling(exception -> exception
-                        .authenticationEntryPoint(authenticationEntryPoint) // 401 에러 핸들러
-//                        .accessDeniedHandler(accessDeniedHandler) // 403 에러 핸들러
-                );
+        // 허용할 HTTP 메서드 설정
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 
-//        http
-//                .sessionManagement((session) -> session
-//                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        // 허용할 헤더 설정
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With"));
 
-        http
-                .sessionManagement((session) -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.ALWAYS));
+        // CORS 요청에서 쿠키 전송 허용
+        configuration.setAllowCredentials(true);
 
+        // 응답 헤더 노출 허용 (토큰 관련)
+        configuration.setExposedHeaders(Arrays.asList("Set-Cookie", "Authentication", "Authorization", "JSESSIONID"));
 
-        return http.build();
+        // CORS 설정 적용
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+
+        return source;
     }
-
 }

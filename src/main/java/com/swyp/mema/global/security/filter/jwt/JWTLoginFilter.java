@@ -29,7 +29,6 @@ public class JWTLoginFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 
-        System.out.println("jwt login filter - attemptAuthentication");
         String email = "";
         String password = "";
         try {
@@ -58,7 +57,6 @@ public class JWTLoginFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication)  {
 
-        System.out.println("jwt login filter - successfulAuthentication");
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 
         String userEmail = customUserDetails.getUsername();
@@ -75,8 +73,6 @@ public class JWTLoginFilter extends UsernamePasswordAuthenticationFilter {
     }
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed)  {
-
-        System.out.println("jwt login filter - unsuccessfulAuthentication");
         response.setStatus(401);
     }
 }

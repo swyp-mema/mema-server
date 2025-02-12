@@ -63,7 +63,6 @@ public class EmailAuthServiceCustom {
             // 전송
             Transport.send(message);
         } catch (MessagingException e) {
-            System.out.println("error in mail creation");
             e.printStackTrace();
         }
     }

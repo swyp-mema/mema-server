@@ -16,7 +16,6 @@ public class JWTUtil {
 
     private JWTUtil(@Value("${custom.code}")String secret){
 
-        System.out.println("JWTUtil create");
         secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
     }
 
@@ -36,7 +35,6 @@ public class JWTUtil {
     }
 
     public String createToken(String username, String role, Long expiredMs){
-        System.out.println("create token");
 
         return Jwts.builder()
                 .claim("username", username)
