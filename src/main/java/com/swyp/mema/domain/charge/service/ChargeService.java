@@ -17,12 +17,15 @@ import com.swyp.mema.domain.user.dto.CustomUserDetails;
 import com.swyp.mema.domain.user.model.User;
 import com.swyp.mema.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ChargeService {
@@ -123,7 +126,7 @@ public class ChargeService {
             해당 정산에 대한 권한이 있는지 체크
          */
 
-        System.out.println("deleted charge " + chargeId);
+        log.info("deleted charge : {}" + chargeId);
         chargeRepository.deleteById(chargeId);
     }
 

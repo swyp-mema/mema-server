@@ -24,7 +24,6 @@ public class CustomOAuthUserService extends DefaultOAuth2UserService {
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        System.out.println("OAuth2 user service - load user");
 
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
@@ -61,7 +60,6 @@ public class CustomOAuthUserService extends DefaultOAuth2UserService {
     }
 
     private User createNewUser(OAuthResponse oAuthResponse) {
-        System.out.println("Creating new user entity");
 
         return userRepository.save(User.builder()
                 .email(oAuthResponse.getEmail())
