@@ -47,6 +47,10 @@ public class _NextStation {
         line = curStation.getLineName();
         curName = curStation.getStationName();
         nextName = nextStation.getStationName();
-        System.out.println("line: " + line + ",  " + curName + " -> " + nextName + ", move time: " + moveTime);
+        System.out.println('\n'+line + ", " + curName + " -> " +line + ", " + nextName + ", move time: " + moveTime);
+        System.out.print("Routes: ");
+        for(_Route route : routes){
+            System.out.print(route.getRoute() + ", ");
+        }
     }
 }

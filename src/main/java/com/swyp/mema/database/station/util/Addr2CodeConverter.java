@@ -1,5 +1,7 @@
 package com.swyp.mema.database.station.util;
 
+import com.swyp.mema.global.config.env.EnvConfig;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
@@ -18,9 +20,16 @@ import java.nio.charset.StandardCharsets;
 @Component
 public class Addr2CodeConverter {
 
-    String apikey = "CAB0D3D2-F705-30C0-BE31-5B9B5CDEADB7";
+    private final EnvConfig envConfig;
+
+    String apikey;
     String searchType = "road";
     String epsg = "epsg:4326";
+
+    public Addr2CodeConverter(EnvConfig envConfig) {
+        this.envConfig = envConfig;
+        apikey = envConfig.getAddr2Coor();
+    }
 
     public Pair<String, String> getCoord(String addr){
 
