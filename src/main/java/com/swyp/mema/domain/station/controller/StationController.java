@@ -3,15 +3,14 @@ package com.swyp.mema.domain.station.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.swyp.mema.domain.station.dto.response.nearSubway.TotalNearSubwayResponse;
-import com.swyp.mema.domain.station.dto.response.subwayMaster.TotalSubwayMasterResponse;
+import com.swyp.mema.database.openapi.location.response.TotalSubwayMasterResponse;
 import com.swyp.mema.domain.station.dto.response.subwayTime.TotalSubwayTimeResponse;
 import com.swyp.mema.domain.station.dto.response.subwayInfo.TotalStationResponse;
 import com.swyp.mema.domain.station.service.NearStationService;
-import com.swyp.mema.domain.station.service.StationMasterService;
+import com.swyp.mema.database.openapi.location.logic.StationMasterService;
 import com.swyp.mema.domain.station.service.StationService;
 import com.swyp.mema.domain.user.dto.CustomUserDetails;
 

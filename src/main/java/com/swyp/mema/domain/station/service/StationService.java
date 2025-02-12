@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.swyp.mema.domain.station.converter.StationConverter;
+import com.swyp.mema.database.openapi.location.converter.StationConverter;
 import com.swyp.mema.domain.station.dto.response.subwayInfo.SubwayInfoBasicResponse;
 import com.swyp.mema.domain.station.dto.response.subwayTime.SubwayTimeBasicResponse;
 import com.swyp.mema.domain.station.dto.response.subwayTime.TotalSubwayTimeResponse;
