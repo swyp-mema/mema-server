@@ -1,12 +1,7 @@
 package com.swyp.mema.domain.voteLocation.controller;
 
-import java.io.UnsupportedEncodingException;
-
 import com.swyp.mema.domain.midloc.service.MidLocService;
-import com.swyp.mema.domain.store.dto.ImageRes;
 import com.swyp.mema.domain.store.dto.TotalStoreRes;
-import com.swyp.mema.domain.store.service.NaverMapCrawler;
-import com.swyp.mema.domain.store.service.NaverStoreSearchService;
 import com.swyp.mema.domain.store.service.StoreService;
 import com.swyp.mema.domain.voteLocation.dto.response.MidLocationResponse;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +29,7 @@ public class LocationController {
 
 	private final LocationService locationService;
 	private final MidLocService midLocService;
+	private final StoreService storeService;
 
 	/**
 	 * 위치 투표 생성
@@ -90,20 +86,7 @@ public class LocationController {
 		@AuthenticationPrincipal CustomUserDetails userDetails
 	) {
 		Long userId = userDetails.getUserId();
-		TotalStoreRes response = locationService.recommendStore(userId, meetId);
+		TotalStoreRes response = storeService.recommendStore(userId, meetId);
 		return ResponseEntity.ok(response);
 	}
-
-	// /**
-	//  * 출발 위치 전체 조회
-	//  */
-	// @Operation(summary = "이미지 크롤링", description = "이미지 크롤링하기")
-	// @GetMapping("/recommend")
-	// public ResponseEntity<Void> recommendStore(
-	// 	@AuthenticationPrincipal CustomUserDetails userDetails
-	// ) {
-	// 	String url = "http://entas.co.kr";
-	// 	naverMapCrawler.crawaling(url);
-	// 	return ResponseEntity.ok().build();
-	// }
 }

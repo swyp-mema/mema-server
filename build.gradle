@@ -69,9 +69,6 @@ dependencies {
 
     // WebFlux
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
-
-    // Image Crawling
-    implementation 'org.jsoup:jsoup:1.18.1'
 }
 
 tasks.named('test') {
