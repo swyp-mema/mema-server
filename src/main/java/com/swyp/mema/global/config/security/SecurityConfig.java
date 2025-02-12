@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -30,11 +31,11 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JWTUtil jwtUtil;
+	private final JWTUtil jwtUtil;
 	private final AuthenticationConfiguration authenticationConfiguration;
 	private final CustomAuthenticationEntryPoint authenticationEntryPoint;
-    // private final CustomOAuthUserService customOAuthUserService;
-    // private final CustomSuccessHandlerCookie customSuccessHandlerCookie;
+	// private final CustomOAuthUserService customOAuthUserService;
+	// private final CustomSuccessHandlerCookie customSuccessHandlerCookie;
 
 	@Bean
 	public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -78,6 +79,7 @@ public class SecurityConfig {
 		// 요청 인증 정책 설정
 		http
 			.authorizeHttpRequests(auth -> auth
+				.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 				.requestMatchers("/", "/login", "/join/custom", "/join/custom/test", "/login/naver",
 					"/join/custom/sendEmail", "/join/custom/checkEmail").permitAll()
 				.requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
@@ -88,48 +90,49 @@ public class SecurityConfig {
 		//                .sessionManagement((session) -> session
 		//                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        //JWTFilterCookie(소셜 로그인 사용자용) 추가
-        //        http
-        //                .addFilterAfter(new JWTFilterOAuth(jwtUtil), OAuth2LoginAuthenticationFilter.class);
-        //
-        //        http
-        //                .oauth2Login((oauth2) -> oauth2
-        //                        .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
-        //                                .userService(customOAuthUserService))
-        //                                .successHandler(customSuccessHandlerCookie)
-        //                        );
+		//JWTFilterCookie(소셜 로그인 사용자용) 추가
+		//        http
+		//                .addFilterAfter(new JWTFilterOAuth(jwtUtil), OAuth2LoginAuthenticationFilter.class);
+		//
+		//        http
+		//                .oauth2Login((oauth2) -> oauth2
+		//                        .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
+		//                                .userService(customOAuthUserService))
+		//                                .successHandler(customSuccessHandlerCookie)
+		//                        );
 
 		return http.build();
 	}
 
-    // CORS 설정을 별도의 Bean으로 관리
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
+	// CORS 설정을 별도의 Bean으로 관리
+	@Bean
+	public CorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration configuration = new CorsConfiguration();
 
-        // 허용할 도메인 (프론트엔드 도메인)
-        configuration.setAllowedOrigins(Arrays.asList(
-            "http://localhost:3000",
-            "https://localhost:3000",
-            "https://meet-mate-mema.vercel.app"
-        ));
+		// ✅ 허용할 프론트엔드 도메인 (setAllowedOriginPatterns 사용)
+		configuration.setAllowedOriginPatterns(Arrays.asList(
+			"http://localhost:3000",
+			"https://localhost:3000",
+			"http://meet-mate-mema.vercel.app",
+			"https://meet-mate-mema.vercel.app"
+		));
 
-        // 허용할 HTTP 메서드 설정
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+		// ✅ 허용할 HTTP 메서드 설정
+		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 
-        // 허용할 헤더 설정
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With"));
+		// ✅ 허용할 헤더 설정
+		configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With"));
 
-        // CORS 요청에서 쿠키 전송 허용
-        configuration.setAllowCredentials(true);
+		// ✅ CORS 요청에서 쿠키 전송 허용 (withCredentials: true 관련 문제 해결)
+		configuration.setAllowCredentials(true);
 
-        // 응답 헤더 노출 허용 (토큰 관련)
-        configuration.setExposedHeaders(Arrays.asList("Set-Cookie", "Authentication", "Authorization", "JSESSIONID"));
+		// ✅ 응답 헤더 노출 허용 (토큰 관련)
+		configuration.setExposedHeaders(Arrays.asList("Set-Cookie", "Authentication", "Authorization", "JSESSIONID"));
 
-        // CORS 설정 적용
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
+		// CORS 설정 적용
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", configuration);
 
-        return source;
-    }
+		return source;
+	}
 }
