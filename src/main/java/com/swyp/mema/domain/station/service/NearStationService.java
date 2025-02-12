@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.swyp.mema.database.openapi.location.converter.StationConverter;
+import com.swyp.mema.database.openapi.location.converter.StationMasterConverter;
 import com.swyp.mema.domain.station.dto.response.nearSubway.NearSubwayBasicResponse;
 import com.swyp.mema.domain.station.dto.response.nearSubway.TotalNearSubwayResponse;
 
@@ -26,12 +26,12 @@ public class NearStationService {
 	private static final String END_INDEX = "100";
 
 	private final WebClient webClient;
-	private final StationConverter converter;
+	private final StationMasterConverter converter;
 
 	@Value("${api.time.key}")
 	private String serviceKey;    // 디코딩된 API 서비스 키
 
-	public NearStationService(WebClient.Builder webClientBuilder, StationConverter converter) {
+	public NearStationService(WebClient.Builder webClientBuilder, StationMasterConverter converter) {
 		this.webClient = webClientBuilder.baseUrl(BASE_URL).build(); // 기본 URL 설정
 		this.converter = converter;
 	}

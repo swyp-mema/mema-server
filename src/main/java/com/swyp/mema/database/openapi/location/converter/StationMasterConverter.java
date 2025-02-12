@@ -19,7 +19,7 @@ import com.swyp.mema.domain.station.dto.response.subwayInfo.TotalStationResponse
 import com.swyp.mema.domain.station.model.Station;
 
 @Component
-public class StationConverter {
+public class StationMasterConverter {
 
 	private static final int START_INDEX = 1;
 	private static final int END_INDEX = 1000;
