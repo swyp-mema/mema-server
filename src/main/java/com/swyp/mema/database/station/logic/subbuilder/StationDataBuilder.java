@@ -26,7 +26,10 @@ public class StationDataBuilder {
     private final StationConverter stationConverter;
 
 
-
+    /**
+     *      Public Method
+     *      Station 데이터를 생성합니다.
+     */
     @Transactional
     public void createStationData(){
 

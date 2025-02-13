@@ -89,6 +89,25 @@ public class NextStationBuilder {
         }
     }
 
+    @Transactional
+    public void buildExcludeLineNextStation(){
+
+        HashSet<String> lines = new HashSet<>();
+        ArrayList<ArrayList<String>> idTable = excelReader.readFile("/scheduleIds.xlsx");
+        for(ArrayList<String> row : idTable){
+
+            String line = row.get(0);
+            if(excludeLines.contains(line)) continue;
+
+            lines.add(line);
+        }
+
+        for (String line : lines) {
+
+            buildLineNextStation(line);
+        }
+    }
+
 
     /**
      * 특정 호선에 속해있는 next station 데이터 구축
