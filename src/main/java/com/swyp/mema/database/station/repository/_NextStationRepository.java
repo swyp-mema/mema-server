@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface _NextStationRepository extends JpaRepository<_NextStation, String> {
 
+    public _NextStation findById(long id);
     public _NextStation findByCurStationAndNextStation(_Station startStation, _Station endStation);
     public Boolean existsByCurStationAndNextStation(_Station startStation, _Station endStation);
 }

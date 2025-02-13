@@ -37,7 +37,8 @@ public class DBController {
     @GetMapping("/DB/test2")
     public ResponseEntity<String> DBtest2() {
 
-        routeBuilder.buildExcludeRoute();
+        routeBuilder.buildIncludeRoute();
+//        routeBuilder.buildExcludeRoute();
 //        nextStationBuilder.buildStationRelation();
         return ResponseEntity.ok("");
     }
@@ -45,8 +46,7 @@ public class DBController {
     @GetMapping("/DB/test3")
     public ResponseEntity<String> DBtest3() {
 
-
-        routeBuilder.buildIncludeRoute();
+        nextStationBuilder.buildIncludeLineNextStation();
         return ResponseEntity.ok("");
     }
     @GetMapping("/DB/addNext/{line}/{curStationName}/{nextStationName}")
@@ -58,12 +58,11 @@ public class DBController {
         return ResponseEntity.ok("");
     }
 
-    @GetMapping("/DB/NextStation/{nextStationId}")
+    @GetMapping("/DB/nextStation/{nextStationId}")
     public ResponseEntity<String> getNextStation(@PathVariable String nextStationId) {
 
-        Optional<_NextStation> nextStationEntity = nextStationRepository.findById(nextStationId);
-        nextStationEntity.ifPresent(nextStation -> {
-            nextStationEntity.get().printData();});
+        _NextStation nextStationEntity = nextStationRepository.findById(Long.parseLong(nextStationId));
+        nextStationEntity.printData();
         return ResponseEntity.ok("");
     }
 }

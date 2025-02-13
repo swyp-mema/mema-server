@@ -28,9 +28,6 @@ public class _Station extends BaseEntity {
     @Setter
     private String scheduleId;
 
-    @Setter
-    private String realtimeId;
-
     @Column(nullable = false)
     private String stationName;	// 역이름
 

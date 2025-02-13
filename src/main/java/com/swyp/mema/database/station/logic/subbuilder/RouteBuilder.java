@@ -30,7 +30,7 @@ public class RouteBuilder {
     }
 
     List<String> excludeLines = Arrays.asList("2호선", "6호선");
-    List<String> includeLines = Arrays.asList("3호선");
+    List<String> includeLines = Arrays.asList("4호선");
 
     public void buildExcludeRoute(){
 
@@ -56,15 +56,7 @@ public class RouteBuilder {
     public void buildIncludeRoute(){
 
         HashSet<_Route> routeHashSet = new HashSet<>(routeRepository.findAll());
-        HashSet<String> lines = new HashSet<>();
-        ArrayList<ArrayList<String>> idTable = excelReader.readFile("/scheduleIds.xlsx");
-        for(ArrayList<String> row : idTable){
-
-            String line = row.get(0);
-            if(!includeLines.contains(line)) continue;
-
-            lines.add(line);
-        }
+        List<String> lines = includeLines;
 
         for (String line : lines) {
             List<_Route> lineRoutes = getLineRoutes(line);
@@ -97,12 +89,12 @@ public class RouteBuilder {
         String stationName = station.getStationName();
         String line = station.getLineName();
 
-        HashMap<String, _Route> routes = new HashMap<>();   //key: 루트 이름
+        HashMap<String, _Route> routeMap = new HashMap<>();   //key: 루트 이름
         String path = "/schedules/" + line + "/" + stationName + ".xlsx";   //엑셀 파일 패스
         for(int i=1; i<=3; i++){
 
             HashMap<String, Integer> routeCountMap = new HashMap<>();
-            ArrayList<ArrayList<String>> data = excelReader.readFile(path);
+            ArrayList<ArrayList<String>> data = excelReader.readFile(path, String.valueOf(i));
             for(ArrayList<String> row : data){
 
                 if (row.get(3).equals("급행")) continue;
@@ -119,17 +111,17 @@ public class RouteBuilder {
 
                 String route = entry.getKey();
                 if(routeRepository.existsByRoute(route)) continue;
-                if(!routes.containsKey(route)) routes.put(route, _Route.builder()
+                if(!routeMap.containsKey(route)) routeMap.put(route, _Route.builder()
                         .route(route)
                         .line(line)
-                        .build());
+                        .build().initNums());
 
-                routes.get(entry.getKey()).addNum(i-1, entry.getValue(), countTimes.get(i-1).get(1) - countTimes.get(i-1).get(0));
+                routeMap.get(entry.getKey()).addNum(i, entry.getValue(), countTimes.get(i-1).get(1) - countTimes.get(i-1).get(0));
             }
-            station.addRoutes(routes.values().stream().toList());
         }
+        station.addRoutes(routeMap.values().stream().toList());
 
-        return routes.values().stream().toList();
+        return routeMap.values().stream().toList();
     }
 
 }

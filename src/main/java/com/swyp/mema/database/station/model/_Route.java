@@ -35,6 +35,16 @@ public class _Route implements Comparable<_Route> {
         return route.compareTo(o.route);
     }
 
+    public _Route initNums(){
+        num1 = 0;
+        num2 = 0;
+        num3 = 0;
+        time1 = 0;
+        time2 = 0;
+        time3 = 0;
+        return this;
+    }
+
     public void addNum(int day, int num, int time) {
 
         switch (day){
@@ -51,5 +61,14 @@ public class _Route implements Comparable<_Route> {
                 time3 = time;
                 break;
         }
+    }
+
+    public int getNum(int day){
+        return switch (day) {
+            case 1 -> num1;
+            case 2 -> num2;
+            case 3 -> num3;
+            default -> 0;
+        };
     }
 }

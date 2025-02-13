@@ -13,12 +13,12 @@ public class Info {
     int endTime0 = 22;
     int endMinute0 = 0;
 
-    int startTime1 = 16;
+    int startTime1 = 11;
     int startMinute1 = 0;
     int endTime1 = 22;
     int endMinute1 = 0;
 
-    int startTime2 = 16;
+    int startTime2 = 11;
     int startMinute2 = 0;
     int endTime2 = 22;
     int endMinute2 = 0;
