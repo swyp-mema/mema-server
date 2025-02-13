@@ -1,4 +1,135 @@
 package com.swyp.mema.database.station.logic.subbuilder;
 
+import com.swyp.mema.database.station.model._Route;
+import com.swyp.mema.database.station.model._Station;
+import com.swyp.mema.database.station.repository._RouteRepository;
+import com.swyp.mema.database.station.repository._StationRepository;
+import com.swyp.mema.database.station.util.ExcelReader;
+import com.swyp.mema.database.station.util.StringCleaner;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
+
+@Service
 public class RouteBuilder {
+
+    private final _RouteRepository routeRepository;
+    private final _StationRepository stationRepository;
+    private final ExcelReader excelReader;
+    private final StringCleaner stringCleaner;
+
+    private List<List<Integer>> countTimes;
+
+    public RouteBuilder(_RouteRepository routeRepository, _StationRepository stationRepository, ExcelReader excelReader, StringCleaner stringCleaner, Info info) {
+        this.routeRepository = routeRepository;
+        this.stationRepository = stationRepository;
+        this.excelReader = excelReader;
+        this.stringCleaner = stringCleaner;
+        countTimes = info.getCountTime();
+    }
+
+    List<String> excludeLines = Arrays.asList("2호선", "6호선");
+    List<String> includeLines = Arrays.asList("3호선");
+
+    public void buildExcludeRoute(){
+
+        HashSet<_Route> routeHashSet = new HashSet<>(routeRepository.findAll());
+        HashSet<String> lines = new HashSet<>();
+        ArrayList<ArrayList<String>> idTable = excelReader.readFile("/scheduleIds.xlsx");
+        for(ArrayList<String> row : idTable){
+
+            String line = row.get(0);
+            if(excludeLines.contains(line)) continue;
+
+            lines.add(line);
+        }
+
+        for (String line : lines) {
+            List<_Route> lineRoutes = getLineRoutes(line);
+            routeHashSet.addAll(lineRoutes);
+        }
+
+        routeRepository.saveAll(routeHashSet);
+    }
+
+    public void buildIncludeRoute(){
+
+        HashSet<_Route> routeHashSet = new HashSet<>(routeRepository.findAll());
+        HashSet<String> lines = new HashSet<>();
+        ArrayList<ArrayList<String>> idTable = excelReader.readFile("/scheduleIds.xlsx");
+        for(ArrayList<String> row : idTable){
+
+            String line = row.get(0);
+            if(!includeLines.contains(line)) continue;
+
+            lines.add(line);
+        }
+
+        for (String line : lines) {
+            List<_Route> lineRoutes = getLineRoutes(line);
+            routeHashSet.addAll(lineRoutes);
+        }
+
+        routeRepository.saveAll(routeHashSet);
+    }
+
+    /**
+        특정 라인에 대해 Route 생성
+     */
+    private List<_Route> getLineRoutes(String line){
+
+        List<_Station> lineStations = stationRepository.findByLineName(line);
+        HashSet<_Route> routes = new HashSet<>();
+        for(_Station station : lineStations){
+
+            List<_Route> routeList = getRoutesAtStation(station);
+            routes.addAll(routeList);
+        }
+        return routes.stream().toList();
+    }
+
+    /**
+        특정 엑셀파일(단일 역)에 대해 Route 생성
+     */
+    private List<_Route> getRoutesAtStation(_Station station){
+
+        String stationName = station.getStationName();
+        String line = station.getLineName();
+
+        HashMap<String, _Route> routes = new HashMap<>();   //key: 루트 이름
+        String path = "/schedules/" + line + "/" + stationName + ".xlsx";   //엑셀 파일 패스
+        for(int i=1; i<=3; i++){
+
+            HashMap<String, Integer> routeCountMap = new HashMap<>();
+            ArrayList<ArrayList<String>> data = excelReader.readFile(path);
+            for(ArrayList<String> row : data){
+
+                if (row.get(3).equals("급행")) continue;
+
+                int time = stringCleaner.getTime(row.get(0), row.get(1));
+                if(time < countTimes.get(i-1).get(0) || time > countTimes.get(i-1).get(1)) continue;
+
+                String route = row.get(5) + "-" + row.get(6);
+                if(!routeCountMap.containsKey(route)) routeCountMap.put(route, 0);
+                routeCountMap.put(route, routeCountMap.get(route) + 1);
+            }
+
+            for(Map.Entry<String, Integer> entry : routeCountMap.entrySet()){
+
+                String route = entry.getKey();
+                if(routeRepository.existsByRoute(route)) continue;
+                if(!routes.containsKey(route)) routes.put(route, _Route.builder()
+                        .route(route)
+                        .line(line)
+                        .build());
+
+                routes.get(entry.getKey()).addNum(i-1, entry.getValue(), countTimes.get(i-1).get(1) - countTimes.get(i-1).get(0));
+            }
+            station.addRoutes(routes.values().stream().toList());
+        }
+
+        return routes.values().stream().toList();
+    }
+
 }

@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
 @Service
-@RequiredArgsConstructor
 public class NextStationBuilder {
 
     private final _StationRepository stationRepository;
@@ -28,11 +27,17 @@ public class NextStationBuilder {
     private final StationConverter stationConverter;
     private final _RouteRepository routeRepository;
 
-    private int[][] countTimes = {
-            {16 * 60, 22 * 60},
-            {10 * 60, 22 * 60},
-            {10 * 60, 19 * 60}
-    };
+    private List<List<Integer>> countTimes;
+
+    public NextStationBuilder(_StationRepository stationRepository, _NextStationRepository nextStationRepository, ExcelReader excelReader, StringCleaner stringCleaner, StationConverter stationConverter, _RouteRepository routeRepository, Info info) {
+        this.stationRepository = stationRepository;
+        this.nextStationRepository = nextStationRepository;
+        this.excelReader = excelReader;
+        this.stringCleaner = stringCleaner;
+        this.stationConverter = stationConverter;
+        this.routeRepository = routeRepository;
+        countTimes = info.getCountTime();
+    }
 
     /*  Inner class: 특정 루트에 대한 각 역들의 정보 */
     @AllArgsConstructor
@@ -63,21 +68,21 @@ public class NextStationBuilder {
     /**
      * 역 정보 추가 함수
      */
-    @Transactional
-    public void buildStationRelation() {
-
-        HashMap<String, _Station> stations = stationConverter.list2Hashmap(stationRepository.findAll());
-        stations = applyConditions(stations);
-        HashMap<String, HashSet<String>> stationRouteSet = getStationRouteSet(stations);
-        HashMap<String, ArrayList<RouteStationInfo>> routeStations = getRouteStations(stationRouteSet);
-
-        List<_Route> routes = createRoutes(routeStations);
-        routes = routeRepository.saveAll(routes);
-        List<_NextStation> newNextStations = addNextStations(stations, routeStations, routes);
-        nextStationRepository.saveAll(newNextStations);
-        List<_NextStation> lastNextStations = addNextStationsToLastStations(stations,routeStations);
-        nextStationRepository.saveAll(lastNextStations);
-    }
+//    @Transactional
+//    public void buildStationRelation() {
+//
+//        HashMap<String, _Station> stations = stationConverter.list2Hashmap(stationRepository.findAll());
+//        stations = applyConditions(stations);
+//        HashMap<String, HashSet<String>> stationRouteSet = getStationRouteSet(stations);
+//        HashMap<String, ArrayList<RouteStationInfo>> routeStations = getRouteStations(stationRouteSet);
+//
+//        List<_Route> routes = createRoutes(routeStations);
+//        routes = routeRepository.saveAll(routes);
+//        List<_NextStation> newNextStations = addNextStations(stations, routeStations, routes);
+//        nextStationRepository.saveAll(newNextStations);
+//        List<_NextStation> lastNextStations = addNextStationsToLastStations(stations,routeStations);
+//        nextStationRepository.saveAll(lastNextStations);
+//    }
 
     private HashMap<String, _Station> applyConditions(HashMap<String, _Station> stations) {
 
@@ -154,7 +159,7 @@ public class NextStationBuilder {
                 }
 
                 // _NextStation 엔티티에 route 추가하기
-                nextStationEntity.addRoute(route);
+//                nextStationEntity.addRoute(route);
             }
         }
 
@@ -196,34 +201,34 @@ public class NextStationBuilder {
         return newNextStations;
     }
 
-    /**
-     * _Route Entity 생성
-     * @param routeStations key: route 이름,  values: RouteStationInfo들의 List => 각 루트들에 포함된 역 정보
-     * @return
-     */
-    private List<_Route> createRoutes(HashMap<String, ArrayList<RouteStationInfo>> routeStations) {
-
-        List<_Route> routes = new ArrayList<>();
-        for (Map.Entry<String, ArrayList<RouteStationInfo>> routeStation : routeStations.entrySet()) {
-
-            String routeName = routeStation.getKey();
-            RouteStationInfo routeStationInfo = routeStation.getValue().getFirst();
-            int num1, num2, num3;
-            num1 = routeStationInfo.num1;
-            num2 = routeStationInfo.num2;
-            num3 = routeStationInfo.num3;
-
-            _Route route = new _Route(routeName,
-                    num1, countTimes[0][1] - countTimes[0][0],
-                    num2, countTimes[1][1] - countTimes[1][0],
-                    num3, countTimes[2][1] - countTimes[2][0]
-            );
-
-            routes.add(route);
-        }
-
-        return routes;
-    }
+//    /**
+//     * _Route Entity 생성
+//     * @param routeStations key: route 이름,  values: RouteStationInfo들의 List => 각 루트들에 포함된 역 정보
+//     * @return
+//     */
+//    private List<_Route> createRoutes(HashMap<String, ArrayList<RouteStationInfo>> routeStations) {
+//
+//        List<_Route> routes = new ArrayList<>();
+//        for (Map.Entry<String, ArrayList<RouteStationInfo>> routeStation : routeStations.entrySet()) {
+//
+//            String routeName = routeStation.getKey();
+//            RouteStationInfo routeStationInfo = routeStation.getValue().getFirst();
+//            int num1, num2, num3;
+//            num1 = routeStationInfo.num1;
+//            num2 = routeStationInfo.num2;
+//            num3 = routeStationInfo.num3;
+//
+//            _Route route = new _Route(routeName,
+//                    num1, countTimes.get(0).get(1) - countTimes.get(0).get(0),
+//                    num2, countTimes.get(1).get(1) - countTimes.get(1).get(0),
+//                    num3, countTimes.get(2).get(1) - countTimes.get(2).get(0)
+//            );
+//
+//            routes.add(route);
+//        }
+//
+//        return routes;
+//    }
 
 
     /**
@@ -296,7 +301,7 @@ public class NextStationBuilder {
 
                     if(row.get(3).equals("급행")) continue;
                     int time = stringCleaner.getTime(row.get(0), row.get(1));
-                    if(time < countTimes[i][0] || time > countTimes[i][1]) continue;
+//                    if(time < countTimes[i][0] || time > countTimes[i][1]) continue;
 
                     String route = row.get(5) + "-" + row.get(6);
                     countPerRoute.get(route).set(i, countPerRoute.get(route).get(i) + 1);

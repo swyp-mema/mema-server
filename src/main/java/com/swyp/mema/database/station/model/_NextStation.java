@@ -28,19 +28,7 @@ public class _NextStation {
     @Setter
     private Integer moveTime; //이동시간
 
-    @ManyToMany
-    @JoinTable(name="NEXT_STATION_ROUTE",
-            joinColumns = @JoinColumn(name = "NEXT_STATION_ID"),
-            inverseJoinColumns = @JoinColumn(name = "ROUTE"))
-    private Set<_Route> routes;
 
-    public void addRoute(_Route route) {
-
-        if (routes == null) {
-            routes = new HashSet<>();
-        }
-        routes.add(route);
-    }
 
     public void printData(){
         String line, curName, nextName;
@@ -48,9 +36,5 @@ public class _NextStation {
         curName = curStation.getStationName();
         nextName = nextStation.getStationName();
         System.out.println('\n'+line + ", " + curName + " -> " +line + ", " + nextName + ", move time: " + moveTime);
-        System.out.print("Routes: ");
-        for(_Route route : routes){
-            System.out.print(route.getRoute() + ", ");
-        }
     }
 }

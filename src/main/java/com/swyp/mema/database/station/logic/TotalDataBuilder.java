@@ -15,6 +15,6 @@ public class TotalDataBuilder {
     public void buildDB(){
 
         stationDataBuilder.createStationData();
-        nextStationBuilder.buildStationRelation();
+//        nextStationBuilder.buildStationRelation();
     }
 }
