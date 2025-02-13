@@ -1,4 +1,4 @@
-package com.swyp.mema.domain.station.dto.response.subwayMaster;
+package com.swyp.mema.database.openapi.location.response;
 
 
 import lombok.Builder;

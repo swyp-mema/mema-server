@@ -1,4 +1,4 @@
-package com.swyp.mema.domain.station.service;
+package com.swyp.mema.database.openapi.location.logic;
 
 import java.net.URI;
 import java.util.List;
@@ -9,10 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.swyp.mema.domain.station.converter.StationConverter;
-import com.swyp.mema.domain.station.dto.response.subwayMaster.SubwayMasterBasicResponse;
-import com.swyp.mema.domain.station.dto.response.subwayMaster.SubwayMasterResponse;
-import com.swyp.mema.domain.station.dto.response.subwayMaster.TotalSubwayMasterResponse;
+import com.swyp.mema.database.openapi.location.converter.StationConverter;
+import com.swyp.mema.database.openapi.location.response.SubwayMasterBasicResponse;
+import com.swyp.mema.database.openapi.location.response.SubwayMasterResponse;
+import com.swyp.mema.database.openapi.location.response.TotalSubwayMasterResponse;
 import com.swyp.mema.domain.station.model.Station;
 import com.swyp.mema.domain.station.repository.StationRepository;
 
