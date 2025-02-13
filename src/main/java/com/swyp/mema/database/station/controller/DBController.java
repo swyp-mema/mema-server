@@ -4,6 +4,7 @@ import com.swyp.mema.database.station.logic.ControllStationData;
 import com.swyp.mema.database.station.logic.subbuilder.NextStationBuilder;
 import com.swyp.mema.database.station.logic.subbuilder.RouteBuilder;
 import com.swyp.mema.database.station.logic.subbuilder.StationDataBuilder;
+import com.swyp.mema.database.station.logic.subbuilder.TransferStationBuilder;
 import com.swyp.mema.database.station.model._NextStation;
 import com.swyp.mema.database.station.repository._NextStationRepository;
 import com.swyp.mema.database.station.util.ExcelReader;
@@ -26,6 +27,7 @@ public class DBController {
     private final NextStationBuilder nextStationBuilder;
     private final RouteBuilder routeBuilder;
     private final StationDataBuilder stationDataBuilder;
+    private final TransferStationBuilder transferStationBuilder;
 
     @GetMapping("/DB/test1")
     public ResponseEntity<String> DBTest1() {
@@ -46,7 +48,8 @@ public class DBController {
     @GetMapping("/DB/test3")
     public ResponseEntity<String> DBtest3() {
 
-        nextStationBuilder.buildIncludeLineNextStation();
+//        nextStationBuilder.buildIncludeLineNextStation();
+        transferStationBuilder.buildTransferStation();
         return ResponseEntity.ok("");
     }
     @GetMapping("/DB/addNext/{line}/{curStationName}/{nextStationName}")
