@@ -9,12 +9,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.swyp.mema.database.openapi.location.converter.StationConverter;
+import com.swyp.mema.database.openapi.location.converter.StationMasterConverter;
 import com.swyp.mema.database.openapi.location.response.SubwayMasterBasicResponse;
 import com.swyp.mema.database.openapi.location.response.SubwayMasterResponse;
 import com.swyp.mema.database.openapi.location.response.TotalSubwayMasterResponse;
 import com.swyp.mema.domain.station.model.Station;
-import com.swyp.mema.domain.station.repository.StationRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,16 +32,14 @@ public class StationMasterService {
 	private static final String END_INDEX = "800";
 
 	private final WebClient webClient;
-	private final StationConverter converter;
-	private final StationRepository repository;
+	private final StationMasterConverter converter;
 
 	@Value("${api.master.key}")
 	private String serviceKey;    // 디코딩된 API 서비스 키
 
-	public StationMasterService(WebClient.Builder webClientBuilder, StationConverter converter, StationRepository repository) {
+	public StationMasterService(WebClient.Builder webClientBuilder, StationMasterConverter converter) {
 		this.webClient = webClientBuilder.baseUrl(BASE_URL).build(); // 기본 URL 설정
 		this.converter = converter;
-		this.repository = repository;
 	}
 
 	/*
@@ -68,8 +65,6 @@ public class StationMasterService {
 				m.getLat(),
 				m.getLot()
 			)).toList();
-
-		repository.saveAll(stations);	// 대량 Insert
 
 		return converter.toTotalSubwayMasterResponse(responses);
 

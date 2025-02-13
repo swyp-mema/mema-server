@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.swyp.mema.database.openapi.location.converter.StationConverter;
+import com.swyp.mema.database.openapi.location.converter.StationMasterConverter;
 import com.swyp.mema.domain.station.dto.response.subwayInfo.SubwayInfoBasicResponse;
 import com.swyp.mema.domain.station.dto.response.subwayTime.SubwayTimeBasicResponse;
 import com.swyp.mema.domain.station.dto.response.subwayTime.TotalSubwayTimeResponse;
@@ -44,13 +44,13 @@ public class StationService {
 	private final MeetMemberRepository meetMemberRepository;
 
 	private final WebClient webClient;
-	private final StationConverter converter;
+	private final StationMasterConverter converter;
 	private final StationRepository stationRepository;
 
 	@Value("${api.info.key}")
 	private String serviceKey;    // 디코딩된 API 서비스 키
 
-	public StationService(WebClient.Builder webClientBuilder, StationConverter converter,
+	public StationService(WebClient.Builder webClientBuilder, StationMasterConverter converter,
 		UserRepository userRepository, MeetRepository meetRepository,
 		MeetMemberRepository meetMemberRepository, StationRepository stationRepository) {
 
