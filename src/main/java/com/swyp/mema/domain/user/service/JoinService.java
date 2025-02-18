@@ -35,7 +35,7 @@ public class JoinService {
         checkEmail(email);
         System.out.println("join service - joinProcess - enter");
 
-        User user = UserConverter.convertJoinReq2User(joinReq, bCryptPasswordEncoder.encode(password), "ROLE_CUSTOM");
+        User user = UserConverter.convertJoinReqToUser(joinReq, bCryptPasswordEncoder.encode(password), "ROLE_CUSTOM");
         System.out.println("email = " + user.getEmail());
         System.out.println("password = " + user.getPassword());
         System.out.println("role = " + user.getRole());

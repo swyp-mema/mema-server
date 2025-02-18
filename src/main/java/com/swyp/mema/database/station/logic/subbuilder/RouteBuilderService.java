@@ -6,13 +6,12 @@ import com.swyp.mema.database.station.repository._RouteRepository;
 import com.swyp.mema.database.station.repository._StationRepository;
 import com.swyp.mema.database.station.util.ExcelReader;
 import com.swyp.mema.database.station.util.StringCleaner;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
-public class RouteBuilder {
+public class RouteBuilderService {
 
     private final _RouteRepository routeRepository;
     private final _StationRepository stationRepository;
@@ -21,17 +20,21 @@ public class RouteBuilder {
 
     private List<List<Integer>> countTimes;
 
-    public RouteBuilder(_RouteRepository routeRepository, _StationRepository stationRepository, ExcelReader excelReader, StringCleaner stringCleaner, Info info) {
+    public RouteBuilderService(_RouteRepository routeRepository, _StationRepository stationRepository, ExcelReader excelReader, StringCleaner stringCleaner, TimeInfoService timeInfoService) {
         this.routeRepository = routeRepository;
         this.stationRepository = stationRepository;
         this.excelReader = excelReader;
         this.stringCleaner = stringCleaner;
-        countTimes = info.getCountTime();
+        countTimes = timeInfoService.getCountTime();
     }
 
     List<String> excludeLines = Arrays.asList("2호선", "6호선");
     List<String> includeLines = Arrays.asList("4호선");
 
+    /**
+     *      Public Method
+     *      excludeLines에 존재하는 호선을 제외하고 Build
+     */
     public void buildExcludeRoute(){
 
         HashSet<_Route> routeHashSet = new HashSet<>(routeRepository.findAll());
@@ -53,6 +56,10 @@ public class RouteBuilder {
         routeRepository.saveAll(routeHashSet);
     }
 
+    /**
+     *      Public Method
+     *      includeLines에 존재하는 호선만 Build
+     */
     public void buildIncludeRoute(){
 
         HashSet<_Route> routeHashSet = new HashSet<>(routeRepository.findAll());
@@ -65,6 +72,7 @@ public class RouteBuilder {
 
         routeRepository.saveAll(routeHashSet);
     }
+
 
     /**
         특정 라인에 대해 Route 생성

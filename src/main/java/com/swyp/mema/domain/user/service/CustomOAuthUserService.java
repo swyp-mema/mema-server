@@ -45,7 +45,7 @@ public class CustomOAuthUserService extends DefaultOAuth2UserService {
         }
 
         // UserDTO로 변환 및 반환
-        UserReq userReq = UserConverter.convertUserEntity2UserDTO(user);
+        UserReq userReq = UserConverter.convertUserEntityToUserDTO(user);
         return new CustomOAuthUser(userReq);
     }
 

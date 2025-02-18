@@ -6,20 +6,24 @@ import com.swyp.mema.database.station.model._Station;
 import com.swyp.mema.database.station.repository._NextStationRepository;
 import com.swyp.mema.database.station.repository._RouteRepository;
 import com.swyp.mema.database.station.repository._StationRepository;
-import com.swyp.mema.database.station.repository._TransferStationRepository;
 import com.swyp.mema.database.station.util.ExcelReader;
 import com.swyp.mema.database.station.util.StationConverter;
 import com.swyp.mema.database.station.util.StringCleaner;
-import com.swyp.mema.domain.station.model.Station;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
 @Service
-public class NextStationBuilder {
+public class NextStationBuilderService {
+
+    /**
+     *
+     *      NextStation Entity를 생성하는 Class
+     *      *** Station 데이터와 Route 데이터가 구축된 뒤 실행해야 함 ***
+     *
+     */
 
     private final _StationRepository stationRepository;
     private final _NextStationRepository nextStationRepository;
@@ -30,14 +34,14 @@ public class NextStationBuilder {
 
     private List<List<Integer>> countTimes;
 
-    public NextStationBuilder(_StationRepository stationRepository, _NextStationRepository nextStationRepository, ExcelReader excelReader, StringCleaner stringCleaner, StationConverter stationConverter, _RouteRepository routeRepository, Info info) {
+    public NextStationBuilderService(_StationRepository stationRepository, _NextStationRepository nextStationRepository, ExcelReader excelReader, StringCleaner stringCleaner, StationConverter stationConverter, _RouteRepository routeRepository, TimeInfoService timeInfoService) {
         this.stationRepository = stationRepository;
         this.nextStationRepository = nextStationRepository;
         this.excelReader = excelReader;
         this.stringCleaner = stringCleaner;
         this.stationConverter = stationConverter;
         this.routeRepository = routeRepository;
-        countTimes = info.getCountTime();
+        countTimes = timeInfoService.getCountTime();
     }
 
     /*  Inner class: 특정 루트에 대한 각 역들의 정보 */
@@ -70,15 +74,13 @@ public class NextStationBuilder {
         }
     }
 
-    List<String> excludeLines = Arrays.asList("2호선", "6호선");
-    List<String> includeLines = Arrays.asList("4호선");
+    List<String> excludeLines = Arrays.asList("1호선", "2호선", "6호선");
+    List<String> includeLines = Arrays.asList("1호선");
 
 
     /**
      *       Public Method
-     *      `includeLines`에 포함된 지하철 호선에 대해 next station 데이터 추가
-     *
-     *      ####    Station 데이터와 Route 데이터가 구축된 뒤 실행해야 함    ###
+     *      `includeLines`에 포함된 지하철 호선을 대상으로 Build
      */
     @Transactional
     public void buildIncludeLineNextStation(){
@@ -89,11 +91,17 @@ public class NextStationBuilder {
         }
     }
 
+
+    /**
+     *      Public Method
+     *      excludeLines에 존재하는 호선을 제외하고 Build
+     */
     @Transactional
     public void buildExcludeLineNextStation(){
 
         HashSet<String> lines = new HashSet<>();
         ArrayList<ArrayList<String>> idTable = excelReader.readFile("/scheduleIds.xlsx");
+
         for(ArrayList<String> row : idTable){
 
             String line = row.get(0);

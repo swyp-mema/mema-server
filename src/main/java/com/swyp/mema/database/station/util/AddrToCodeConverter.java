@@ -1,7 +1,6 @@
 package com.swyp.mema.database.station.util;
 
 import com.swyp.mema.global.config.env.EnvConfig;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
@@ -18,19 +17,29 @@ import java.nio.charset.StandardCharsets;
 
 @Slf4j
 @Component
-public class Addr2CodeConverter {
+public class AddrToCodeConverter {
 
-    private final EnvConfig envConfig;
+    /**
+     *
+     * 주소를 위경도로 변환해주는 openAPI
+     *
+     */
 
     String apikey;
-    String searchType = "road";
+    String searchType = "road"; // 주소타입: 도로명 주소
     String epsg = "epsg:4326";
 
-    public Addr2CodeConverter(EnvConfig envConfig) {
-        this.envConfig = envConfig;
+    public AddrToCodeConverter(EnvConfig envConfig) {
         apikey = envConfig.getAddr2Coor();
     }
 
+    /**
+     *      Public method
+     *      도로명 주소 -> 위경도로 변환해주는 메서드
+     *
+     * @param addr 도로명 주소
+     * @return  <위도, 경도>
+     */
     public Pair<String, String> getCoord(String addr){
 
         StringBuilder sb = new StringBuilder("https://api.vworld.kr/req/address");
@@ -50,7 +59,6 @@ public class Addr2CodeConverter {
             BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8));
 
             JSONParser jspa = new JSONParser();
-//            System.out.println(jspa.parse(reader));
             JSONObject jsob = (JSONObject) jspa.parse(reader);
             System.out.println(jsob);
             JSONObject jsrs = (JSONObject) jsob.get("response");
@@ -63,8 +71,6 @@ public class Addr2CodeConverter {
 
             lat = jspoint.get("x").toString();
             lot = jspoint.get("y").toString();
-//            System.out.println("X 좌표: " + jspoint.get("x"));
-//            System.out.println("Y 좌표: " + jspoint.get("y"));
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }

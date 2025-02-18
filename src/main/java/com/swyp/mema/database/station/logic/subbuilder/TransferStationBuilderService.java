@@ -5,7 +5,6 @@ import com.swyp.mema.database.station.model._TransferStation;
 import com.swyp.mema.database.station.repository._StationRepository;
 import com.swyp.mema.database.station.repository._TransferStationRepository;
 import lombok.RequiredArgsConstructor;
-import org.apache.poi.poifs.filesystem.Entry;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,7 +14,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class TransferStationBuilder {
+public class TransferStationBuilderService {
 
     private final _StationRepository stationRepository;
     private final _TransferStationRepository transferStationRepository;
@@ -65,7 +64,9 @@ public class TransferStationBuilder {
 
     /**
      * 환승시간 계산 로직
+     *
      *  ###     현재는 임시로직      ###
+     *
      * @return  환승시간
      */
     private int getTransferTime(String stationName, String curLine, String transferLine, int size) {

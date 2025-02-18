@@ -6,6 +6,7 @@ import com.swyp.mema.global.base.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -52,7 +53,7 @@ public class _Station extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "ROUTE"))
     private Set<_Route> routes;
 
-    /* Add Info*/
+    /* Add TimeInfoService*/
     public void addRoute(_Route route) {
 
         if (routes == null) {
@@ -61,10 +62,14 @@ public class _Station extends BaseEntity {
         routes.add(route);
     }
     public void addTransferStation(_TransferStation transferStation) {
+        if(transferStations == null) {
+            transferStations = new ArrayList<>();
+        }
         transferStations.add(transferStation);
     }
 
     public void addNextStation(_NextStation nextStation) {
+        if(nextStations==null) nextStations = new ArrayList<>();
         nextStations.add(nextStation);
     }
 

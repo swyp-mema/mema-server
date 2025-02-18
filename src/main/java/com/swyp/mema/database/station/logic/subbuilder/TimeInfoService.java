@@ -6,18 +6,27 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
-public class Info {
+public class TimeInfoService {
 
+    /**
+     *
+     * 배차 측정 시간 설정 클래스
+     *
+     */
+
+    //평일
     int startTime0 = 16;
     int startMinute0 = 0;
     int endTime0 = 22;
     int endMinute0 = 0;
 
+    //토요일
     int startTime1 = 11;
     int startMinute1 = 0;
     int endTime1 = 22;
     int endMinute1 = 0;
 
+    //주말, 공휴일
     int startTime2 = 11;
     int startMinute2 = 0;
     int endTime2 = 22;

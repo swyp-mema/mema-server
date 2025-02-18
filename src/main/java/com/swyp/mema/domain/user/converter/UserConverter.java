@@ -6,7 +6,7 @@ import com.swyp.mema.domain.user.model.User;
 
 public class UserConverter {
 
-    public static User convertUserDTO2User(UserReq userReq) {
+    public static User convertUserDtoToUser(UserReq userReq) {
 
         User user = User.builder()
                 .email(userReq.getEmail())
@@ -19,7 +19,7 @@ public class UserConverter {
         return user;
     }
 
-    public static User convertUserDTO2User(UserReq userReq, String password) {
+    public static User convertUserDtoToUser(UserReq userReq, String password) {
 
         User user = User.builder()
                 .email(userReq.getEmail())
@@ -33,7 +33,7 @@ public class UserConverter {
         return user;
     }
 
-    public static User convertJoinReq2User(JoinReq joinReq, String password, String role) {
+    public static User convertJoinReqToUser(JoinReq joinReq, String password, String role) {
 
         User user = User.builder()
                 .email(joinReq.getEmail())
@@ -45,7 +45,7 @@ public class UserConverter {
     }
 
 
-    public static UserReq convertUserEntity2UserDTO(User user) {
+    public static UserReq convertUserEntityToUserDTO(User user) {
 
 
         UserReq userReq = new UserReq();

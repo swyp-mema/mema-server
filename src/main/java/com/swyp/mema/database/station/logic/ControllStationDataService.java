@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class ControllStationData {
+public class ControllStationDataService {
 
     private final _StationRepository stationRepository;
     private final _NextStationRepository nextStationRepository;

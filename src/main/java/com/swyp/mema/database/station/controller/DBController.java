@@ -1,10 +1,11 @@
 package com.swyp.mema.database.station.controller;
 
-import com.swyp.mema.database.station.logic.ControllStationData;
-import com.swyp.mema.database.station.logic.subbuilder.NextStationBuilder;
-import com.swyp.mema.database.station.logic.subbuilder.RouteBuilder;
-import com.swyp.mema.database.station.logic.subbuilder.StationDataBuilder;
-import com.swyp.mema.database.station.logic.subbuilder.TransferStationBuilder;
+import com.swyp.mema.database.station.logic.ControllStationDataService;
+import com.swyp.mema.database.station.logic.TotalDataBuilderService;
+import com.swyp.mema.database.station.logic.subbuilder.NextStationBuilderService;
+import com.swyp.mema.database.station.logic.subbuilder.RouteBuilderService;
+import com.swyp.mema.database.station.logic.subbuilder.StationDataBuilderService;
+import com.swyp.mema.database.station.logic.subbuilder.TransferStationBuilderService;
 import com.swyp.mema.database.station.model._NextStation;
 import com.swyp.mema.database.station.repository._NextStationRepository;
 import com.swyp.mema.database.station.util.ExcelReader;
@@ -14,8 +15,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import java.util.Optional;
-
 
 @Controller
 @RequiredArgsConstructor
@@ -23,33 +22,31 @@ public class DBController {
 
     private final ExcelReader excelReader;
     private final _NextStationRepository nextStationRepository;
-    private final ControllStationData controllStationData;
-    private final NextStationBuilder nextStationBuilder;
-    private final RouteBuilder routeBuilder;
-    private final StationDataBuilder stationDataBuilder;
-    private final TransferStationBuilder transferStationBuilder;
+    private final ControllStationDataService controllStationDataService;
+    private final NextStationBuilderService nextStationBuilderService;
+    private final RouteBuilderService routeBuilderService;
+    private final StationDataBuilderService stationDataBuilderService;
+    private final TransferStationBuilderService transferStationBuilderService;
+    private final TotalDataBuilderService totalDataBuilderService;
 
     @GetMapping("/DB/test1")
     public ResponseEntity<String> DBTest1() {
 
-        stationDataBuilder.createStationData();
+        totalDataBuilderService.buildDB();
         return ResponseEntity.ok("");
     }
 
     @GetMapping("/DB/test2")
     public ResponseEntity<String> DBtest2() {
 
-        routeBuilder.buildIncludeRoute();
-//        routeBuilder.buildExcludeRoute();
-//        nextStationBuilder.buildStationRelation();
+        nextStationBuilderService.buildExcludeLineNextStation();
         return ResponseEntity.ok("");
     }
 
     @GetMapping("/DB/test3")
     public ResponseEntity<String> DBtest3() {
 
-//        nextStationBuilder.buildIncludeLineNextStation();
-        transferStationBuilder.buildTransferStation();
+        transferStationBuilderService.buildTransferStation();
         return ResponseEntity.ok("");
     }
     @GetMapping("/DB/addNext/{line}/{curStationName}/{nextStationName}")
@@ -57,7 +54,7 @@ public class DBController {
                                           @PathVariable String curStationName,
                                           @PathVariable String nextStationName) {
 
-        controllStationData.addNextStation(line, curStationName, nextStationName);
+        controllStationDataService.addNextStation(line, curStationName, nextStationName);
         return ResponseEntity.ok("");
     }
 
