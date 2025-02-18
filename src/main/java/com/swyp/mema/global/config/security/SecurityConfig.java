@@ -114,7 +114,8 @@ public class SecurityConfig {
 			"http://localhost:3000",
 			"https://localhost:3000",
 			"http://meet-mate-mema.vercel.app",
-			"https://meet-mate-mema.vercel.app"
+			"https://meet-mate-mema.vercel.app",
+			"https://mema-client-test.vercel.app"	// 프론트 테스트 서버
 		));
 
 		// ✅ 허용할 HTTP 메서드 설정
