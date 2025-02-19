@@ -113,11 +113,12 @@ public class SecurityConfig {
 			"http://localhost:3000",
 			"https://localhost:3000",
 			"http://meet-mate-mema.vercel.app",
-			"https://meet-mate-mema.vercel.app"
+			"https://meet-mate-mema.vercel.app",
+			"https://mema-client-test.vercel.app"	// 프론트 테스트 서버
 		));
 
 		// ✅ 허용할 HTTP 메서드 설정
-		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
 
 		// ✅ 허용할 헤더 설정
 		configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With"));

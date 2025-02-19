@@ -115,12 +115,12 @@ public class StoreService {
 			// Shop 객체 생성
 			StoreRes store = StoreRes.builder()
 				.name(matcher.group(1))
-				.description(matcher.group(2))
+				// .description(matcher.group(2))
 				.category(matcher.group(3))
 				.address(matcher.group(4))
-				.time(matcher.group(5))
-				.phone(matcher.group(6))
-				.score(matcher.group(7))
+				// .time(matcher.group(5))
+				// .phone(matcher.group(6))
+				// .score(matcher.group(7))
 				.build();
 
 			// 리스트에 추가
