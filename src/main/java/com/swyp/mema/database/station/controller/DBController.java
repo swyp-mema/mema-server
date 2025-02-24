@@ -7,8 +7,11 @@ import com.swyp.mema.database.station.logic.subbuilder.RouteBuilderService;
 import com.swyp.mema.database.station.logic.subbuilder.StationDataBuilderService;
 import com.swyp.mema.database.station.logic.subbuilder.TransferStationBuilderService;
 import com.swyp.mema.database.station.model._NextStation;
+import com.swyp.mema.database.station.model._Station;
 import com.swyp.mema.database.station.repository._NextStationRepository;
+import com.swyp.mema.database.station.repository._StationRepository;
 import com.swyp.mema.database.station.util.ExcelReader;
+import com.swyp.mema.domain.station.repository.StationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -28,6 +31,7 @@ public class DBController {
     private final StationDataBuilderService stationDataBuilderService;
     private final TransferStationBuilderService transferStationBuilderService;
     private final TotalDataBuilderService totalDataBuilderService;
+    private final _StationRepository stationRepository;
 
     @GetMapping("/DB/test1")
     public ResponseEntity<String> DBTest1() {
@@ -63,6 +67,15 @@ public class DBController {
 
         _NextStation nextStationEntity = nextStationRepository.findById(Long.parseLong(nextStationId));
         nextStationEntity.printData();
+        return ResponseEntity.ok("");
+    }
+
+    @GetMapping("/DB/stationInfo/{line}/{stationName}")
+    public ResponseEntity<String> getStationInfo(@PathVariable String line,
+                                                 @PathVariable String stationName) {
+
+        _Station station = stationRepository.findByLineNameAndStationName(line, stationName);
+        station.printAll();
         return ResponseEntity.ok("");
     }
 }
