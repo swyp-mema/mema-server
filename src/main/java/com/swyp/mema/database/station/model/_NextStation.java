@@ -28,25 +28,36 @@ public class _NextStation {
     @Setter
     private Integer moveTime; //이동시간
 
-    @ManyToMany
-    @JoinTable(name="NEXT_STATION_ROUTE",
-            joinColumns = @JoinColumn(name = "NEXT_STATION_ID"),
-            inverseJoinColumns = @JoinColumn(name = "ROUTE"))
-    private Set<_Route> routes;
+    // current station -> next station 으로 가는 요일별 배차 수
+    private Integer num1;
+    private Integer num2;
+    private Integer num3;
 
-    public void addRoute(_Route route) {
 
-        if (routes == null) {
-            routes = new HashSet<>();
-        }
-        routes.add(route);
-    }
 
     public void printData(){
         String line, curName, nextName;
         line = curStation.getLineName();
         curName = curStation.getStationName();
         nextName = nextStation.getStationName();
-        System.out.println("line: " + line + ",  " + curName + " -> " + nextName + ", move time: " + moveTime);
+        System.out.println('\n'+line + ", " + curName + " -> " +line + ", " + nextName + ", move time: " + moveTime);
+    }
+
+    public void addNum(int day, int num) {
+
+        switch (day){
+            case 1:
+                if(num1 == null) num1 = 0;
+                num1 += num;
+                break;
+            case 2:
+                if(num2 == null) num2 = 0;
+                num2 += num;
+                break;
+            case 3:
+                if(num3 == null) num3 = 0;
+                num3 += num;
+                break;
+        }
     }
 }

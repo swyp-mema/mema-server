@@ -6,7 +6,10 @@ import com.swyp.mema.global.base.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PRIVATE;
@@ -26,9 +29,6 @@ public class _Station extends BaseEntity {
     @Setter
     private String scheduleId;
 
-    @Setter
-    private String realtimeId;
-
     @Column(nullable = false)
     private String stationName;	// 역이름
 
@@ -47,13 +47,29 @@ public class _Station extends BaseEntity {
     @OneToMany(mappedBy = "curStation", cascade = CascadeType.ALL)
     private List<_TransferStation> transferStations;
 
+    @ManyToMany
+    @JoinTable(name="STATION_ROUTE",
+            joinColumns = @JoinColumn(name = "STATION_ID"),
+            inverseJoinColumns = @JoinColumn(name = "ROUTE"))
+    private Set<_Route> routes;
 
-    /* Add Info*/
+    /* Add TimeInfoService*/
+    public void addRoute(_Route route) {
+
+        if (routes == null) {
+            routes = new HashSet<>();
+        }
+        routes.add(route);
+    }
     public void addTransferStation(_TransferStation transferStation) {
+        if(transferStations == null) {
+            transferStations = new ArrayList<>();
+        }
         transferStations.add(transferStation);
     }
 
     public void addNextStation(_NextStation nextStation) {
+        if(nextStations==null) nextStations = new ArrayList<>();
         nextStations.add(nextStation);
     }
 
@@ -67,6 +83,13 @@ public class _Station extends BaseEntity {
         this.stationName = stationName;
         this.lineName = lineName;
         this.address = address;
+    }
+
+    public void addRoutes(List<_Route> routes) {
+        if (this.routes == null) {
+            this.routes = new HashSet<>();
+        }
+        this.routes.addAll(routes);
     }
 
     public void printAll(){

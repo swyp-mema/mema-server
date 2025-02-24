@@ -23,6 +23,9 @@ public class EnvConfig {
         return dotenv.get("CLIENT_IP");
     }
 
+    public String getAddr2Coor(){
+        return dotenv.get("ADDR2COOR");
+    }
 
     public String getMailAddress() {
         return dotenv.get("NAVER_EMAIL");
