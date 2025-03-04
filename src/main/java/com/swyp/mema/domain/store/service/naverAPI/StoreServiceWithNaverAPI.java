@@ -1,4 +1,4 @@
-package com.swyp.mema.domain.store.service;
+package com.swyp.mema.domain.store.service.naverAPI;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -11,11 +11,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.swyp.mema.domain.store.converter.StoreConverter;
-import com.swyp.mema.domain.store.dto.BasicStoreRes;
-import com.swyp.mema.domain.store.dto.BasicStoreRes.Item;
-import com.swyp.mema.domain.store.dto.ImageRes;
-import com.swyp.mema.domain.store.dto.StoreRes;
-import com.swyp.mema.domain.store.dto.TotalStoreRes;
+import com.swyp.mema.domain.store.dto.naverAPI.BasicStoreRes;
+import com.swyp.mema.domain.store.dto.naverAPI.BasicStoreRes.Item;
+import com.swyp.mema.domain.store.dto.naverAPI.ImageRes;
+import com.swyp.mema.domain.store.dto.naverAPI.StoreRes;
+import com.swyp.mema.domain.store.dto.naverAPI.TotalStoreRes;
 
 import lombok.extern.slf4j.Slf4j;
 

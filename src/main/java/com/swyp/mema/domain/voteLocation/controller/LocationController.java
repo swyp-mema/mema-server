@@ -1,7 +1,7 @@
 package com.swyp.mema.domain.voteLocation.controller;
 
 import com.swyp.mema.domain.midloc.service.MidLocService;
-import com.swyp.mema.domain.store.dto.TotalStoreList;
+import com.swyp.mema.domain.store.dto.naverMap.TotalStoreInfoList;
 import com.swyp.mema.domain.voteLocation.dto.response.MidLocationResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -79,12 +79,12 @@ public class LocationController {
 	 */
 	@Operation(summary = "맛집 추천 API", description = "중간 지점 역 근처의 맛집을 추천받을 수 있다.")
 	@GetMapping("/meets/{meetId}/recommend")
-	public ResponseEntity<TotalStoreList> recommendStore(
+	public ResponseEntity<TotalStoreInfoList> recommendStore(
 		@PathVariable(name = "meetId") Long meetId,
 		@AuthenticationPrincipal CustomUserDetails userDetails
 	) {
 		Long userId = userDetails.getUserId();
-		TotalStoreList response = locationService.recommendStore(userId, meetId);
+		TotalStoreInfoList response = locationService.recommendStore(userId, meetId);
 		return ResponseEntity.ok(response);
 	}
 }

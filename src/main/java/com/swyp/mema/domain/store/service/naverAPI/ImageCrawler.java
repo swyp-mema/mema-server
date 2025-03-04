@@ -1,4 +1,4 @@
-package com.swyp.mema.domain.store.service;
+package com.swyp.mema.domain.store.service.naverAPI;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -25,7 +25,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Service;
 
-import com.swyp.mema.domain.store.dto.ImageRes;
+import com.swyp.mema.domain.store.dto.naverAPI.ImageRes;
 import com.swyp.mema.global.config.WebDriverConfig;
 import com.swyp.mema.global.s3.S3Service;
 

@@ -1,4 +1,4 @@
-package com.swyp.mema.domain.store.dto;
+package com.swyp.mema.domain.store.dto.naverMap;
 
 import lombok.Getter;
 import lombok.Setter;

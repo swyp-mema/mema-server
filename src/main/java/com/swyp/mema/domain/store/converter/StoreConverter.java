@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import com.swyp.mema.domain.store.dto.BasicStoreRes;
-import com.swyp.mema.domain.store.dto.BasicStoreRes.Item;
-import com.swyp.mema.domain.store.dto.StoreRes;
-import com.swyp.mema.domain.store.dto.TotalStoreRes;
+import com.swyp.mema.domain.store.dto.naverAPI.BasicStoreRes;
+import com.swyp.mema.domain.store.dto.naverAPI.BasicStoreRes.Item;
+import com.swyp.mema.domain.store.dto.naverAPI.StoreRes;
+import com.swyp.mema.domain.store.dto.naverAPI.TotalStoreRes;
 
 @Component
 public class StoreConverter {

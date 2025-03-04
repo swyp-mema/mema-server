@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.swyp.mema.domain.midloc.service.MidLocService;
 import com.swyp.mema.domain.station.dto.response.subwayInfo.SingleStationResponse;
-import com.swyp.mema.domain.store.dto.StoreInfo;
-import com.swyp.mema.domain.store.dto.TotalStoreList;
+import com.swyp.mema.domain.store.dto.naverMap.StoreInfo;
+import com.swyp.mema.domain.store.dto.naverMap.TotalStoreInfoList;
 import com.swyp.mema.domain.store.exception.NotRecommendStore;
 import com.swyp.mema.domain.store.service.StoreServiceWithNaverMap;
 import com.swyp.mema.domain.voteLocation.dto.response.MidLocationResponse;
@@ -131,7 +131,7 @@ public class LocationService {
 	}
 
 	@Transactional(readOnly = true)
-	public TotalStoreList recommendStore(Long userId, Long meetId) {
+	public TotalStoreInfoList recommendStore(Long userId, Long meetId) {
 
 		// 필수 검증 로직
 		User user = validateUser(userId);
@@ -143,7 +143,7 @@ public class LocationService {
 			throw new NotRecommendStore();
 		}
 		List<StoreInfo> storeInfos = storeService.getStoreInfo(meet.getMeetLocation());
-		return new TotalStoreList(storeInfos);
+		return new TotalStoreInfoList(storeInfos);
 	}
 
 	private MeetMember validateMeetMember(User user, Meet meet) {

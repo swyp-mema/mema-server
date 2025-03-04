@@ -1,4 +1,4 @@
-package com.swyp.mema.domain.store.dto;
+package com.swyp.mema.domain.store.dto.naverMap;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class TotalStoreList {
+public class TotalStoreInfoList {
 
     private List<StoreInfo> storeList;
 

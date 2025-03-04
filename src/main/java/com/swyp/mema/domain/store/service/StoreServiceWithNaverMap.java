@@ -2,7 +2,7 @@ package com.swyp.mema.domain.store.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.swyp.mema.domain.store.dto.StoreInfo;
+import com.swyp.mema.domain.store.dto.naverMap.StoreInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;

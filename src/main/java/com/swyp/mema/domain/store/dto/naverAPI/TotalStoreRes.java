@@ -1,4 +1,4 @@
-package com.swyp.mema.domain.store.dto;
+package com.swyp.mema.domain.store.dto.naverAPI;
 
 import java.util.ArrayList;
 import java.util.List;
