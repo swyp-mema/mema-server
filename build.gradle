@@ -74,8 +74,15 @@ dependencies {
     // WebFlux
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
-    // Image Crawling
+    // jsoup & Selenium & WebDriverManager (최신 안정 버전으로 업데이트)
     implementation 'org.jsoup:jsoup:1.18.1'
+    implementation 'org.seleniumhq.selenium:selenium-java:4.14.1'
+    implementation 'org.seleniumhq.selenium:selenium-chrome-driver:4.14.1'
+    implementation 'io.github.bonigarcia:webdrivermanager:5.8.0'
+
+    // AWS S3 (AWS SDK v2)
+    implementation 'software.amazon.awssdk:s3:2.20.40'
+    implementation 'software.amazon.awssdk:auth:2.20.40'
 }
 
 tasks.named('test') {

@@ -1,13 +1,7 @@
 package com.swyp.mema.domain.voteLocation.controller;
 
-import java.io.UnsupportedEncodingException;
-
 import com.swyp.mema.domain.midloc.service.MidLocService;
-import com.swyp.mema.domain.store.dto.ImageRes;
 import com.swyp.mema.domain.store.dto.TotalStoreRes;
-import com.swyp.mema.domain.store.service.NaverMapCrawler;
-import com.swyp.mema.domain.store.service.NaverStoreSearchService;
-import com.swyp.mema.domain.store.service.StoreService;
 import com.swyp.mema.domain.voteLocation.dto.response.MidLocationResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
