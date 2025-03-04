@@ -1,13 +1,13 @@
 package com.swyp.mema.domain.voteLocation.service;
 
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import com.swyp.mema.domain.midloc.service.MidLocService;
 import com.swyp.mema.domain.station.dto.response.subwayInfo.SingleStationResponse;
-import com.swyp.mema.domain.store.dto.TotalStoreRes;
+import com.swyp.mema.domain.store.dto.StoreInfo;
+import com.swyp.mema.domain.store.dto.TotalStoreList;
 import com.swyp.mema.domain.store.exception.NotRecommendStore;
-import com.swyp.mema.domain.store.service.NaverStoreSearchService;
+import com.swyp.mema.domain.store.service.StoreServiceWithNaverMap;
 import com.swyp.mema.domain.voteLocation.dto.response.MidLocationResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -42,7 +42,7 @@ public class LocationService {
 	private final LocationRepository locationRepository;
 	private final LocationConverter converter;
 	private final MidLocService midLocService;
-	private final NaverStoreSearchService storeSearchService;
+	private final StoreServiceWithNaverMap storeService;
 
 
 	@Transactional
@@ -131,7 +131,7 @@ public class LocationService {
 	}
 
 	@Transactional(readOnly = true)
-	public TotalStoreRes recommendStore(Long userId, Long meetId) {
+	public TotalStoreList recommendStore(Long userId, Long meetId) {
 
 		// 필수 검증 로직
 		User user = validateUser(userId);
@@ -142,8 +142,8 @@ public class LocationService {
 		if (meet.getMeetLocation() == null) {
 			throw new NotRecommendStore();
 		}
-
-		return storeSearchService.search(meet.getMeetLocation());
+		List<StoreInfo> storeInfos = storeService.getStoreInfo(meet.getMeetLocation());
+		return new TotalStoreList(storeInfos);
 	}
 
 	private MeetMember validateMeetMember(User user, Meet meet) {

@@ -26,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class StoreServiceByGPT {
+public class StoreServiceWithGPT {
 
 	private final OpenAIWorker openAIWorker;
 	private final UserRepository userRepository;

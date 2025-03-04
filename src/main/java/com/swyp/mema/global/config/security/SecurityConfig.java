@@ -53,7 +53,7 @@ public class SecurityConfig {
 		log.info("=== filter chain start ===");
 
 		http
-			.cors(cors -> cors.configurationSource(corsConfigurationSource())) // ✅ Spring Security에서 CORS 처리
+			.cors(cors -> cors.configurationSource(corsConfigurationSource())) // Spring Security에서 CORS 처리
 			.csrf(csrf -> csrf.disable()) // CSRF 비활성화
 			.formLogin(formLogin -> formLogin.disable())
 			.httpBasic(httpBasic -> httpBasic.disable());
@@ -108,7 +108,7 @@ public class SecurityConfig {
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
 
-		// ✅ 허용할 프론트엔드 도메인 (setAllowedOriginPatterns 사용)
+		// 허용할 프론트엔드 도메인 (setAllowedOriginPatterns 사용)
 		configuration.setAllowedOriginPatterns(Arrays.asList(
 			"http://localhost:3000",
 			"https://localhost:3000",
@@ -117,16 +117,16 @@ public class SecurityConfig {
 			"https://mema-client-test.vercel.app"	// 프론트 테스트 서버
 		));
 
-		// ✅ 허용할 HTTP 메서드 설정
+		// 허용할 HTTP 메서드 설정
 		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
 
-		// ✅ 허용할 헤더 설정
+		// 허용할 헤더 설정
 		configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With"));
 
-		// ✅ CORS 요청에서 쿠키 전송 허용 (withCredentials: true 관련 문제 해결)
+		// CORS 요청에서 쿠키 전송 허용 (withCredentials: true 관련 문제 해결)
 		configuration.setAllowCredentials(true);
 
-		// ✅ 응답 헤더 노출 허용 (토큰 관련)
+		// 응답 헤더 노출 허용 (토큰 관련)
 		configuration.setExposedHeaders(Arrays.asList("Set-Cookie", "Authentication", "Authorization", "JSESSIONID"));
 
 		// CORS 설정 적용

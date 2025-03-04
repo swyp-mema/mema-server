@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
-public class NaverStoreSearchService {
+public class StoreServiceWithNaverAPI {
 
 	private static final String BASE_URL = "https://openapi.naver.com/v1/search/local.json";
 
@@ -35,8 +35,8 @@ public class NaverStoreSearchService {
 	private final StoreConverter converter;
 	private final ImageCrawler crawler;
 
-	public NaverStoreSearchService(WebClient.Builder webClientBuilder, StoreConverter converter,
-		ImageCrawler crawler) {
+	public StoreServiceWithNaverAPI(WebClient.Builder webClientBuilder, StoreConverter converter,
+									ImageCrawler crawler) {
 		this.webClient = webClientBuilder.baseUrl(BASE_URL).build(); // 기본 URL 설정
 		this.converter = converter;
 		this.crawler = crawler;

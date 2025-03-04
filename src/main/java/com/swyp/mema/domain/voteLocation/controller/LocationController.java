@@ -1,7 +1,7 @@
 package com.swyp.mema.domain.voteLocation.controller;
 
 import com.swyp.mema.domain.midloc.service.MidLocService;
-import com.swyp.mema.domain.store.dto.TotalStoreRes;
+import com.swyp.mema.domain.store.dto.TotalStoreList;
 import com.swyp.mema.domain.voteLocation.dto.response.MidLocationResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -75,29 +75,16 @@ public class LocationController {
 	}
 
 	/**
-	 * 출발 위치 전체 조회
+	 * 맛집 추천 API
 	 */
 	@Operation(summary = "맛집 추천 API", description = "중간 지점 역 근처의 맛집을 추천받을 수 있다.")
 	@GetMapping("/meets/{meetId}/recommend")
-	public ResponseEntity<TotalStoreRes> recommendStore(
-		@PathVariable Long meetId,
+	public ResponseEntity<TotalStoreList> recommendStore(
+		@PathVariable(name = "meetId") Long meetId,
 		@AuthenticationPrincipal CustomUserDetails userDetails
 	) {
 		Long userId = userDetails.getUserId();
-		TotalStoreRes response = locationService.recommendStore(userId, meetId);
+		TotalStoreList response = locationService.recommendStore(userId, meetId);
 		return ResponseEntity.ok(response);
 	}
-
-	// /**
-	//  * 출발 위치 전체 조회
-	//  */
-	// @Operation(summary = "이미지 크롤링", description = "이미지 크롤링하기")
-	// @GetMapping("/recommend")
-	// public ResponseEntity<Void> recommendStore(
-	// 	@AuthenticationPrincipal CustomUserDetails userDetails
-	// ) {
-	// 	String url = "http://entas.co.kr";
-	// 	naverMapCrawler.crawaling(url);
-	// 	return ResponseEntity.ok().build();
-	// }
 }
