@@ -36,3 +36,10 @@ naver:
     client:
       id: ${NAVER_API_CLIENT_ID}
       secret: ${NAVER_API_CLIENT_SECRET}
+
+aws:
+  s3:
+    bucket-name: ${AWS_BUCKET_NAME}
+    region: ap-northeast-2  # 서울
+    access-key: ${AWS_ACCESS_KEY_ID}
+    secret-key: ${AWS_SECRET_ACCESS_KEY}

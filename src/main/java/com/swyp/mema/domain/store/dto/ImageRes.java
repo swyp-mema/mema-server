@@ -7,7 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class ImageRes {
 
-	private String image; // Base64 encoded image
+	private String url; // Base64 encoded image
 	private int width;    // Target width
 	private int height;   // Target height
 
