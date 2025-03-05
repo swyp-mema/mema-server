@@ -5,17 +5,17 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
-import com.swyp.mema.domain.station.dto.response.nearSubway.NearSubwayBasicResponse;
-import com.swyp.mema.domain.station.dto.response.nearSubway.NearSubwayResponse;
-import com.swyp.mema.domain.station.dto.response.nearSubway.TotalNearSubwayResponse;
-import com.swyp.mema.domain.station.dto.response.subwayInfo.SingleStationResponse;
+import com.swyp.mema.domain.station.dto.response.nearSubway.NearSubwayBasicRes;
+import com.swyp.mema.domain.station.dto.response.nearSubway.NearSubwayRes;
+import com.swyp.mema.domain.station.dto.response.nearSubway.TotalNearSubwayRes;
+import com.swyp.mema.domain.station.dto.response.subwayInfo.SingleStationRes;
 import com.swyp.mema.database.openapi.location.response.SubwayMasterBasicResponse;
 import com.swyp.mema.database.openapi.location.response.SubwayMasterResponse;
 import com.swyp.mema.database.openapi.location.response.TotalSubwayMasterResponse;
-import com.swyp.mema.domain.station.dto.response.subwayTime.SubwayTimeBasicResponse;
-import com.swyp.mema.domain.station.dto.response.subwayTime.TotalSubwayTimeResponse;
-import com.swyp.mema.domain.station.dto.response.subwayTime.SubwayTimeResponse;
-import com.swyp.mema.domain.station.dto.response.subwayInfo.TotalStationResponse;
+import com.swyp.mema.domain.station.dto.response.subwayTime.SubwayTimeBasicRes;
+import com.swyp.mema.domain.station.dto.response.subwayTime.TotalSubwayTimeRes;
+import com.swyp.mema.domain.station.dto.response.subwayTime.SubwayTimeRes;
+import com.swyp.mema.domain.station.dto.response.subwayInfo.TotalStationRes;
 import com.swyp.mema.domain.station.model.Station;
 
 @Component
@@ -24,12 +24,12 @@ public class StationMasterConverter {
 	private static final int START_INDEX = 1;
 	private static final int END_INDEX = 1000;
 
-	public TotalStationResponse toTotalStationResponse(List<Station> stationList) {
+	public TotalStationRes toTotalStationResponse(List<Station> stationList) {
 
-		List<SingleStationResponse> stationResponse = stationList.stream()
-			.map(station -> SingleStationResponse.builder()
+		List<SingleStationRes> stationResponse = stationList.stream()
+			.map(station -> SingleStationRes.builder()
 				.stationName(station.getStationName())
-				.routeName(station.getRouteName())
+				.lineName(station.getRouteName())
 				.lat(station.getLat())
 				.lot(station.getLot())
 				.build()
@@ -37,7 +37,7 @@ public class StationMasterConverter {
 			.collect(Collectors.toList());
 
 		int totalCount = stationResponse.size();
-		return TotalStationResponse.builder()
+		return TotalStationRes.builder()
 			.pageNo(START_INDEX)
 			.numOfRows(END_INDEX)
 			.totalCount(totalCount)
@@ -45,10 +45,10 @@ public class StationMasterConverter {
 			.build();
 	}
 
-	public TotalSubwayTimeResponse toSubwayTimeListResponse(SubwayTimeBasicResponse basicResponse) {
+	public TotalSubwayTimeRes toSubwayTimeListResponse(SubwayTimeBasicRes basicResponse) {
 
-		List<SubwayTimeResponse> list = basicResponse.getResponse().getBody().getItems().getItemList().stream()
-			.map(res -> SubwayTimeResponse.builder()
+		List<SubwayTimeRes> list = basicResponse.getResponse().getBody().getItems().getItemList().stream()
+			.map(res -> SubwayTimeRes.builder()
 				.stationId(res.getStationId())
 				.stationName(res.getStationName())
 				.routeId(res.getRouteId())
@@ -61,14 +61,14 @@ public class StationMasterConverter {
 				.build()
 			).toList();
 
-		return new TotalSubwayTimeResponse(list);
+		return new TotalSubwayTimeRes(list);
 	}
 
-	public TotalNearSubwayResponse toNearSubwayBasicResponse(NearSubwayBasicResponse basicResponse) {
+	public TotalNearSubwayRes toNearSubwayBasicResponse(NearSubwayBasicRes basicResponse) {
 
 		// Stream을 통해 realtimeArrivalList를 NearSubwayResponse로 변환
-		List<NearSubwayResponse> responses = basicResponse.getRealtimeArrivalList().stream()
-			.map(res -> NearSubwayResponse.builder()
+		List<NearSubwayRes> responses = basicResponse.getRealtimeArrivalList().stream()
+			.map(res -> NearSubwayRes.builder()
 				.rowNum(res.getRowNum())                        // 순서
 				.subwayLine(res.getSubwayId())          // 지하철호선ID
 				.statnFid(res.getStatnFid())                    // 이전 지하철역 ID
@@ -94,7 +94,7 @@ public class StationMasterConverter {
 			.toList(); // 결과를 리스트로 변환
 
 		// TotalNearSubwayResponse에 변환된 리스트를 설정
-		return new TotalNearSubwayResponse(responses);
+		return new TotalNearSubwayRes(responses);
 	}
 
 	public List<SubwayMasterResponse> toSubwayMasterListResponse(SubwayMasterBasicResponse basicResponse) {

@@ -35,7 +35,7 @@ public class VoteDateController {
 	@Operation(summary = "일정 생성 API", description = "특정 약속의 일정을 생성합니다.")
 	@PostMapping("/meets/{meetId}/vote/date")
 	public ResponseEntity<TotalVoteDateListRes> createVote(
-		@PathVariable Long meetId,
+		@PathVariable(name="meetId") Long meetId,
 		@Valid @RequestBody CreateVoteDateReq createVoteDateReq,
 		@AuthenticationPrincipal CustomUserDetails user) {
 
@@ -63,7 +63,7 @@ public class VoteDateController {
 	@Operation(summary = "일정 수정 API", description = "특정 약속에서 입력한 나의 일정을 수정할 수 있습니다.")
 	@PatchMapping("/meets/{meetId}/vote/date")
 	public ResponseEntity<TotalVoteDateListRes> updateVoteDates(
-		@PathVariable Long meetId,
+		@PathVariable(name="meetId") Long meetId,
 		@Valid @RequestBody UpdateVoteDateReq voteDateReq,
 		@AuthenticationPrincipal CustomUserDetails user) {
 
@@ -84,7 +84,7 @@ public class VoteDateController {
 	@Operation(summary = "일정 전체 조회 API", description = "특정 약속의 약속원들이 입력한 일정을 모두 조회할 수 있습니다.")
 	@GetMapping("/meets/{meetId}/vote/date/total")
 	public ResponseEntity<TotalVoteDateListRes> getVoteDates(
-		@PathVariable Long meetId,
+		@PathVariable(name="meetId") Long meetId,
 		@AuthenticationPrincipal CustomUserDetails user) {
 
 		Long userId = Long.parseLong(user.getUsername());
@@ -98,7 +98,7 @@ public class VoteDateController {
 	@Operation(summary = "내 일정 조회 API", description = "특정 약속에서 입력한 나의 일정을 조회할 수 있습니다.")
 	@GetMapping("/meets/{meetId}/vote/date/my")
 	public ResponseEntity<SingleVoteDateRes> getMyVoteDates(
-		@PathVariable Long meetId,
+		@PathVariable(name="meetId") Long meetId,
 		@AuthenticationPrincipal CustomUserDetails user) {
 
 		Long userId = Long.parseLong(user.getUsername());
@@ -114,7 +114,7 @@ public class VoteDateController {
 	@Operation(summary = "최종 날짜 선택 API", description = "최종 날짜를 선택할 수 있습니다.")
 	@PatchMapping("/meets/{meetId}/vote/date/final")
 	public ResponseEntity<Void> setFinalVoteDate(
-		@PathVariable Long meetId,
+		@PathVariable(name="meetId") Long meetId,
 		@Valid @RequestBody FinalVoteDateReq finalVoteDateReq,
 		@AuthenticationPrincipal CustomUserDetails user) {
 
@@ -126,7 +126,7 @@ public class VoteDateController {
 	@Operation(summary = "나의 날짜 투표 삭제 API", description = "나의 날짜투표 내역을 삭제합니다.")
 	@DeleteMapping("/meets/{meetId}/vote/date/my")
 	public ResponseEntity<Void> deleteVodeDate(
-			@PathVariable Long meetId,
+			@PathVariable(name="meetId") Long meetId,
 			@AuthenticationPrincipal CustomUserDetails user	){
 
 		Long userId = Long.parseLong(user.getUsername());
@@ -137,7 +137,7 @@ public class VoteDateController {
 	@Operation(summary = "날짜 투표 전체 삭제 API", description = "약속에 존재하는 날짜투표 내역을 전부 삭제합니다.")
 	@DeleteMapping("/meets/{meetId}/vote/date")
 	public ResponseEntity<Void> deleteVodeDateAll(
-			@PathVariable Long meetId,
+			@PathVariable(name="meetId") Long meetId,
 			@AuthenticationPrincipal CustomUserDetails user	){
 
 		Long userId = Long.parseLong(user.getUsername());

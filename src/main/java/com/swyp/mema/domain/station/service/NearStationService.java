@@ -9,8 +9,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.swyp.mema.database.openapi.location.converter.StationMasterConverter;
-import com.swyp.mema.domain.station.dto.response.nearSubway.NearSubwayBasicResponse;
-import com.swyp.mema.domain.station.dto.response.nearSubway.TotalNearSubwayResponse;
+import com.swyp.mema.domain.station.dto.response.nearSubway.NearSubwayBasicRes;
+import com.swyp.mema.domain.station.dto.response.nearSubway.TotalNearSubwayRes;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,7 +40,7 @@ public class NearStationService {
 	 * 지하철 실시간 시간 데이터 OpenAPI 를 호출하여 현재역 기준 앞뒤 역 데이터를 가져오기
 	 */
 	@Transactional
-	public TotalNearSubwayResponse getNearSubwayByAPI(String stationName) {
+	public TotalNearSubwayRes getNearSubwayByAPI(String stationName) {
 
 		// 서울역인 경우 서울로 변경
 		stationName = stationName.equals("서울역") ? "서울" : stationName;
@@ -50,7 +50,7 @@ public class NearStationService {
 		log.info("Generated SubwayInfo API Request URL: {}", uri);
 
 		// OpenAPI 요청 및 JSON 확인
-		NearSubwayBasicResponse result = fetchOpenApiForNearSubway(uri);
+		NearSubwayBasicRes result = fetchOpenApiForNearSubway(uri);
 		if(result.getRealtimeArrivalList() == null || result.getRealtimeArrivalList().isEmpty()) {
 
 			return null;
@@ -68,13 +68,13 @@ public class NearStationService {
 			.toUri();
 	}
 
-	private NearSubwayBasicResponse fetchOpenApiForNearSubway(URI uri) {
+	private NearSubwayBasicRes fetchOpenApiForNearSubway(URI uri) {
 
 		// WebClient 요청
 		return webClient.get()
 			.uri(uri) // 생성한 URI를 그대로 사용
 			.retrieve() // 응답 수신
-			.bodyToMono(NearSubwayBasicResponse.class)
+			.bodyToMono(NearSubwayBasicRes.class)
 			.block(); // 동기 방식으로 결과 받기
 	}
 }

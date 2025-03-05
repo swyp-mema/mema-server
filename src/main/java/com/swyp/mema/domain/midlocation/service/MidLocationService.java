@@ -4,10 +4,8 @@ import com.swyp.mema.database.station.model._NextStation;
 import com.swyp.mema.database.station.model._Route;
 import com.swyp.mema.database.station.model._Station;
 import com.swyp.mema.database.station.model._TransferStation;
-import com.swyp.mema.database.station.repository._StationRepository;
-import com.swyp.mema.domain.voteLocation.model.Location;
+import com.swyp.mema.database.station.repository.StationRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -16,7 +14,7 @@ public class MidLocationService {
 
     private final HashMap<String, _Station> codeMap;    // key: line + "_" + station name
     private final HashMap<String, _Station> idMap;      // key: Station.scheduleId
-    private final _StationRepository stationRepository;
+    private final StationRepository stationRepository;
 
 
     /* Inner Class : 각 유저들이 출발역에서 출발하였을 때 특정 역까지 가는 시간이 얼마나 걸리는지 기록 */
@@ -37,7 +35,7 @@ public class MidLocationService {
         }
     }
 
-    public MidLocationService(_StationRepository stationRepository) {
+    public MidLocationService(StationRepository stationRepository) {
         this.stationRepository = stationRepository;
         this.codeMap = new HashMap<>();
         this.idMap = new HashMap<>();

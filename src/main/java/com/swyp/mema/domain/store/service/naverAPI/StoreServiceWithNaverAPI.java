@@ -136,49 +136,4 @@ public class StoreServiceWithNaverAPI {
 	private boolean hasMissingLinks(Item item) {
 		return item.getLink().isEmpty();
 	}
-	// // 이미지 검증 메서드 추가
-	// private boolean hasMissingImages(BasicStoreRes results) {
-	// 	return results.getItems().stream()
-	// 		.anyMatch(store -> crawler.crawaling(store.getLink()) == null);
-	// }
-	//
-	// // 기존 데이터 중 Link 또는 이미지가 없는 경우 새로운 결과로 대체
-	// private List<StoreRes> replaceWithNewDataAndImages(BasicStoreRes oldResults, BasicStoreRes newResults) {
-	//
-	// 	List<StoreRes> updatedResults = new ArrayList<>();
-	//
-	// 	int j = 0;
-	// 	for (int i = 0; i < oldResults.getItems().size(); i++) {
-	//
-	// 		Item oldData = oldResults.getItems().get(i);
-	// 		ImageRes oldDataImageLink = crawler.crawaling(oldData.getLink());
-	//
-	// 		// 링크가 없거나 이미지 크롤링 결과가 null이면 새 데이터로 대체
-	// 		if ((oldData.getLink() == null || oldData.getLink().isEmpty()) || (oldDataImageLink == null)) {
-	//
-	// 			for (; j < newResults.getItems().size(); j++) {
-	//
-	// 				Item newData = newResults.getItems().get(j);
-	// 				ImageRes newDataImageLink = crawler.crawaling(newData.getLink());
-	//
-	// 				if ((newData.getLink() != null && !newData.getLink().isEmpty()) && (newDataImageLink != null)) {
-	//
-	// 					// StoreRes 객체 생성
-	// 					StoreRes storeRes = converter.toStoreRes(newData);
-	// 					storeRes.setImageInfo(newDataImageLink); // 크롤링된 이미지 정보 추가
-	//
-	// 					updatedResults.add(storeRes); // 새로운 데이터로 대체
-	// 					j++;
-	// 					break;
-	// 				}
-	// 			}
-	// 		} else {
-	// 			StoreRes storeRes = converter.toStoreRes(oldData);
-	// 			storeRes.setImageInfo(oldDataImageLink);
-	// 			updatedResults.add(storeRes); // 기존 데이터 유지
-	// 		}
-	// 	}
-	// 	return updatedResults;
-	// }
-
 }

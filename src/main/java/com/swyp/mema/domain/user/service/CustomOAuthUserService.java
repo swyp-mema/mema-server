@@ -3,8 +3,8 @@ package com.swyp.mema.domain.user.service;
 import com.swyp.mema.domain.user.dto.request.UserReq;
 import com.swyp.mema.domain.user.converter.UserConverter;
 import com.swyp.mema.domain.user.dto.CustomOAuthUser;
-import com.swyp.mema.domain.user.dto.response.oauth2.NaverResponse;
-import com.swyp.mema.domain.user.dto.response.oauth2.OAuthResponse;
+import com.swyp.mema.domain.user.dto.response.oauth2.NaverRes;
+import com.swyp.mema.domain.user.dto.response.oauth2.OAuthRes;
 import com.swyp.mema.domain.user.dto.converter.UserDtoConverter;
 import com.swyp.mema.domain.user.model.User;
 import com.swyp.mema.domain.user.repository.UserRepository;
@@ -30,7 +30,7 @@ public class CustomOAuthUserService extends DefaultOAuth2UserService {
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
 
         // OAuthResponse 처리
-        OAuthResponse oAuthResponse = getOAuthResponse(registrationId, oAuth2User);
+        OAuthRes oAuthResponse = getOAuthResponse(registrationId, oAuth2User);
         if (oAuthResponse == null) {
             throw new OAuth2AuthenticationException("지원하지 않는 OAuth2 Provider: " + registrationId);
         }
@@ -49,17 +49,17 @@ public class CustomOAuthUserService extends DefaultOAuth2UserService {
         return new CustomOAuthUser(userReq);
     }
 
-    private OAuthResponse getOAuthResponse(String registrationId, OAuth2User oAuth2User) {
+    private OAuthRes getOAuthResponse(String registrationId, OAuth2User oAuth2User) {
         switch (registrationId) {
             case "naver":
                 System.out.println("naver login");
-                return new NaverResponse(oAuth2User.getAttributes());
+                return new NaverRes(oAuth2User.getAttributes());
             default:
                 return null;
         }
     }
 
-    private User createNewUser(OAuthResponse oAuthResponse) {
+    private User createNewUser(OAuthRes oAuthResponse) {
 
         return userRepository.save(User.builder()
                 .email(oAuthResponse.getEmail())

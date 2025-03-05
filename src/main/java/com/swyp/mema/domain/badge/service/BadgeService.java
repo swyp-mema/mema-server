@@ -1,15 +1,13 @@
 package com.swyp.mema.domain.badge.service;
 
 import com.swyp.mema.domain.badge.converter.BadgeConverter;
-import com.swyp.mema.domain.badge.dto.response.BadgeResponse;
+import com.swyp.mema.domain.badge.dto.response.BadgeRes;
 import com.swyp.mema.domain.badge.model.Badge;
 import com.swyp.mema.domain.badge.repository.BadgeRepository;
 import com.swyp.mema.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +32,7 @@ public class BadgeService {
     }
 
     // 보유 뱃지 현황 조회
-    public BadgeResponse getBadges(){
+    public BadgeRes getBadges(){
 
         Long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
         Badge badge = badgeRepository.findByUser(userRepository.findByUserId(userId));

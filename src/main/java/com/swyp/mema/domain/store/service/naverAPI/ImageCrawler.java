@@ -43,7 +43,7 @@ public class ImageCrawler {
 	public ImageRes crawaling(String url) {
 
 		try {
-			// 1️⃣ HTML 문서에서 이미지 URL 가져오기
+			// 1. HTML 문서에서 이미지 URL 가져오기
 			String imgUrl = fetchImageUrl(url);
 
 			if (imgUrl == null) {
@@ -51,7 +51,7 @@ public class ImageCrawler {
 				return null;
 			}
 
-			// 2️⃣ 이미지 로드 및 S3 업로드
+			// 2. 이미지 로드 및 S3 업로드
 			String imageUrl = processAndUploadImage(imgUrl);
 			return new ImageRes(imageUrl, 350, calculateHeight(350));
 

@@ -2,7 +2,7 @@ package com.swyp.mema.database.station.logic.subbuilder;
 
 import com.swyp.mema.database.station.model._Station;
 import com.swyp.mema.database.station.model._TransferStation;
-import com.swyp.mema.database.station.repository._StationRepository;
+import com.swyp.mema.database.station.repository.StationRepository;
 import com.swyp.mema.database.station.repository._TransferStationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class TransferStationBuilderService {
 
-    private final _StationRepository stationRepository;
+    private final StationRepository stationRepository;
     private final _TransferStationRepository transferStationRepository;
 
     /**

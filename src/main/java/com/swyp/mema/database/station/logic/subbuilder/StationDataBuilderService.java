@@ -1,10 +1,8 @@
 package com.swyp.mema.database.station.logic.subbuilder;
 
 import com.swyp.mema.database.openapi.location.logic.StationMasterService;
-import com.swyp.mema.database.openapi.location.response.TotalSubwayMasterResponse;
 import com.swyp.mema.database.station.model._Station;
-import com.swyp.mema.database.station.model._TransferStation;
-import com.swyp.mema.database.station.repository._StationRepository;
+import com.swyp.mema.database.station.repository.StationRepository;
 import com.swyp.mema.database.station.util.AddrToCodeConverter;
 import com.swyp.mema.database.station.util.ExcelReader;
 import com.swyp.mema.database.station.util.StationConverter;
@@ -24,7 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StationDataBuilderService {
 
-    private final _StationRepository stationRepository;
+    private final StationRepository stationRepository;
     private final ExcelReader excelData;
     private final AddrToCodeConverter addrToCodeConverter;
     private final StringCleaner stringCleaner;

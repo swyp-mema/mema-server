@@ -76,7 +76,7 @@ public class MeetController {
 	@Operation(summary = "약속 단건 조회 API", description = "약속에 대한 모든 정보를 조회할 수 있습니다.")
 	@GetMapping("/{meetId}")
 	public ResponseEntity<SingleMeetRes> getOne(
-		@Parameter(description = "약속 ID", example = "1") @PathVariable Long meetId,
+		@Parameter(description = "약속 ID", example = "1") @PathVariable(name="meetId") Long meetId,
 		@AuthenticationPrincipal CustomUserDetails user) {
 
 		Long userId = Long.parseLong(user.getUsername());
@@ -99,7 +99,7 @@ public class MeetController {
 	@Operation(summary = "약속 수정 API", description = "약속명을 수정할 수 있습니다.")
 	@PatchMapping("/{meetId}")
 	public ResponseEntity<SingleMeetRes> update(
-		@Parameter(description = "약속 ID", example = "1") @PathVariable Long meetId,
+		@Parameter(description = "약속 ID", example = "1") @PathVariable(name="meetId") Long meetId,
 		@Valid @RequestBody MeetNameReq meetNameReq,
 		@AuthenticationPrincipal CustomUserDetails user) {
 
@@ -111,7 +111,7 @@ public class MeetController {
 	@Operation(summary = "약속 삭제 API", description = "약속을 삭제할 수 있습니다.")
 	@DeleteMapping("/{meetId}")
 	public ResponseEntity<Void> deleteMeet(
-		@Parameter(description = "약속 ID", example = "1") @PathVariable Long meetId,
+		@Parameter(description = "약속 ID", example = "1") @PathVariable(name="meetId") Long meetId,
 		@AuthenticationPrincipal CustomUserDetails user) {
 
 		Long userId = Long.parseLong(user.getUsername());

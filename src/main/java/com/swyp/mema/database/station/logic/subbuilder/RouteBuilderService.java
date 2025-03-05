@@ -3,7 +3,7 @@ package com.swyp.mema.database.station.logic.subbuilder;
 import com.swyp.mema.database.station.model._Route;
 import com.swyp.mema.database.station.model._Station;
 import com.swyp.mema.database.station.repository._RouteRepository;
-import com.swyp.mema.database.station.repository._StationRepository;
+import com.swyp.mema.database.station.repository.StationRepository;
 import com.swyp.mema.database.station.util.ExcelReader;
 import com.swyp.mema.database.station.util.StringCleaner;
 import org.springframework.stereotype.Service;
@@ -14,13 +14,13 @@ import java.util.*;
 public class RouteBuilderService {
 
     private final _RouteRepository routeRepository;
-    private final _StationRepository stationRepository;
+    private final StationRepository stationRepository;
     private final ExcelReader excelReader;
     private final StringCleaner stringCleaner;
 
     private List<List<Integer>> countTimes;
 
-    public RouteBuilderService(_RouteRepository routeRepository, _StationRepository stationRepository, ExcelReader excelReader, StringCleaner stringCleaner, TimeInfoService timeInfoService) {
+    public RouteBuilderService(_RouteRepository routeRepository, StationRepository stationRepository, ExcelReader excelReader, StringCleaner stringCleaner, TimeInfoService timeInfoService) {
         this.routeRepository = routeRepository;
         this.stationRepository = stationRepository;
         this.excelReader = excelReader;
