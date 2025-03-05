@@ -22,5 +22,6 @@ public class TotalDataBuilderService {
         routeBuilderService.buildExcludeRoute();
         nextStationBuilderService.buildExcludeLineNextStation();
         transferStationBuilderService.buildTransferStation();
+        stationDataBuilderService.addLocationData();
     }
 }

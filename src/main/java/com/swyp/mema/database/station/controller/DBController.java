@@ -51,6 +51,7 @@ public class DBController {
     public ResponseEntity<String> DBtest3() {
 
         transferStationBuilderService.buildTransferStation();
+//        stationDataBuilderService.addLocationData();
         return ResponseEntity.ok("");
     }
     @GetMapping("/DB/addNext/{line}/{curStationName}/{nextStationName}")

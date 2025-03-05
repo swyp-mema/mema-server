@@ -4,6 +4,8 @@ import com.swyp.mema.domain.station.model.Station;
 import jakarta.persistence.*;
 import lombok.*;
 
+import static jakarta.persistence.GenerationType.IDENTITY;
+
 @Entity
 @Getter
 @Builder
@@ -11,7 +13,7 @@ import lombok.*;
 @AllArgsConstructor
 public class _TransferStation {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
