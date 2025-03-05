@@ -4,7 +4,7 @@ import com.swyp.mema.database.station.dto.response.TotalStationRes;
 import com.swyp.mema.database.station.service.StationService;
 import com.swyp.mema.domain.midloc.service.MidLocService;
 import com.swyp.mema.domain.store.dto.naverMap.TotalStoreInfoRes;
-import com.swyp.mema.domain.voteLocation.dto.response.MidLocationRes;
+import com.swyp.mema.domain.voteLocation.dto.response.MidLocationTotalRes;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -67,14 +67,13 @@ public class LocationController {
 	 */
 	@Operation(summary = "전체 위치 조회 API", description = "약속원의 전체 출발 위치와 중간 지점역을 조회할 수 있습니다.")
 	@GetMapping("/meets/{meetId}/vote/location/total")
-	public ResponseEntity<MidLocationRes> getTotalLocation(
+	public ResponseEntity<MidLocationTotalRes> getTotalLocation(
 		@PathVariable(name="meetId") Long meetId,
 		@AuthenticationPrincipal CustomUserDetails userDetails
 	) {
 		Long userId = userDetails.getUserId();
-		locationService.getTotalLocation(meetId, userId);
-		MidLocationRes response = midLocationService.getMidLocation(meetId, userId);
-		return ResponseEntity.ok(response);
+		MidLocationTotalRes res = locationService.getTotalLocation(meetId, userId);
+		return ResponseEntity.ok(res);
 	}
 
 	/**

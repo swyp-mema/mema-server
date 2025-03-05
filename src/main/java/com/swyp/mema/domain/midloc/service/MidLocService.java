@@ -12,7 +12,7 @@ import com.swyp.mema.domain.station.dto.response.subwayInfo.SingleStationRes;
 import com.swyp.mema.domain.user.exception.UserNotFoundException;
 import com.swyp.mema.domain.user.model.User;
 import com.swyp.mema.domain.user.repository.UserRepository;
-import com.swyp.mema.domain.voteLocation.dto.response.MidLocationRes;
+import com.swyp.mema.domain.voteLocation.dto.response.MidLocationTotalRes;
 import com.swyp.mema.domain.voteLocation.exception.LocationNotFoundException;
 import com.swyp.mema.domain.voteLocation.model.Location;
 import com.swyp.mema.domain.voteLocation.repository.LocationRepository;
@@ -44,7 +44,7 @@ public class MidLocService {
 	 * @return
 	 */
 	@Transactional
-	public MidLocationRes getMidLocation(Long meetId, Long userId) {
+	public MidLocationTotalRes getMidLocation(Long meetId, Long userId) {
 
 		// 필수 검증 로직
 		User user = validateUser(userId);
@@ -80,8 +80,8 @@ public class MidLocService {
 			.lot(meet.getLot())
 			.build();
 
-		return MidLocationRes.builder()
-			.startStationList(userStartStations)
+		return MidLocationTotalRes.builder()
+//			.users(userStartStations)
 			.midStation(midStation)
 			.build();
 
