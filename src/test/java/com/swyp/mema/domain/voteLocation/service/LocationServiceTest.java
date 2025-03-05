@@ -22,7 +22,6 @@ import java.util.List;
 @SpringBootTest
 class LocationServiceTest {
 
-    @Autowired private LocationService locationService;
     @Autowired
     private MidLocationService midLocationService;
     @Autowired
