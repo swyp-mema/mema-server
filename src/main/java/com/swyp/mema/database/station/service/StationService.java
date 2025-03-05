@@ -2,8 +2,7 @@ package com.swyp.mema.database.station.service;
 
 import com.swyp.mema.database.station.dto.response.StationRes;
 import com.swyp.mema.database.station.dto.response.TotalStationRes;
-import com.swyp.mema.database.station.model._Station;
-import com.swyp.mema.database.station.repository.StationRepository;
+import com.swyp.mema.database.station.repository.StationCustomRepository;
 import com.swyp.mema.database.station.util.StationConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,7 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StationService {
 
-    private final StationRepository stationRepository;
+    private final StationCustomRepository stationRepository;
     private final StationConverter converter;
 
     /**
@@ -25,9 +24,7 @@ public class StationService {
     @Transactional(readOnly = true)
     public TotalStationRes getStationInfo() {
 
-        List<_Station> all = stationRepository.findAll();
-
-        List<StationRes> stationRes = converter.toStationRes(all);
+        List<StationRes> stationRes = stationRepository.findStationsWithLocation();
         return new TotalStationRes(stationRes.size(), stationRes);
     }
 
