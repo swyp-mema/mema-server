@@ -6,6 +6,7 @@ import com.swyp.mema.database.station.repository.StationRepository;
 import com.swyp.mema.database.station.util.ExcelReader;
 import com.swyp.mema.database.station.util.StationConverter;
 import com.swyp.mema.database.station.util.StringCleaner;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.jupiter.api.Disabled;
 import org.junit.runner.RunWith;
@@ -35,7 +36,7 @@ public class StationDataBuilderServiceTest {
     @Autowired
     private ExcelReader excelReader;
 
-    @Disabled("위치 데이터 빌드 할 때만 테스트 하세요.")
+    @Ignore("위치 데이터 빌드 할 때만 테스트 하세요.")
     @Test
     public void locationBuild_Success_Test() {
 
@@ -46,7 +47,7 @@ public class StationDataBuilderServiceTest {
         assert list.isEmpty();
     }
 
-    @Disabled("위치 데이터 빌드 할 때만 테스트 하세요.")
+    @Ignore("위치 데이터 빌드 할 때만 테스트 하세요.")
     @Test
     public void dataMatch_Api_Test(){
 
@@ -59,7 +60,7 @@ public class StationDataBuilderServiceTest {
         list.forEach(s -> System.out.println(stringCleaner.createCode(s)));
     }
 
-    @Disabled("위치 데이터 빌드 할 때만 테스트 하세요.")
+    @Ignore("위치 데이터 빌드 할 때만 테스트 하세요.")
     @Test
     public void dataMatch_excel_Test(){
 
