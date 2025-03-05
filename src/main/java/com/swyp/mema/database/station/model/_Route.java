@@ -71,4 +71,12 @@ public class _Route implements Comparable<_Route> {
             default -> 0;
         };
     }
+    public int getTime(int day){
+        return switch (day) {
+            case 1 -> time1;
+            case 2 -> time2;
+            case 3 -> time3;
+            default -> 0;
+        };
+    }
 }

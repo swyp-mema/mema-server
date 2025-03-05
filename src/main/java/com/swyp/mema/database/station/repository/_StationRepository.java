@@ -10,4 +10,5 @@ public interface _StationRepository extends JpaRepository<_Station, String> {
     public List<_Station> findByStationName(String stationName);
     public List<_Station> findByLineName(String lineName);
     public _Station findByLineNameAndStationName(String lineName, String stationName);
+    public _Station findByScheduleId(String scheduleId);
 }

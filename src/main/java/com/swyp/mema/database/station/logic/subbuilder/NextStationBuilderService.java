@@ -74,7 +74,7 @@ public class NextStationBuilderService {
         }
     }
 
-    List<String> excludeLines = Arrays.asList("1호선", "2호선", "6호선");
+    List<String> excludeLines = Arrays.asList("2호선", "6호선");
     List<String> includeLines = Arrays.asList("1호선");
 
 
@@ -235,10 +235,7 @@ public class NextStationBuilderService {
                 nextStationRepository.save(nextStationEntity);
                 curStation.addNextStation(nextStationEntity);
             }
-            for(int day=1; day<=3; day++){
-
-                nextStationEntity.addNum(day, route.getNum(day));
-            }
+            nextStationEntity.addRoute(route);
         }
     }
 
@@ -285,9 +282,6 @@ public class NextStationBuilderService {
                     .build();
             nextStationRepository.save(nextStation);
         }
-        for(int day=1; day<=3; day++){
-
-            nextStation.addNum(day, targetRoute.getNum(day));
-        }
+        nextStation.addRoute(targetRoute);
     }
 }

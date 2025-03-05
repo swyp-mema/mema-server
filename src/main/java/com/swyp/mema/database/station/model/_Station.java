@@ -41,13 +41,13 @@ public class _Station extends BaseEntity {
 
     private String address;
 
-    @OneToMany(mappedBy = "curStation", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "curStation", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<_NextStation> nextStations;
 
-    @OneToMany(mappedBy = "curStation", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "curStation", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<_TransferStation> transferStations;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name="STATION_ROUTE",
             joinColumns = @JoinColumn(name = "STATION_ID"),
             inverseJoinColumns = @JoinColumn(name = "ROUTE"))
@@ -95,5 +95,11 @@ public class _Station extends BaseEntity {
     public void printAll(){
 
         System.out.println("name: " + stationName + ", line: " + lineName + ", lat: " + lat + ", lot: " + lot + ", ID: " + scheduleId);
+        for(_NextStation nextStation : nextStations){
+            nextStation.printData();
+        }
+        for(_TransferStation transferStation : transferStations){
+            transferStation.printAll();
+        }
     }
 }

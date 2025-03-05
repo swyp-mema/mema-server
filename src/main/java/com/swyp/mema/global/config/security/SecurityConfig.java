@@ -79,7 +79,7 @@ public class SecurityConfig {
 		// 요청 인증 정책 설정
 		http
 			.authorizeHttpRequests(auth -> auth
-				.requestMatchers("/", "/login", "/join/custom", "/midloc/test1", "/near/station","/midloc/test2/{stationId}/{upDown}","/midloc/test3","/DB/test1", "/DB/test2", "/DB/test3", "/DB/addNext/{line}/{curStationName}/{nextStationName}", "/DB/nextStation/{nextStationId}", "/login/naver", "/join/custom/sendEmail", "/join/custom/checkEmail").permitAll()
+				.requestMatchers("/", "/login", "/join/custom", "/midloc/test1", "/midLocation/test1", "/DB/stationInfo/{line}/{stationName}", "/near/station","/midloc/test2/{stationId}/{upDown}","/midloc/test3","/DB/test1", "/DB/test2", "/DB/test3", "/DB/addNext/{line}/{curStationName}/{nextStationName}", "/DB/nextStation/{nextStationId}", "/login/naver", "/join/custom/sendEmail", "/join/custom/checkEmail").permitAll()
 
 				.requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
 				.anyRequest().authenticated()
