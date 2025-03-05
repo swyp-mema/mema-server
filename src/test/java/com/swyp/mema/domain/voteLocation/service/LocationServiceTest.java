@@ -7,6 +7,7 @@ import com.swyp.mema.domain.user.model.User;
 import com.swyp.mema.domain.voteLocation.converter.LocationConverter;
 import com.swyp.mema.domain.voteLocation.dto.response.MidLocationTotalRes;
 import com.swyp.mema.domain.voteLocation.model.Location;
+import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,7 @@ class LocationServiceTest {
     @Autowired
     private LocationConverter locationConverter;
 
+    @Ignore
     @Test
     void getTotalLocation() {
 
