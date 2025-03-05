@@ -15,4 +15,8 @@ public class SingleStationRes {
 
 	private String lot; // 경도
 
+	public void printAll(){
+		System.out.print(lineName+" "+stationName+" "+lat+" "+lot + ",  ");
+	}
 }
+

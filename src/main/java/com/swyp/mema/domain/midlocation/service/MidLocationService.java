@@ -5,6 +5,12 @@ import com.swyp.mema.database.station.model._Route;
 import com.swyp.mema.database.station.model._Station;
 import com.swyp.mema.database.station.model._TransferStation;
 import com.swyp.mema.database.station.repository.StationRepository;
+import com.swyp.mema.database.station.util.StringCleaner;
+import com.swyp.mema.domain.midlocation.dto.MidLocationDto;
+import com.swyp.mema.domain.user.model.User;
+import com.swyp.mema.domain.voteLocation.model.Location;
+import lombok.Setter;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -15,13 +21,25 @@ public class MidLocationService {
     private final HashMap<String, _Station> codeMap;    // key: line + "_" + station name
     private final HashMap<String, _Station> idMap;      // key: Station.scheduleId
     private final StationRepository stationRepository;
+    private final StringCleaner stringCleaner;
 
+    public MidLocationService(StationRepository stationRepository, StringCleaner stringCleaner) {
+        this.stationRepository = stationRepository;
+        this.codeMap = new HashMap<>();
+        this.idMap = new HashMap<>();
+        init();
+        this.stringCleaner = stringCleaner;
+    }
 
     /* Inner Class : 각 유저들이 출발역에서 출발하였을 때 특정 역까지 가는 시간이 얼마나 걸리는지 기록 */
     class UserMap{
 
         HashMap<String, Integer> userMap;      // 도달하는데 걸리는 시간
         HashMap<String, String> prevMap;       // 이전 역의 scheduleId
+        @Setter
+        User user;
+        @Setter
+        _Station firstStation;
 
         public void initUsermap() {
 
@@ -35,13 +53,6 @@ public class MidLocationService {
         }
     }
 
-    public MidLocationService(StationRepository stationRepository) {
-        this.stationRepository = stationRepository;
-        this.codeMap = new HashMap<>();
-        this.idMap = new HashMap<>();
-        init();
-    }
-
     protected void init() {
 
         List<_Station> totalStations = stationRepository.findAll();
@@ -52,6 +63,46 @@ public class MidLocationService {
             idMap.put(station.getScheduleId(), station);
         }
     }
+
+    /**********************
+     *   Public Method
+     *********************/
+
+    /**
+     * 유저의 중간값 정보가 기록된 Location 클래스의 List를 받아 중간역과 그 경로를 반환
+     * @param locations
+     * @return
+     */
+    public Pair<_Station, List<MidLocationDto>> getTotalMidStation(List<Location> locations) {
+
+        List<UserMap> userMaps = new ArrayList<>();
+        for(Location location : locations) {
+
+            UserMap userMap = new UserMap();
+            userMap.initUsermap();
+            userMap.setUser(location.getUser());
+            userMap.setFirstStation(codeMap.get(stringCleaner.createCode(location.getStationRoute(),location.getStationName())));
+            userMaps.add(userMap);
+
+            //역 도달시간 계산
+            calc(location.getStationName(), location.getStationRoute(), userMap, 1);
+
+        }
+
+        String midStationId = getMidStation(userMaps);
+        Pair<_Station, List<MidLocationDto>> res = Pair.of(idMap.get(midStationId), new ArrayList<>());
+        for(UserMap userMap : userMaps) {
+            res.getSecond().add(MidLocationDto.builder()
+                    .user(userMap.user)
+                    .path(traceStations(userMap, midStationId))
+                    .firstStation(userMap.firstStation)
+                    .time(userMap.userMap.get(midStationId))
+                    .build());
+        }
+
+        return res;
+    }
+
 
 
     /**

@@ -2,14 +2,18 @@ package com.swyp.mema.domain.voteLocation.service;
 
 import java.util.List;
 
+import com.swyp.mema.database.station.model._Station;
 import com.swyp.mema.domain.midloc.service.MidLocService;
+import com.swyp.mema.domain.midlocation.dto.MidLocationDto;
+import com.swyp.mema.domain.midlocation.service.MidLocationService;
 import com.swyp.mema.domain.station.dto.response.subwayInfo.SingleStationRes;
 import com.swyp.mema.domain.store.dto.naverMap.StoreInfoRes;
 import com.swyp.mema.domain.store.dto.naverMap.TotalStoreInfoRes;
 import com.swyp.mema.domain.store.exception.NotRecommendStore;
 import com.swyp.mema.domain.store.service.naverMap.StoreServiceWithNaverMap;
-import com.swyp.mema.domain.voteLocation.dto.response.MidLocationRes;
+import com.swyp.mema.domain.voteLocation.dto.response.MidLocationTotalRes;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,6 +47,8 @@ public class LocationService {
 	private final LocationConverter converter;
 	private final MidLocService midLocService;
 	private final StoreServiceWithNaverMap storeService;
+	private final MidLocationService midLocationService;
+	private final LocationConverter locationConverter;
 
 
 	@Transactional
@@ -89,7 +95,7 @@ public class LocationService {
 	}
 
 	@Transactional(readOnly = true)
-	public MidLocationRes getTotalLocation(Long meetId, Long userId) {
+	public MidLocationTotalRes getTotalLocation(Long meetId, Long userId) {
 
 		// 필수 검증 로직
 		User user = validateUser(userId);
@@ -107,26 +113,9 @@ public class LocationService {
 		// 유저들의 출발 위치가 없는 경우 예외
 		if (locations.isEmpty()) { throw new LocationNotFoundException(); }
 
-		List<SingleStationRes> userStartStations = locations.stream()
-			.map(location -> SingleStationRes.builder()
-				.stationName(location.getStationName())
-				.lineName(location.getStationRoute())
-				.lat(location.getLat())
-				.lot(location.getLot())
-				.build())
-			.toList();
+		Pair<_Station, List<MidLocationDto>> totalMidStation = midLocationService.getTotalMidStation(locations);
 
-		SingleStationRes midStation = SingleStationRes.builder()
-			.stationName(meet.getMeetLocation())
-			.lineName(meet.getLine())
-			.lat(meet.getLat())
-			.lot(meet.getLot())
-			.build();
-
-		return MidLocationRes.builder()
-			.startStationList(userStartStations)
-			.midStation(midStation)
-			.build();
+		return locationConverter.toMidLocationTotalResponse(totalMidStation);
 	}
 
 	@Transactional(readOnly = true)

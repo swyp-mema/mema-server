@@ -1,21 +1,29 @@
 package com.swyp.mema.domain.voteLocation.dto.response;
 
 import com.swyp.mema.domain.station.dto.response.subwayInfo.SingleStationRes;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
-import lombok.Getter;
 
 import java.util.List;
 
-@Getter
 @Builder
-@Schema(description = "유저 프로필 응답")
 public class MidLocationRes {
 
-    @Schema(description = "유저들이 선택한 역", example = "[왕십리, 평촌, 강남]  **리스트")
-    private List<SingleStationRes> startStationList;
+    Long userId;
+    String nickname;
+    Long puzId;
+    String puzColor;
+    String role;
+    Integer time;
+    String stationName;		// 출발 위치 역이름
+    String stationRoute;	// 출발 위치 호선 정보
 
-    @Schema(description = "중간역", example = "부평")
-    private SingleStationRes midStation;
+    List<SingleStationRes> stationPath;
+
+    public void printAll(){
+        System.out.println("\n" + userId + " - " + nickname + " - " + puzId + " - " + puzColor + "\n출발역:" + stationRoute + "-" +stationName + ", time: " + time);
+        for(SingleStationRes singleStationRes : stationPath){
+            singleStationRes.printAll();
+        }
+    }
 
 }
