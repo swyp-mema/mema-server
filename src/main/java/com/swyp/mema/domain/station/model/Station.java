@@ -12,10 +12,12 @@ import jakarta.persistence.Id;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Immutable;
 
 @Getter
 @Entity
 @NoArgsConstructor(access = PROTECTED)
+@Immutable
 public class Station extends BaseEntity {
 
 	@Id

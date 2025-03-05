@@ -3,11 +3,11 @@ package com.swyp.mema.domain.midloc.service;
 import com.swyp.mema.domain.midloc.service.structures.NextStation;
 import com.swyp.mema.domain.midloc.service.structures.StationInfo;
 import com.swyp.mema.domain.midloc.service.structures.TransferStation;
-import com.swyp.mema.domain.station.dto.response.nearSubway.NearSubwayResponse;
-import com.swyp.mema.domain.station.dto.response.nearSubway.TotalNearSubwayResponse;
-import com.swyp.mema.domain.station.dto.response.subwayInfo.SingleStationResponse;
+import com.swyp.mema.domain.station.dto.response.nearSubway.NearSubwayRes;
+import com.swyp.mema.domain.station.dto.response.nearSubway.TotalNearSubwayRes;
+import com.swyp.mema.domain.station.dto.response.subwayInfo.SingleStationRes;
 import com.swyp.mema.domain.station.service.NearStationService;
-import com.swyp.mema.domain.station.service.StationService;
+import com.swyp.mema.domain.station.service.StationServiceWithOpenAPI;
 
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
@@ -26,10 +26,10 @@ public class Stations {
     private final HashMap<String, String> realTIme_lineMap;   //실시간 line -> 라인
     private final HashMap<String, String> realTime_codeMap;   //실시간 idx(StatnId) -> 역코드
 
-    private final StationService stationService;
+    private final StationServiceWithOpenAPI stationService;
     private final NearStationService nearStationService;
 
-    public Stations(StationService stationService, NearStationService nearStationService) {
+    public Stations(StationServiceWithOpenAPI stationService, NearStationService nearStationService) {
         this.stationInfos = new HashMap<>();
         this.realTIme_lineMap = new HashMap<>();
         this.realTime_codeMap = new HashMap<>();
@@ -1655,19 +1655,19 @@ public class Stations {
         for(StationInfo stationInfo : this.stationInfos.values()){
 
 //            System.out.println(stationInfo.getLine() + " " + stationInfo.getStationName());
-            TotalNearSubwayResponse reses = nearStationService.getNearSubwayByAPI(stationInfo.getStationName());
+            TotalNearSubwayRes reses = nearStationService.getNearSubwayByAPI(stationInfo.getStationName());
             if (reses == null) continue;
             makeRealTimeCodeMap(reses);
         }
     }
 
-    public void makeRealTimeCodeMap(TotalNearSubwayResponse totalRes) {
+    public void makeRealTimeCodeMap(TotalNearSubwayRes totalRes) {
         if (totalRes == null || totalRes.getSubwayTimeList() == null) {
             System.out.println("TotalNearSubwayResponse is null or its subwayTimeList is null.");
             return;
         }
 
-        for (NearSubwayResponse res : totalRes.getSubwayTimeList()) {
+        for (NearSubwayRes res : totalRes.getSubwayTimeList()) {
             if (res == null || res.getStatnId() == null) {
                 System.out.println("NearSubwayResponse or statnId is null.");
                 continue;
@@ -1694,10 +1694,10 @@ public class Stations {
      */
     public void makeStations() {
 
-        List<SingleStationResponse> reses = stationService.getSubwayInfo().getStationList();
+        List<SingleStationRes> reses = stationService.getSubwayInfo().getStationList();
 
-        for (SingleStationResponse res : reses) {
-            String code = res.getRouteName() + "_" + res.getStationName();
+        for (SingleStationRes res : reses) {
+            String code = res.getLineName() + "_" + res.getStationName();
             StationInfo stationInfo = makeStation(res);
             this.stationInfos.put(code, stationInfo);
             stationInfo.printInfo();
@@ -1707,11 +1707,11 @@ public class Stations {
     /*
         단일 stationInfo 생성
      */
-    public StationInfo makeStation(SingleStationResponse res) {
+    public StationInfo makeStation(SingleStationRes res) {
 
         StationInfo stationInfo = StationInfo.builder()
                 .stationName(res.getStationName())
-                .line(res.getRouteName())
+                .line(res.getLineName())
                 .lat(res.getLat())
                 .lot(res.getLot())
                 .build();
@@ -1725,9 +1725,9 @@ public class Stations {
 
         for(StationInfo stationInfo : this.stationInfos.values()){
 
-            TotalNearSubwayResponse reses = nearStationService.getNearSubwayByAPI(stationInfo.getStationName());
+            TotalNearSubwayRes reses = nearStationService.getNearSubwayByAPI(stationInfo.getStationName());
             if (reses == null) continue;
-            for(NearSubwayResponse res : reses.getSubwayTimeList()){
+            for(NearSubwayRes res : reses.getSubwayTimeList()){
 
                 addNext(res);
                 addTransfer(res);
@@ -1739,7 +1739,7 @@ public class Stations {
     /*
         stationInfo에 다음역 정보 추가
      */
-    public void addNext(NearSubwayResponse res) {
+    public void addNext(NearSubwayRes res) {
 
 
         String currentStationCode = (realTime_codeMap.get(res.getStatnId()));
@@ -1807,7 +1807,7 @@ public class Stations {
     /*
         환승역 정보 추가
      */
-    public void addTransfer(NearSubwayResponse res) {
+    public void addTransfer(NearSubwayRes res) {
 
 
         String currentStationCode = (realTime_codeMap.get(res.getStatnId()));
@@ -1843,8 +1843,4 @@ public class Stations {
             curStationInfo.addTransfer(newTransfer);
         }
     }
-
-
-
-
 }

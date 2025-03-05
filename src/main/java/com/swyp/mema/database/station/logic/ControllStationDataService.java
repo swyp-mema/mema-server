@@ -3,7 +3,7 @@ package com.swyp.mema.database.station.logic;
 import com.swyp.mema.database.station.model._NextStation;
 import com.swyp.mema.database.station.model._Station;
 import com.swyp.mema.database.station.repository._NextStationRepository;
-import com.swyp.mema.database.station.repository._StationRepository;
+import com.swyp.mema.database.station.repository.StationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ControllStationDataService {
 
-    private final _StationRepository stationRepository;
+    private final StationRepository stationRepository;
     private final _NextStationRepository nextStationRepository;
 
     public void addNextStation(String line, String curStationName, String nextStationName) {

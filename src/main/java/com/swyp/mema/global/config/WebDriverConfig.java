@@ -9,23 +9,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class WebDriverConfig {
 
-	private static final ThreadLocal<WebDriver> webDriverThreadLocal = new ThreadLocal<>();
-
-	public WebDriver getWebDriver() {
-		if (webDriverThreadLocal.get() == null) {
-			WebDriverManager.chromedriver().setup();
-			ChromeOptions options = new ChromeOptions();
-			options.addArguments("--headless", "--no-sandbox", "--disable-dev-shm-usage");
-			webDriverThreadLocal.set(new ChromeDriver(options));
-		}
-		return webDriverThreadLocal.get();
+	public WebDriver createWebDriver() {
+		WebDriverManager.chromedriver().setup();
+		ChromeOptions options = new ChromeOptions();
+		options.addArguments("--headless", "--no-sandbox", "--disable-dev-shm-usage");
+		return new ChromeDriver(options);
 	}
 
-	public void quitWebDriver() {
-		WebDriver driver = webDriverThreadLocal.get();
+	public void closeWebDriver(WebDriver driver) {
 		if (driver != null) {
 			driver.quit();
-			webDriverThreadLocal.remove();
 		}
 	}
 }

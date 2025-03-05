@@ -8,11 +8,11 @@ import com.swyp.mema.domain.meetMember.exception.NotMeetMemberException;
 import com.swyp.mema.domain.meetMember.model.MeetMember;
 import com.swyp.mema.domain.meetMember.repository.MeetMemberRepository;
 import com.swyp.mema.domain.midloc.service.structures.StationInfo;
-import com.swyp.mema.domain.station.dto.response.subwayInfo.SingleStationResponse;
+import com.swyp.mema.domain.station.dto.response.subwayInfo.SingleStationRes;
 import com.swyp.mema.domain.user.exception.UserNotFoundException;
 import com.swyp.mema.domain.user.model.User;
 import com.swyp.mema.domain.user.repository.UserRepository;
-import com.swyp.mema.domain.voteLocation.dto.response.MidLocationResponse;
+import com.swyp.mema.domain.voteLocation.dto.response.MidLocationRes;
 import com.swyp.mema.domain.voteLocation.exception.LocationNotFoundException;
 import com.swyp.mema.domain.voteLocation.model.Location;
 import com.swyp.mema.domain.voteLocation.repository.LocationRepository;
@@ -44,7 +44,7 @@ public class MidLocService {
 	 * @return
 	 */
 	@Transactional
-	public MidLocationResponse getMidLocation(Long meetId, Long userId) {
+	public MidLocationRes getMidLocation(Long meetId, Long userId) {
 
 		// 필수 검증 로직
 		User user = validateUser(userId);
@@ -64,23 +64,23 @@ public class MidLocService {
 			throw new LocationNotFoundException();
 		}
 
-		List<SingleStationResponse> userStartStations = locations.stream()
-			.map(location -> SingleStationResponse.builder()
+		List<SingleStationRes> userStartStations = locations.stream()
+			.map(location -> SingleStationRes.builder()
 				.stationName(location.getStationName())
-				.routeName(location.getStationRoute())
+				.lineName(location.getStationRoute())
 				.lat(location.getLat())
 				.lot(location.getLot())
 				.build())
 			.toList();
 
-		SingleStationResponse midStation = SingleStationResponse.builder()
+		SingleStationRes midStation = SingleStationRes.builder()
 			.stationName(meet.getMeetLocation())
-			.routeName(meet.getLine())
+			.lineName(meet.getLine())
 			.lat(meet.getLat())
 			.lot(meet.getLot())
 			.build();
 
-		return MidLocationResponse.builder()
+		return MidLocationRes.builder()
 			.startStationList(userStartStations)
 			.midStation(midStation)
 			.build();
@@ -92,7 +92,7 @@ public class MidLocService {
 	 * @param meetId
 	 * @return 이름, 혹은 라인이 매칭되지 않으면 null 반환
 	 */
-	public SingleStationResponse getMidStation(Long meetId) {
+	public SingleStationRes getMidStation(Long meetId) {
 
 		int maxRetry = 100;
 
@@ -101,9 +101,9 @@ public class MidLocService {
 		if (locations.isEmpty()) {
 			throw new IllegalArgumentException("출발 위치 데이터가 없습니다.");
 		} else if (locations.size() == 1) {
-			return SingleStationResponse.builder()
+			return SingleStationRes.builder()
 				.stationName(locations.get(0).getStationName())
-				.routeName(locations.get(0).getStationRoute())
+				.lineName(locations.get(0).getStationRoute())
 				.lat(locations.get(0).getLat())
 				.lot(locations.get(0).getLot())
 				.build();
@@ -145,9 +145,9 @@ public class MidLocService {
 				StationInfo stationInfo = stationService.getStationInfos().get(stationCode);
 
 				if (stationInfo != null) {
-					return SingleStationResponse.builder()
+					return SingleStationRes.builder()
 						.stationName(stationName)
-						.routeName(stationLine)
+						.lineName(stationLine)
 						.lot(stationInfo.getLot())
 						.lat(stationInfo.getLat())
 						.build();
@@ -163,9 +163,9 @@ public class MidLocService {
 		// Fallback 값 반환
 		System.out.println("모든 시도가 실패했습니다. 기본값을 반환합니다.");
 
-		return SingleStationResponse.builder()
+		return SingleStationRes.builder()
 			.stationName("기본역")
-			.routeName("1호선")
+			.lineName("1호선")
 			.lot("0.0")
 			.lat("0.0")
 			.build();

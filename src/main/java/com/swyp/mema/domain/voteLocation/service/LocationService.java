@@ -1,14 +1,14 @@
 package com.swyp.mema.domain.voteLocation.service;
 
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import com.swyp.mema.domain.midloc.service.MidLocService;
-import com.swyp.mema.domain.station.dto.response.subwayInfo.SingleStationResponse;
-import com.swyp.mema.domain.store.dto.TotalStoreRes;
+import com.swyp.mema.domain.station.dto.response.subwayInfo.SingleStationRes;
+import com.swyp.mema.domain.store.dto.naverMap.StoreInfoRes;
+import com.swyp.mema.domain.store.dto.naverMap.TotalStoreInfoRes;
 import com.swyp.mema.domain.store.exception.NotRecommendStore;
-import com.swyp.mema.domain.store.service.NaverStoreSearchService;
-import com.swyp.mema.domain.voteLocation.dto.response.MidLocationResponse;
+import com.swyp.mema.domain.store.service.naverMap.StoreServiceWithNaverMap;
+import com.swyp.mema.domain.voteLocation.dto.response.MidLocationRes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.swyp.mema.domain.meet.model.vo.State;
 import com.swyp.mema.domain.voteLocation.converter.LocationConverter;
 import com.swyp.mema.domain.voteLocation.dto.request.CreateLocationReq;
-import com.swyp.mema.domain.voteLocation.dto.response.SingleLocationResponse;
+import com.swyp.mema.domain.voteLocation.dto.response.SingleLocationRes;
 import com.swyp.mema.domain.voteLocation.exception.DuplicateLocationVoteException;
 import com.swyp.mema.domain.voteLocation.exception.LocationNotFoundException;
 import com.swyp.mema.domain.voteLocation.model.Location;
@@ -42,11 +42,11 @@ public class LocationService {
 	private final LocationRepository locationRepository;
 	private final LocationConverter converter;
 	private final MidLocService midLocService;
-	private final NaverStoreSearchService storeSearchService;
+	private final StoreServiceWithNaverMap storeService;
 
 
 	@Transactional
-	public SingleLocationResponse saveLocation(CreateLocationReq createLocationReq, Long meetId, Long userId) {
+	public SingleLocationRes saveLocation(CreateLocationReq createLocationReq, Long meetId, Long userId) {
 
 		// 필수 검증 로직
 		User user = validateUser(userId);
@@ -65,16 +65,16 @@ public class LocationService {
 		meetMember.setVoteLocationYn(true);
 
 		// 중간 지점 구하기 위해 GPT 요청
-		SingleStationResponse midStation = midLocService.getMidStation(meetId);
+		SingleStationRes midStation = midLocService.getMidStation(meetId);
 
 		// 해당 미팅 중간 지점 변경
-		meet.setMeetLocation(midStation.getStationName(), midStation.getRouteName(), midStation.getLat(), midStation.getLot());
+		meet.setMeetLocation(midStation.getStationName(), midStation.getLineName(), midStation.getLat(), midStation.getLot());
 
 		return converter.toSingleLocationResponse(location);
 	}
 
 	@Transactional(readOnly = true)
-	public SingleLocationResponse getMyLocation(Long meetId, Long userId) {
+	public SingleLocationRes getMyLocation(Long meetId, Long userId) {
 
 		// 필수 검증 로직
 		User user = validateUser(userId);
@@ -89,7 +89,7 @@ public class LocationService {
 	}
 
 	@Transactional(readOnly = true)
-	public MidLocationResponse getTotalLocation(Long meetId, Long userId) {
+	public MidLocationRes getTotalLocation(Long meetId, Long userId) {
 
 		// 필수 검증 로직
 		User user = validateUser(userId);
@@ -107,31 +107,30 @@ public class LocationService {
 		// 유저들의 출발 위치가 없는 경우 예외
 		if (locations.isEmpty()) { throw new LocationNotFoundException(); }
 
-
-		List<SingleStationResponse> userStartStations = locations.stream()
-			.map(location -> SingleStationResponse.builder()
+		List<SingleStationRes> userStartStations = locations.stream()
+			.map(location -> SingleStationRes.builder()
 				.stationName(location.getStationName())
-				.routeName(location.getStationRoute())
+				.lineName(location.getStationRoute())
 				.lat(location.getLat())
 				.lot(location.getLot())
 				.build())
 			.toList();
 
-		SingleStationResponse midStation = SingleStationResponse.builder()
+		SingleStationRes midStation = SingleStationRes.builder()
 			.stationName(meet.getMeetLocation())
-			.routeName(meet.getLine())
+			.lineName(meet.getLine())
 			.lat(meet.getLat())
 			.lot(meet.getLot())
 			.build();
 
-		return MidLocationResponse.builder()
+		return MidLocationRes.builder()
 			.startStationList(userStartStations)
 			.midStation(midStation)
 			.build();
 	}
 
 	@Transactional(readOnly = true)
-	public TotalStoreRes recommendStore(Long userId, Long meetId) {
+	public TotalStoreInfoRes recommendStore(Long userId, Long meetId) {
 
 		// 필수 검증 로직
 		User user = validateUser(userId);
@@ -142,8 +141,8 @@ public class LocationService {
 		if (meet.getMeetLocation() == null) {
 			throw new NotRecommendStore();
 		}
-
-		return storeSearchService.search(meet.getMeetLocation());
+		List<StoreInfoRes> storeInfos = storeService.getStoreInfo(meet.getMeetLocation());
+		return new TotalStoreInfoRes(storeInfos);
 	}
 
 	private MeetMember validateMeetMember(User user, Meet meet) {

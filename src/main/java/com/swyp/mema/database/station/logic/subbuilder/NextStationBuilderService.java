@@ -5,7 +5,7 @@ import com.swyp.mema.database.station.model._Route;
 import com.swyp.mema.database.station.model._Station;
 import com.swyp.mema.database.station.repository._NextStationRepository;
 import com.swyp.mema.database.station.repository._RouteRepository;
-import com.swyp.mema.database.station.repository._StationRepository;
+import com.swyp.mema.database.station.repository.StationRepository;
 import com.swyp.mema.database.station.util.ExcelReader;
 import com.swyp.mema.database.station.util.StationConverter;
 import com.swyp.mema.database.station.util.StringCleaner;
@@ -25,7 +25,7 @@ public class NextStationBuilderService {
      *
      */
 
-    private final _StationRepository stationRepository;
+    private final StationRepository stationRepository;
     private final _NextStationRepository nextStationRepository;
     private final ExcelReader excelReader;
     private final StringCleaner stringCleaner;
@@ -34,7 +34,7 @@ public class NextStationBuilderService {
 
     private List<List<Integer>> countTimes;
 
-    public NextStationBuilderService(_StationRepository stationRepository, _NextStationRepository nextStationRepository, ExcelReader excelReader, StringCleaner stringCleaner, StationConverter stationConverter, _RouteRepository routeRepository, TimeInfoService timeInfoService) {
+    public NextStationBuilderService(StationRepository stationRepository, _NextStationRepository nextStationRepository, ExcelReader excelReader, StringCleaner stringCleaner, StationConverter stationConverter, _RouteRepository routeRepository, TimeInfoService timeInfoService) {
         this.stationRepository = stationRepository;
         this.nextStationRepository = nextStationRepository;
         this.excelReader = excelReader;

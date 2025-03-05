@@ -6,8 +6,8 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 import com.swyp.mema.domain.voteLocation.dto.request.CreateLocationReq;
-import com.swyp.mema.domain.voteLocation.dto.response.SingleLocationResponse;
-import com.swyp.mema.domain.voteLocation.dto.response.TotalLocationResponse;
+import com.swyp.mema.domain.voteLocation.dto.response.SingleLocationRes;
+import com.swyp.mema.domain.voteLocation.dto.response.TotalLocationRes;
 import com.swyp.mema.domain.voteLocation.model.Location;
 import com.swyp.mema.domain.meet.model.Meet;
 import com.swyp.mema.domain.user.model.User;
@@ -39,18 +39,18 @@ public class LocationConverter {
 			.build();
 	}
 
-	public SingleLocationResponse toSingleLocationResponse(Location location) {
-		return new SingleLocationResponse(location.getStationName(), location.getLat(), location.getLot());
+	public SingleLocationRes toSingleLocationResponse(Location location) {
+		return new SingleLocationRes(location.getStationName(), location.getLat(), location.getLot());
 	}
 
-	public TotalLocationResponse toTotalLocationResponse(List<Location> locationList) {
+	public TotalLocationRes toTotalLocationResponse(List<Location> locationList) {
 
 		// Location 객체에서 필요한 필드를 추출 (예: stationName)
 		List<String> startStationList = locationList.stream()
 			.map(Location::getStationName) // Location의 stationName 필드 추출
 			.collect(Collectors.toList());
 
-		return TotalLocationResponse.builder()
+		return TotalLocationRes.builder()
 			.startStationList(startStationList)
 			.arrivalStation("구현 중! 기다려주세용^_^")
 			.build();

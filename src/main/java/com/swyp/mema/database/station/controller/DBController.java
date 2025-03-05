@@ -9,9 +9,8 @@ import com.swyp.mema.database.station.logic.subbuilder.TransferStationBuilderSer
 import com.swyp.mema.database.station.model._NextStation;
 import com.swyp.mema.database.station.model._Station;
 import com.swyp.mema.database.station.repository._NextStationRepository;
-import com.swyp.mema.database.station.repository._StationRepository;
+import com.swyp.mema.database.station.repository.StationRepository;
 import com.swyp.mema.database.station.util.ExcelReader;
-import com.swyp.mema.domain.station.repository.StationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -31,7 +30,7 @@ public class DBController {
     private final StationDataBuilderService stationDataBuilderService;
     private final TransferStationBuilderService transferStationBuilderService;
     private final TotalDataBuilderService totalDataBuilderService;
-    private final _StationRepository stationRepository;
+    private final StationRepository stationRepository;
 
     @GetMapping("/DB/test1")
     public ResponseEntity<String> DBTest1() {
