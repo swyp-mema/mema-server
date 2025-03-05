@@ -27,7 +27,7 @@ public class MidLocationService {
         this.stationRepository = stationRepository;
         this.codeMap = new HashMap<>();
         this.idMap = new HashMap<>();
-        init();
+//        init();
         this.stringCleaner = stringCleaner;
     }
 
@@ -53,7 +53,7 @@ public class MidLocationService {
         }
     }
 
-    protected void init() {
+    public void init() {
 
         List<_Station> totalStations = stationRepository.findAll();
         for (_Station station : totalStations) {
