@@ -101,7 +101,7 @@ public class LocationConverter {
 				.midStation(SingleStationRes.builder()
 						.lineName(dtos.getFirst().getLineName())
 						.stationName(dtos.getFirst().getStationName())
-						.lat(dtos.getFirst().getLot())
+						.lat(dtos.getFirst().getLat())
 						.lot(dtos.getFirst().getLot())
 						.build())
 				.users(new ArrayList<>())
