@@ -16,7 +16,7 @@ public class midLocationController {
 
     @GetMapping("/midLocation/test1")
     public ResponseEntity<String> DBTest1() {
-
+        midLocationService.init();
         return ResponseEntity.ok("");
     }
 }
