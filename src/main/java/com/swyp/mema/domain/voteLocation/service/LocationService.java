@@ -6,12 +6,12 @@ import com.swyp.mema.database.station.model._Station;
 import com.swyp.mema.domain.midloc.service.MidLocService;
 import com.swyp.mema.domain.midlocation.dto.MidLocationDto;
 import com.swyp.mema.domain.midlocation.service.MidLocationService;
-import com.swyp.mema.domain.station.dto.response.subwayInfo.SingleStationRes;
 import com.swyp.mema.domain.store.dto.naverMap.StoreInfoRes;
 import com.swyp.mema.domain.store.dto.naverMap.TotalStoreInfoRes;
 import com.swyp.mema.domain.store.exception.NotRecommendStore;
 import com.swyp.mema.domain.store.service.naverMap.StoreServiceWithNaverMap;
 import com.swyp.mema.domain.voteLocation.dto.response.MidLocationTotalRes;
+import com.swyp.mema.domain.voteLocation.exception.MidLocationNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
@@ -70,11 +70,11 @@ public class LocationService {
 		meet.changeState(State.LOCATION_VOTING);
 		meetMember.setVoteLocationYn(true);
 
-		// 중간 지점 구하기 위해 GPT 요청
-		SingleStationRes midStation = midLocService.getMidStation(meetId);
-
-		// 해당 미팅 중간 지점 변경
-		meet.setMeetLocation(midStation.getStationName(), midStation.getLineName(), midStation.getLat(), midStation.getLot());
+//		// 중간 지점 구하기 위해 GPT 요청
+//		SingleStationRes midStation = midLocService.getMidStation(meetId);
+//
+//		// 해당 미팅 중간 지점 변경
+//		meet.setMeetLocation(midStation.getStationName(), midStation.getLineName(), midStation.getLat(), midStation.getLot());
 
 		return converter.toSingleLocationResponse(location);
 	}
@@ -111,7 +111,7 @@ public class LocationService {
 		List<Location> locations = locationRepository.findByMeetId(meetId);
 
 		// 유저들의 출발 위치가 없는 경우 예외
-		if (locations.isEmpty()) { throw new LocationNotFoundException(); }
+		if (locations.isEmpty()) { throw new MidLocationNotFoundException(); }
 
 		Pair<_Station, List<MidLocationDto>> totalMidStation = midLocationService.getTotalMidStation(locations);
 

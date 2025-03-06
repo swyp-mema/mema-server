@@ -46,6 +46,7 @@ public enum ErrorCode {
 	VOTE_LOCATION_NOT_FOUND(HttpStatus.NOT_FOUND, "VL001", "해당 위치 투표 ID는 존재하지 않습니다."),
 	DUPLICATE_LOCATION_VOTE(HttpStatus.BAD_REQUEST, "VL002", "위치 투표는 중복해서 할 수 없습니다."),
 	ONLY_ONE_LOCATION_VOTE(HttpStatus.BAD_REQUEST, "VL003", "해당 약속의 위치 투표값이 1개라서 중간 위치를 구할 수 없습니다."),
+	MID_LOCATION_NOT_FOUND(HttpStatus.NOT_FOUND, "VL004", "투표한 약속원이 없기 때문에 중간 위치를 구할 수 없습니다."),
 
 	// STATION
 	STATION_NOT_FOUNT(HttpStatus.NOT_FOUND, "S001", "해당 역을 찾을 수 없습니다."),
