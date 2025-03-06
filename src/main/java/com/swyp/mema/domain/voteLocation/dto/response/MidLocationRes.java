@@ -2,9 +2,11 @@ package com.swyp.mema.domain.voteLocation.dto.response;
 
 import com.swyp.mema.domain.station.dto.response.subwayInfo.SingleStationRes;
 import lombok.Builder;
+import lombok.Getter;
 
 import java.util.List;
 
+@Getter
 @Builder
 public class MidLocationRes {
 
