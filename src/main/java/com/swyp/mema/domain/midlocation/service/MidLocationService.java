@@ -12,6 +12,7 @@ import com.swyp.mema.domain.voteLocation.model.Location;
 import lombok.Setter;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -47,15 +48,26 @@ public class MidLocationService {
             prevMap = new HashMap<>();
             for(_Station station : codeMap.values()){
 
-                userMap.put(station.getScheduleId(), Integer.MAX_VALUE);
+                userMap.put(station.getScheduleId(), 10000);
                 prevMap.put(station.getScheduleId(), station.getScheduleId());
+            }
+        }
+
+        public void printAll(){
+            Set<String> ids = idMap.keySet();
+            for(String id : ids){
+                String lineName = idMap.get(id).getLineName();
+                String stationName = idMap.get(id).getStationName();
+                System.out.println(lineName + "\t" + stationName + "\tuserMap:" + userMap.get(id) + "\tprevMap:" + prevMap.get(id));
             }
         }
     }
 
+    @Transactional(readOnly = true)
     public void init() {
 
         List<_Station> totalStations = stationRepository.findAll();
+        stationRepository.findAllForRuntimeAlgorithm2();
         for (_Station station : totalStations) {
 
             String code = station.getLineName() + "_" + station.getStationName();
@@ -142,15 +154,15 @@ public class MidLocationService {
             int sum = 0;
             /*
                 중간역 계산시 가중치 알고리즘 : 중위값을 추종할 것인지, 평균값을 추종할 것인지
+            */
+            //- 중위값 추종
+//            for(int i=exclude; i<size-exclude; i++){
+//
+//                sum += userMaps.get(i).userMap.get(key);
+//            }
+//            int aver = sum / (size - exclude * 2);
 
-            - 중위값 추종
-            for(int i=exclude; i<size-exclude; i++){
-
-                sum += userMaps.get(i).userMap.get(key);
-            }
-            int aver = sum / (size - exclude * 2);
-
-             */
+            //- 평균값 추종
             for(int i=0; i<size; i++){
 
                 sum += userMaps.get(i).userMap.get(key);
@@ -185,6 +197,22 @@ public class MidLocationService {
         return midId;
     }
 
+
+    public void test(){
+        UserMap userMap = new UserMap();
+        userMap.initUsermap();
+        String stationName = "연천";
+        String line = "1호선";
+
+        calc(stationName, line, userMap, 1);
+        userMap.printAll();
+
+
+    }
+
+
+
+
     /**
      * 유저가 출발역에서 출발하여 각각의 역까지 도달하는데 걸리는 시간을 계산하여 UserMap 클래스에 기록
      * @param stationName   출발역 명
@@ -214,7 +242,7 @@ public class MidLocationService {
      */
     private void getSubway(_Station prevStation, _Station curStation, UserMap userMap, int time, int day){
 
-        if (userMap.userMap.get(curStation.getScheduleId()) <= time) return;
+//        if (userMap.userMap.get(curStation.getScheduleId()) < time) return;
         Set<_Route> routeSet = curStation.getRoutes();
         toNextStation(prevStation, curStation, routeSet, userMap,time, 0, day);
     }
@@ -231,17 +259,23 @@ public class MidLocationService {
      */
     private void toNextStation(_Station prevStation, _Station curStation, Set<_Route> routeSet, UserMap userMap, int time, int waitTime, int day) {
 
-        if (userMap.userMap.get(curStation.getScheduleId()) <= time + waitTime || time > 180 ) return;
+        //이미 매핑된 도달시간이 더 빠르면 return
+        if (userMap.userMap.get(curStation.getScheduleId()) < time + waitTime || time > 240) return;
+        //도달시간, 이전역 정보 업데이트
         userMap.userMap.put(curStation.getScheduleId(), time + waitTime);
         userMap.prevMap.put(curStation.getScheduleId(), prevStation.getScheduleId());
 //        System.out.println(curStation.getLineName() + "_" + curStation.getStationName() + ": " + time);
 
+        //next station으로 이동
         for (_NextStation nextStation : curStation.getNextStations()) {
 
+            //이전역은 패스
             if(Objects.equals(nextStation.getNextStation().getId(), prevStation.getId())) continue;
 
+            //해당 역까지 갈 수 있는 루트를 체크해본다.
             Set<_Route> nextRouteSet = CheckRouteSet(routeSet, nextStation.getRoutes());
             if(nextRouteSet.isEmpty()) {
+                //갈 수 있는 경로가 없으면 여기서 다시 탑승하는데?? 뭐지
                 getSubway(prevStation, curStation, userMap, time + waitTime, day);
                 continue;
             }
@@ -276,9 +310,6 @@ public class MidLocationService {
      * @param day
      */
     private void toTransferStation(_Station prevStation, _Station curStation, UserMap userMap, int time, int day) {
-
-//        if (userMap.userMap.get(curStation.getScheduleId()) <= time) return;
-//        userMap.userMap.put(curStation.getScheduleId(), time);
 
         getSubway(prevStation, curStation, userMap, time, day);
     }
