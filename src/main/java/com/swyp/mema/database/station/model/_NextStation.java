@@ -12,24 +12,27 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(indexes = {
+        @Index(name="next_station_current_station_idx", columnList = "curStationId")
+})
 public class _NextStation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "curStationId")
     private _Station curStation;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "nextStationId")
     private _Station nextStation;
 
     @Setter
     private Integer moveTime; //이동시간
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name="NEXTSTATION_ROUTE",
             joinColumns = @JoinColumn(name = "NEXTSTATION_ID"),
             inverseJoinColumns = @JoinColumn(name = "ROUTE"))
@@ -41,7 +44,8 @@ public class _NextStation {
         line = curStation.getLineName();
         curName = curStation.getStationName();
         nextName = nextStation.getStationName();
-        System.out.println('\n'+ "next station: " + line + ", " + curName + " -> " +line + ", " + nextName + ", move time: " + moveTime);
+        System.out.println("next station: " + line + ", " + curName + " -> " +line + ", " + nextName + ", move time: " + moveTime);
+        routes.stream().forEach(_Route::printAll);
     }
 
     public void addRoute(_Route route) {

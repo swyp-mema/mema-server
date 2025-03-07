@@ -20,7 +20,10 @@ import static lombok.AccessLevel.PROTECTED;
 @Builder
 @NoArgsConstructor(access = PROTECTED)
 @AllArgsConstructor(access = PRIVATE)
-public class _Station extends BaseEntity {
+@Table(indexes = {
+        @Index(name = "station_code_idx", columnList = "lineName, stationName")
+})
+public class _Station extends BaseEntity implements Comparable<_Station> {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -30,25 +33,25 @@ public class _Station extends BaseEntity {
     private String scheduleId;
 
     @Column(nullable = false)
-    private String stationName;	// 역이름
+    private String stationName;    // 역이름
 
     @Column(nullable = false)
-    private String lineName;	// 호선 정보
+    private String lineName;    // 호선 정보
 
-    private String lat;	// 위도
+    private String lat;    // 위도
 
-    private String lot;	// 경도
+    private String lot;    // 경도
 
     private String address;
 
-    @OneToMany(mappedBy = "curStation", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "curStation", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<_NextStation> nextStations;
 
-    @OneToMany(mappedBy = "curStation", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "curStation", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<_TransferStation> transferStations;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name="STATION_ROUTE",
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "STATION_ROUTE",
             joinColumns = @JoinColumn(name = "STATION_ID"),
             inverseJoinColumns = @JoinColumn(name = "ROUTE"))
     private Set<_Route> routes;
@@ -61,15 +64,16 @@ public class _Station extends BaseEntity {
         }
         routes.add(route);
     }
+
     public void addTransferStation(_TransferStation transferStation) {
-        if(transferStations == null) {
+        if (transferStations == null) {
             transferStations = new ArrayList<>();
         }
         transferStations.add(transferStation);
     }
 
     public void addNextStation(_NextStation nextStation) {
-        if(nextStations==null) nextStations = new ArrayList<>();
+        if (nextStations == null) nextStations = new ArrayList<>();
         nextStations.add(nextStation);
     }
 
@@ -92,14 +96,19 @@ public class _Station extends BaseEntity {
         this.routes.addAll(routes);
     }
 
-    public void printAll(){
+    public void printAll() {
 
-        System.out.println("name: " + stationName + ", line: " + lineName + ", lat: " + lat + ", lot: " + lot + ", ID: " + scheduleId);
-        for(_NextStation nextStation : nextStations){
+        System.out.println("\nStation: name: " + stationName + ", line: " + lineName + ", lat: " + lat + ", lot: " + lot + ", ID: " + scheduleId);
+        for (_NextStation nextStation : nextStations) {
             nextStation.printData();
         }
-        for(_TransferStation transferStation : transferStations){
+        for (_TransferStation transferStation : transferStations) {
             transferStation.printAll();
         }
+    }
+
+    @Override
+    public int compareTo(_Station o) {
+        return scheduleId.compareTo(o.scheduleId);
     }
 }

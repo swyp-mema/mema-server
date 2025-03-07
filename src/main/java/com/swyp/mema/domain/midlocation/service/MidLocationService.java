@@ -28,8 +28,8 @@ public class MidLocationService {
         this.stationRepository = stationRepository;
         this.codeMap = new HashMap<>();
         this.idMap = new HashMap<>();
-//        init();
         this.stringCleaner = stringCleaner;
+        init();
     }
 
     /* Inner Class : 각 유저들이 출발역에서 출발하였을 때 특정 역까지 가는 시간이 얼마나 걸리는지 기록 */
@@ -66,8 +66,7 @@ public class MidLocationService {
     @Transactional(readOnly = true)
     public void init() {
 
-        List<_Station> totalStations = stationRepository.findAll();
-        stationRepository.findAllForRuntimeAlgorithm2();
+        List<_Station> totalStations = stationRepository.findAllForRuntimeAlgorithm();
         for (_Station station : totalStations) {
 
             String code = station.getLineName() + "_" + station.getStationName();
@@ -197,22 +196,6 @@ public class MidLocationService {
         return midId;
     }
 
-
-    public void test(){
-        UserMap userMap = new UserMap();
-        userMap.initUsermap();
-        String stationName = "연천";
-        String line = "1호선";
-
-        calc(stationName, line, userMap, 1);
-        userMap.printAll();
-
-
-    }
-
-
-
-
     /**
      * 유저가 출발역에서 출발하여 각각의 역까지 도달하는데 걸리는 시간을 계산하여 UserMap 클래스에 기록
      * @param stationName   출발역 명
@@ -242,7 +225,7 @@ public class MidLocationService {
      */
     private void getSubway(_Station prevStation, _Station curStation, UserMap userMap, int time, int day){
 
-//        if (userMap.userMap.get(curStation.getScheduleId()) < time) return;
+        if (userMap.userMap.get(curStation.getScheduleId()) < time) return;
         Set<_Route> routeSet = curStation.getRoutes();
         toNextStation(prevStation, curStation, routeSet, userMap,time, 0, day);
     }
