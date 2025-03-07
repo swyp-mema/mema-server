@@ -35,6 +35,10 @@ public class _Route implements Comparable<_Route> {
         return route.compareTo(o.route);
     }
 
+    public void printAll(){
+        System.out.println(route + " " + num1 + "-" + time1 + " " + num2 + "-" + time2 + " " + num3 + "-" + time3);
+    }
+
     public _Route initNums(){
         num1 = 0;
         num2 = 0;
