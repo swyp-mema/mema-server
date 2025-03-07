@@ -88,7 +88,7 @@ public class LocationService {
 		return converter.toSingleLocationResponse(location);
 	}
 
-	@Transactional(readOnly = true)
+	@Transactional
 	public MidLocationTotalRes getTotalLocation(Long meetId, Long userId) {
 
 		// 필수 검증 로직
@@ -108,6 +108,9 @@ public class LocationService {
 		if (locations.isEmpty()) { throw new MidLocationNotFoundException(); }
 
 		Pair<_Station, List<MidLocationDto>> totalMidStation = midLocationService.getTotalMidStation(locations);
+
+		meet.setMeetLocation(totalMidStation.getFirst().getStationName(), totalMidStation.getFirst().getLineName(),
+				totalMidStation.getFirst().getLat(), totalMidStation.getFirst().getLot());
 
 		return locationConverter.toMidLocationTotalResponse(totalMidStation);
 	}
