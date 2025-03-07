@@ -6,12 +6,12 @@ import com.swyp.mema.database.station.model._Station;
 import com.swyp.mema.domain.midloc.service.MidLocService;
 import com.swyp.mema.domain.midlocation.dto.MidLocationDto;
 import com.swyp.mema.domain.midlocation.service.MidLocationService;
-import com.swyp.mema.domain.station.dto.response.subwayInfo.SingleStationRes;
 import com.swyp.mema.domain.store.dto.naverMap.StoreInfoRes;
 import com.swyp.mema.domain.store.dto.naverMap.TotalStoreInfoRes;
 import com.swyp.mema.domain.store.exception.NotRecommendStore;
 import com.swyp.mema.domain.store.service.naverMap.StoreServiceWithNaverMap;
 import com.swyp.mema.domain.voteLocation.dto.response.MidLocationTotalRes;
+import com.swyp.mema.domain.voteLocation.exception.MidLocationNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
@@ -88,7 +88,7 @@ public class LocationService {
 		return converter.toSingleLocationResponse(location);
 	}
 
-	@Transactional(readOnly = true)
+	@Transactional
 	public MidLocationTotalRes getTotalLocation(Long meetId, Long userId) {
 
 		// 필수 검증 로직
@@ -105,9 +105,12 @@ public class LocationService {
 		List<Location> locations = locationRepository.findByMeetId(meetId);
 
 		// 유저들의 출발 위치가 없는 경우 예외
-		if (locations.isEmpty()) { throw new LocationNotFoundException(); }
+		if (locations.isEmpty()) { throw new MidLocationNotFoundException(); }
 
 		Pair<_Station, List<MidLocationDto>> totalMidStation = midLocationService.getTotalMidStation(locations);
+
+		meet.setMeetLocation(totalMidStation.getFirst().getStationName(), totalMidStation.getFirst().getLineName(),
+				totalMidStation.getFirst().getLat(), totalMidStation.getFirst().getLot());
 
 		return locationConverter.toMidLocationTotalResponse(totalMidStation);
 	}
