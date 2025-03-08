@@ -10,11 +10,15 @@ import com.swyp.mema.domain.midlocation.dto.MidLocationDto;
 import com.swyp.mema.domain.user.model.User;
 import com.swyp.mema.domain.voteLocation.model.Location;
 import lombok.Setter;
+import lombok.val;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+
+import static java.lang.Math.pow;
+import static java.lang.Math.sqrt;
 
 @Service
 public class MidLocationService {
@@ -35,8 +39,8 @@ public class MidLocationService {
     /* Inner Class : 각 유저들이 출발역에서 출발하였을 때 특정 역까지 가는 시간이 얼마나 걸리는지 기록 */
     class UserMap{
 
-        HashMap<String, Integer> userMap;      // 도달하는데 걸리는 시간
-        HashMap<String, String> prevMap;       // 이전 역의 scheduleId
+        HashMap<String, Integer> userMap;      // 도달하는데 걸리는 시간, key: _Station.scheduleId
+        HashMap<String, String> prevMap;       // 이전 역의 scheduleId, key: _Station.scheduleId
         @Setter
         User user;
         @Setter
@@ -142,6 +146,44 @@ public class MidLocationService {
      */
     private String getMidStation(List<UserMap> userMaps){
 
+        int size = userMaps.size();     //유저 수
+        double minTime = Double.MAX_VALUE;
+        String midId = "";
+
+        for (String key : idMap.keySet()) {
+
+            double distribute = 0;
+            double sum = 0;
+            double max_time = 0;
+
+
+            for(int i=0; i<size; i++){
+
+                Integer time = userMaps.get(i).userMap.get(key);
+                if(time > max_time) max_time = time;
+                sum += time;
+            }
+            for(int i=0; i<size; i++){
+                Integer time = userMaps.get(i).userMap.get(key);
+                distribute += pow((sum/size) - time, 2);
+            }
+
+            double deviation = sqrt(distribute);    //표준편차
+            double stationScore = idMap.get(key).getTransferStations().size() * 10 * (size * 0.5 + 1);
+
+            double score = sum + deviation + max_time - stationScore;         //점수 = 표준편차 + 이동시간 + 최대 이동시간 - 역의 번화도
+
+
+            if (score < minTime) {
+                minTime = score;
+                midId = key;
+            }
+        }
+        return midId;
+    }
+    /* 이동 시간 총 합 기반 중간역 계산 함수  */
+    private String getMidStation1(List<UserMap> userMaps){
+
         int size = userMaps.size();
         int exclude = size/3;
         double minTime = Double.MAX_VALUE;
@@ -150,7 +192,7 @@ public class MidLocationService {
         for (String key : idMap.keySet()) {
 
             double val = 0;
-            int sum = 0;
+            double sum = 0;
             /*
                 중간역 계산시 가중치 알고리즘 : 중위값을 추종할 것인지, 평균값을 추종할 것인지
             */
@@ -161,32 +203,35 @@ public class MidLocationService {
 //            }
 //            int aver = sum / (size - exclude * 2);
 
+            List<Integer> times = new ArrayList<>();
             //- 평균값 추종
             for(int i=0; i<size; i++){
 
                 sum += userMaps.get(i).userMap.get(key);
+                times.add(userMaps.get(i).userMap.get(key));
             }
-            int aver = sum / size;
+            double aver = sum / size;
+            System.out.println(idMap.get(key).getLineName() + " "+idMap.get(key).getStationName()+": " + sum);
 
-            List<Integer> times = new ArrayList<>();
-            for (UserMap userMap : userMaps) {
-
-                times.add(userMap.userMap.get(key));
-            }
             times.sort(Integer::compareTo);
 
-            for(int i=0; i<exclude; i++){
+            val += sum;
 
-                val += (aver - times.get(i))*0.5;
-            }
-            for(int i=exclude; i<size-exclude; i++){
+//            val += (times.getLast() - times.getFirst())*0.8;
+//            val += (times.get(1) - times.get(2))*0.4;
 
-                val += times.get(i);
-            }
-            for(int i=size-exclude; i<size; i++){
-
-                val += (times.get(i) - aver)*0.5;
-            }
+//            for(int i=0; i<exclude; i++){
+//
+//                val += (aver - times.get(i))*0.5;
+//            }
+//            for(int i=exclude; i<size-exclude; i++){
+//
+//                val += times.get(i);
+//            }
+//            for(int i=size-exclude; i<size; i++){
+//
+//                val += (times.get(i) - aver)*0.5;
+//            }
 
             if (val < minTime) {
                 minTime = val;
@@ -243,7 +288,7 @@ public class MidLocationService {
     private void toNextStation(_Station prevStation, _Station curStation, Set<_Route> routeSet, UserMap userMap, int time, int waitTime, int day) {
 
         //이미 매핑된 도달시간이 더 빠르면 return
-        if (userMap.userMap.get(curStation.getScheduleId()) < time + waitTime || time > 240) return;
+        if (userMap.userMap.get(curStation.getScheduleId()) < time + waitTime) return;
         //도달시간, 이전역 정보 업데이트
         userMap.userMap.put(curStation.getScheduleId(), time + waitTime);
         userMap.prevMap.put(curStation.getScheduleId(), prevStation.getScheduleId());
