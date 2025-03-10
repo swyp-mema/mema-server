@@ -62,7 +62,7 @@ public class SubwayInfoBasicRes {
 		@JsonProperty("subwayStationName")
 		private String stationName;
 
-		@JsonProperty("subwayRouteName")
-		private String routeName;
+		@JsonProperty("subwayLineName")
+		private String lineName;
 	}
 }

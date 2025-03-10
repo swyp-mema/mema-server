@@ -29,7 +29,7 @@ public class StationMasterConverter {
 		List<SingleStationRes> stationResponse = stationList.stream()
 			.map(station -> SingleStationRes.builder()
 				.stationName(station.getStationName())
-				.lineName(station.getRouteName())
+				.lineName(station.getLineName())
 				.lat(station.getLat())
 				.lot(station.getLot())
 				.build()

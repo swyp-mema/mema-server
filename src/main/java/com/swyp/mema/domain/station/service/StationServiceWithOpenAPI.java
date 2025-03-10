@@ -98,7 +98,7 @@ public class StationServiceWithOpenAPI {
 	// 	List<Station> stations = result.getResponse().getBody().getItems().getItemList().stream()
 	// 		.map(item -> new Station(
 	// 			item.getStationName(),
-	// 			item.getRouteName())
+	// 			item.getLineName())
 	// 		)
 	// 		.toList();
 	//

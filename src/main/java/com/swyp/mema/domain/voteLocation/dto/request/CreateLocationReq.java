@@ -12,7 +12,7 @@ public class CreateLocationReq {
 	private String stationName;
 
 	@NotBlank
-	private String routeName;
+	private String lineName;
 
 	private String lat;
 
