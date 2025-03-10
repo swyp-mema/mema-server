@@ -7,7 +7,7 @@ import com.swyp.mema.domain.meet.model.Meet;
 import com.swyp.mema.domain.meetMember.converter.MeetMemberConverter;
 import com.swyp.mema.domain.meetMember.model.MeetMember;
 import com.swyp.mema.domain.meetMember.repository.MeetMemberRepository;
-import com.swyp.mema.domain.user.exception.UserAlreadyRegisteredException;
+import com.swyp.mema.domain.meetMember.exception.UserAlreadyRegisteredException;
 import com.swyp.mema.domain.user.model.User;
 
 import lombok.RequiredArgsConstructor;
