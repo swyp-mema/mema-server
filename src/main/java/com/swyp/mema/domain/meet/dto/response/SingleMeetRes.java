@@ -36,7 +36,7 @@ public class SingleMeetRes {
 	private String meetLocation;
 
 	@Schema(description = "만나는 역 호선", example = "1호선")
-	private String routeName;
+	private String lineName;
 
 	@Schema(description = "만나는 역 위도", example = "37.556228")
 	private String lat;

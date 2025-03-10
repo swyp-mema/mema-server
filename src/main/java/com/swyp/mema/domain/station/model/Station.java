@@ -28,7 +28,7 @@ public class Station extends BaseEntity {
 	private String stationName;	// 역이름
 
 	@Column(nullable = false)
-	private String routeName;	// 호선 정보
+	private String lineName;	// 호선 정보
 
 	private int waitTime;		// 배차 간격
 
@@ -39,9 +39,9 @@ public class Station extends BaseEntity {
 	private String lot;	// 경도
 
 	@Builder
-	public Station(String stationName, String routeName, String lat, String lot) {
+	public Station(String stationName, String lineName, String lat, String lot) {
 		this.stationName = stationName;
-		this.routeName = routeName;
+		this.lineName = lineName;
 		this.lat = lat;
 		this.lot = lot;
 	}

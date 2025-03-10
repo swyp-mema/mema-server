@@ -40,7 +40,7 @@ public class LocationConverter {
 			.meet(meet)
 			.user(user)
 			.stationName(request.getStationName())
-			.stationRoute(request.getRouteName())
+			.stationRoute(request.getLineName())
 			.lat(request.getLat())
 			.lot(request.getLot())
 			.build();

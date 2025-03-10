@@ -127,11 +127,11 @@ public class NextStationBuilderService {
 
         for (Map.Entry<String, PriorityQueue<StationInfo>> entry : linePqMap.entrySet()) {
 
-            String routeName = entry.getKey();
-            updateRouteNextStations(routeName, entry.getValue());
+            String lineName = entry.getKey();
+            updateRouteNextStations(lineName, entry.getValue());
         }
-        for(String routeName : linePqMap.keySet())
-            updateNextStationOfRouteLastStation(line, routeName);
+        for(String lineName : linePqMap.keySet())
+            updateNextStationOfRouteLastStation(line, lineName);
     }
 
 
@@ -147,8 +147,8 @@ public class NextStationBuilderService {
         HashMap<String, PriorityQueue<StationInfo>> pqMap = new HashMap<>();
 
         // Route 이름을 key로 갖는 PQ 생성
-        for(_Route routeName : lineRoutes){
-            pqMap.put(routeName.getRoute(), new PriorityQueue<>());
+        for(_Route lineName : lineRoutes){
+            pqMap.put(lineName.getRoute(), new PriorityQueue<>());
         }
 
         for (_Station station : lineStations) {
@@ -160,10 +160,10 @@ public class NextStationBuilderService {
             }
             Set<_Route> routes = station.getRoutes();
             for (_Route route : routes) {
-                String routeName = route.getRoute();
-                int firstTime = findFirstSchedule(sheets, routeName);
+                String lineName = route.getRoute();
+                int firstTime = findFirstSchedule(sheets, lineName);
 
-                pqMap.get(routeName).offer(new StationInfo(line, stationName, firstTime));
+                pqMap.get(lineName).offer(new StationInfo(line, stationName, firstTime));
             }
         }
 
@@ -173,17 +173,17 @@ public class NextStationBuilderService {
     /**
      * 엑셀 파일에서 특정 루트의 첫차 시간을 추출 (특정 호선의 특정 역에 대한 함수)
      * @param sheets    엑셀 데이터 시트
-     * @param routeName 호선 명
+     * @param lineName 호선 명
      * @return  첫차 시간
      */
-    private int findFirstSchedule(List<ArrayList<ArrayList<String>>> sheets, String routeName){
+    private int findFirstSchedule(List<ArrayList<ArrayList<String>>> sheets, String lineName){
 
         for(ArrayList<ArrayList<String>> data : sheets) {
             for (ArrayList<String> row : data) {
                 if (row.get(3).equals("급행")) continue;
                 String route = row.get(5) + "-" + row.get(6);
 
-                if (!route.equals(routeName)) continue;
+                if (!route.equals(lineName)) continue;
 
                 return stringCleaner.getTime(row.get(0), row.get(1));
             }
@@ -195,12 +195,12 @@ public class NextStationBuilderService {
 
     /**
      * 특정 루트의 첫차시간을 정렬 기준으로 하는 Priority queue를 받아 해당 루트에서의 Next Station 데이터를 업데이트한다.
-     * @param routeName 호선 명
+     * @param lineName 호선 명
      * @param entry     Priority queue
      */
-    private void updateRouteNextStations(String routeName, PriorityQueue<StationInfo> entry) {
+    private void updateRouteNextStations(String lineName, PriorityQueue<StationInfo> entry) {
 
-        _Route route = routeRepository.findById(routeName).isPresent() ? routeRepository.findById(routeName).get() : null;
+        _Route route = routeRepository.findById(lineName).isPresent() ? routeRepository.findById(lineName).get() : null;
         if(route == null) {
             System.out.println("route error");
             return;
@@ -242,12 +242,12 @@ public class NextStationBuilderService {
     /**
      * 각 루트의 종점역 직전역 -> 종점역 인 next station 정보 업데이트
      * @param line  호선 명
-     * @param routeName 루트 명
+     * @param lineName 루트 명
      */
-    private void updateNextStationOfRouteLastStation(String line, String routeName) {
+    private void updateNextStationOfRouteLastStation(String line, String lineName) {
 
-        String lastStationName = routeName.split("-")[1];
-        _Route targetRoute = routeRepository.findByRoute(routeName);
+        String lastStationName = lineName.split("-")[1];
+        _Route targetRoute = routeRepository.findByRoute(lineName);
         _Station lastStation = stationRepository.findByLineNameAndStationName(line, lastStationName);
 
         _Station prevStation = null;
@@ -262,7 +262,7 @@ public class NextStationBuilderService {
             for (_Route route : prevStation.getRoutes()) {
 
                 //previous station의 route중에 우리가 찾는 route가 있으면 스탑
-                if (route.getRoute().equals(routeName)) {
+                if (route.getRoute().equals(lineName)) {
                     flag = true;
                     break;
                 }
