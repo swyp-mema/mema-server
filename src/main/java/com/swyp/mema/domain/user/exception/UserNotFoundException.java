@@ -10,4 +10,8 @@ public class UserNotFoundException extends ServiceException {
     public UserNotFoundException() {
         super(ERROR_CODE);
     }
+
+    public UserNotFoundException(String message) {
+        super(ERROR_CODE, message);
+    }
 }

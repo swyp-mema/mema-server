@@ -5,9 +5,9 @@ import com.swyp.mema.domain.user.dto.converter.UserConverter;
 import com.swyp.mema.domain.user.dto.request.UpdatePasswordReq;
 import com.swyp.mema.domain.user.dto.request.UpdateUserInfoReq;
 import com.swyp.mema.domain.user.dto.response.UserInfoRes;
-import com.swyp.mema.domain.user.exception.UserNotFoundException;
 import com.swyp.mema.domain.user.model.User;
 import com.swyp.mema.domain.user.repository.UserRepository;
+import com.swyp.mema.global.validation.ValidationFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -20,6 +20,7 @@ import java.util.function.Consumer;
 @RequiredArgsConstructor
 public class UserService {
 
+    private final ValidationFacade validationFacade;
     private final UserRepository userRepository;
     private final UserConverter userConverter;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -27,9 +28,7 @@ public class UserService {
     // 사용자 조회 (예외 처리 포함)
     @Transactional(readOnly = true)
     public User getUserById(Long userId) {
-
-        return userRepository.findById(userId)
-                .orElseThrow(UserNotFoundException::new);
+        return validationFacade.validateUserExists(userId);
     }
 
     // 내 정보 상세보기
@@ -62,6 +61,7 @@ public class UserService {
     public void deleteUser(){
 
         Long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
+        validationFacade.validateUserExists(userId);    // Facade 통해 검증 후 삭제 진행
         userRepository.deleteById(userId);
     }
 
