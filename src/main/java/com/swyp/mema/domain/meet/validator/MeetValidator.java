@@ -26,6 +26,11 @@ public class MeetValidator {
                 .orElseThrow(JoinCodeInvalidException::new);
     }
 
+    // 참여 코드의 중복 여부 검증
+    public boolean isMeetCodeDuplicate(int code) {
+        return meetRepository.existsByCode(code);
+    }
+
     // 사용자의 진행 중인 약속 개수 검증
     public void validateUserCanCreateMoreMeets(Long userId) {
         Long activeMeetCount = meetRepository.countActiveMeetsByUserId(userId);

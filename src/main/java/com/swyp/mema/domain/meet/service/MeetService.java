@@ -1,11 +1,13 @@
 package com.swyp.mema.domain.meet.service;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import com.swyp.mema.domain.badge.repository.BadgeRepository;
+import com.swyp.mema.domain.meetMember.service.MeetMemberService;
 import com.swyp.mema.global.validation.ValidationFacade;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,17 +20,12 @@ import com.swyp.mema.domain.meet.dto.response.MeetHomeDetailRes;
 import com.swyp.mema.domain.meet.dto.response.MeetHomeRes;
 import com.swyp.mema.domain.meet.dto.response.SingleMeetRes;
 import com.swyp.mema.domain.meet.dto.response.TotalMeetManageRes;
-import com.swyp.mema.domain.meet.exception.MaxActiveMeetsExceededException;
-import com.swyp.mema.domain.meet.exception.MeetNotFoundException;
 import com.swyp.mema.domain.meet.model.Meet;
 import com.swyp.mema.domain.meet.model.vo.State;
 import com.swyp.mema.domain.meet.repository.MeetRepository;
-import com.swyp.mema.domain.meetMember.converter.MeetMemberConverter;
 import com.swyp.mema.domain.meetMember.dto.response.MeetMemberRes;
-import com.swyp.mema.domain.meetMember.exception.NotMeetMemberException;
 import com.swyp.mema.domain.meetMember.model.MeetMember;
 import com.swyp.mema.domain.meetMember.repository.MeetMemberRepository;
-import com.swyp.mema.domain.user.exception.UserNotFoundException;
 import com.swyp.mema.domain.user.model.User;
 import com.swyp.mema.global.utils.RandomCodeGenerator;
 
@@ -39,12 +36,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MeetService {
 
+	private final MeetMemberService meetMemberService;
 	private final ValidationFacade validationFacade;
 	private final MeetRepository meetRepository;
 	private final MeetMemberRepository meetMemberRepository;
 	private final BadgeRepository badgeRepository;
 	private final MeetConverter meetConverter;
-	private final MeetMemberConverter meetMemberConverter;
 
 	/**
 	 * 새로운 약속 생성 & 사용자는 약속원에 등록
@@ -65,8 +62,8 @@ public class MeetService {
 		meetRepository.save(meet);
 
 		// 생성된 약속에 약속원으로 등록
-		MeetMember meetMember = meetMemberConverter.toMeetMember(meet, user);
-		meetMemberRepository.save(meetMember);
+		MeetMember meetMember = meetMemberService.addMeetMember(meet, user);
+		meet.addMember(meetMember);	// 객체 그래프 동기화
 
 		// 뱃지 설정
 		badgeRepository.findByUser(user).createMeet();
@@ -92,9 +89,8 @@ public class MeetService {
 		validationFacade.validateUserCanCreateMoreMeets(userId);
 
 		// 약속원 등록
-		MeetMember meetMember = meetMemberConverter.toMeetMember(meet, user);
-		meetMemberRepository.save(meetMember);
-		meet.addMember(meetMember);
+		MeetMember meetMember = meetMemberService.addMeetMember(meet, user);
+		meet.addMember(meetMember);	// 객체 그래프 동기화
 
 		return getSingle(meet.getId(), userId);
 	}
@@ -118,7 +114,6 @@ public class MeetService {
 		List<MeetMemberRes> members = meetMemberRepository.findMeetMembersWithUserInfo(meetId, userId);
 
 		return meetConverter.toMeetSingleResponse(meet, members);
-
 	}
 
 	/**
@@ -148,7 +143,6 @@ public class MeetService {
 			.hasNext(hasNext)
 			.pageSize(meetList.size())
 			.build();
-
 	}
 
 	/**
@@ -200,10 +194,11 @@ public class MeetService {
 		// 사용자의 모든 약속(Meet) 조회
 		List<Meet> meets = meetMemberRepository.findMeetsByUserId(userId);
 
-		// meets 가 없는 경우 MeetNotFoundException 커스텀 예외 던지기
-		if (meets == null || meets.isEmpty()) {
-			throw new MeetNotFoundException();
+		// 사용자가 참여한 약속이 없다면 빈 리스트 반환
+		if (meets.isEmpty()) {
+			return new MeetHomeRes(Collections.emptyList(), Collections.emptyList());
 		}
+
 		// 현재 날짜
 		LocalDate today = LocalDate.now();
 
@@ -254,7 +249,6 @@ public class MeetService {
 
 		// 결과를 Response 객체로 반환
 		return new MeetHomeRes(upcomingMeets, pastMeets);
-
 	}
 
 
@@ -266,7 +260,7 @@ public class MeetService {
 		int code;
 		do {
 			code = RandomCodeGenerator.generateCode(); // 난수 생성 호출
-		} while (meetRepository.existsByCode(code)); // 중복 확인
+		} while (validationFacade.validateMeetCodeDuplicate(code)); // 중복 여부 검증을 Validator 에 위임
 		return code;
 	}
 }

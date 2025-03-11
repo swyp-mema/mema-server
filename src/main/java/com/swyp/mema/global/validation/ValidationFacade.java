@@ -43,9 +43,14 @@ public class ValidationFacade {
         return meetValidator.validateMeetExists(meetId);
     }
 
-    // 참여 코드로 약속 존재 여부 검증
+    // 참여 코드로 약속 존재 여부 검증 후 Meet 반환
     public Meet validateMeetExistsByCode(int joinCode) {
         return meetValidator.validateMeetExistsByCode(joinCode);
+    }
+
+    // 참여 코드의 중복 여부 검증
+    public boolean validateMeetCodeDuplicate(int code) {
+        return meetValidator.isMeetCodeDuplicate(code);
     }
 
     // 사용자의 진행 중인 약속 개수 검증
