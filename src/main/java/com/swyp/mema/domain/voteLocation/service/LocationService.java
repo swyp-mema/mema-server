@@ -3,7 +3,6 @@ package com.swyp.mema.domain.voteLocation.service;
 import java.util.List;
 
 import com.swyp.mema.database.station.model._Station;
-import com.swyp.mema.domain.midloc.service.MidLocService;
 import com.swyp.mema.domain.midlocation.dto.MidLocationDto;
 import com.swyp.mema.domain.midlocation.service.MidLocationService;
 import com.swyp.mema.domain.store.dto.naverMap.StoreInfoRes;
@@ -45,7 +44,6 @@ public class LocationService {
 	private final MeetMemberRepository meetMemberRepository;
 	private final LocationRepository locationRepository;
 	private final LocationConverter converter;
-	private final MidLocService midLocService;
 	private final StoreServiceWithNaverMap storeService;
 	private final MidLocationService midLocationService;
 	private final LocationConverter locationConverter;

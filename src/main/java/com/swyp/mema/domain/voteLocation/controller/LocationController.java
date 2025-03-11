@@ -2,7 +2,6 @@ package com.swyp.mema.domain.voteLocation.controller;
 
 import com.swyp.mema.database.station.dto.response.TotalStationRes;
 import com.swyp.mema.database.station.service.StationService;
-import com.swyp.mema.domain.midloc.service.MidLocService;
 import com.swyp.mema.domain.store.dto.naverMap.TotalStoreInfoRes;
 import com.swyp.mema.domain.voteLocation.dto.response.MidLocationTotalRes;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +28,6 @@ import lombok.RequiredArgsConstructor;
 public class LocationController {
 
 	private final LocationService locationService;
-	private final MidLocService midLocationService;
 	private final StationService stationService;
 
 	/**
