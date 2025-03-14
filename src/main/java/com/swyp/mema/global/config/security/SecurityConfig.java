@@ -114,6 +114,8 @@ public class SecurityConfig {
 			"https://localhost:3000",
 			"http://meet-mate-mema.vercel.app",
 			"https://meet-mate-mema.vercel.app",
+			"https://meetmate.shop",
+			"https://www.meetmate.shop",
 			"https://mema-client-test.vercel.app"	// 프론트 테스트 서버
 		));
 

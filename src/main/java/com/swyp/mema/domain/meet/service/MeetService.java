@@ -1,12 +1,14 @@
 package com.swyp.mema.domain.meet.service;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import com.swyp.mema.domain.badge.repository.BadgeRepository;
-import com.swyp.mema.domain.badge.service.BadgeService;
+import com.swyp.mema.domain.meetMember.service.MeetMemberService;
+import com.swyp.mema.global.validation.ValidationFacade;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,22 +20,13 @@ import com.swyp.mema.domain.meet.dto.response.MeetHomeDetailRes;
 import com.swyp.mema.domain.meet.dto.response.MeetHomeRes;
 import com.swyp.mema.domain.meet.dto.response.SingleMeetRes;
 import com.swyp.mema.domain.meet.dto.response.TotalMeetManageRes;
-import com.swyp.mema.domain.meet.exception.JoinCodeInvalidException;
-import com.swyp.mema.domain.meet.exception.MaxActiveMeetsExceededException;
-import com.swyp.mema.domain.meet.exception.MeetNotFoundException;
 import com.swyp.mema.domain.meet.model.Meet;
 import com.swyp.mema.domain.meet.model.vo.State;
 import com.swyp.mema.domain.meet.repository.MeetRepository;
-import com.swyp.mema.domain.meetMember.converter.MeetMemberConverter;
 import com.swyp.mema.domain.meetMember.dto.response.MeetMemberRes;
-import com.swyp.mema.domain.meetMember.exception.NotMeetMemberException;
 import com.swyp.mema.domain.meetMember.model.MeetMember;
 import com.swyp.mema.domain.meetMember.repository.MeetMemberRepository;
-import com.swyp.mema.domain.user.dto.converter.UserConverter;
-import com.swyp.mema.domain.user.exception.UserAlreadyRegisteredException;
-import com.swyp.mema.domain.user.exception.UserNotFoundException;
 import com.swyp.mema.domain.user.model.User;
-import com.swyp.mema.domain.user.repository.UserRepository;
 import com.swyp.mema.global.utils.RandomCodeGenerator;
 
 import lombok.RequiredArgsConstructor;
@@ -43,14 +36,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MeetService {
 
+	private final MeetMemberService meetMemberService;
+	private final ValidationFacade validationFacade;
 	private final MeetRepository meetRepository;
-	private final MeetConverter meetConverter;
 	private final MeetMemberRepository meetMemberRepository;
-	private final MeetMemberConverter meetMemberConverter;
-	private final UserRepository userRepository;
-	private final UserConverter userConverter;
 	private final BadgeRepository badgeRepository;
-	private final BadgeService badgeService;
+	private final MeetConverter meetConverter;
 
 	/**
 	 * 새로운 약속 생성 & 사용자는 약속원에 등록
@@ -58,14 +49,10 @@ public class MeetService {
 	public CreateMeetRes create(MeetNameReq meetNameReq, Long userId) {
 
 		// 존재하는 사용자인지 검증
-		User user = userRepository.findById(userId)
-			.orElseThrow(UserNotFoundException::new);
+		User user = validationFacade.validateUserExists(userId);
 
 		// 진행 중인 약속은 최대 4개까지 생성되도록 검증
-		Long activeMeetCount = meetRepository.countActiveMeetsByUserId(userId);
-		if (activeMeetCount >= 4) {
-			throw new MaxActiveMeetsExceededException();
-		}
+		validationFacade.validateUserCanCreateMoreMeets(userId);
 
 		// 참여 코드 생성
 		int code = generateUniqueMeetCode();
@@ -75,8 +62,8 @@ public class MeetService {
 		meetRepository.save(meet);
 
 		// 생성된 약속에 약속원으로 등록
-		MeetMember meetMember = meetMemberConverter.toMeetMember(meet, user);
-		meetMemberRepository.save(meetMember);
+		MeetMember meetMember = meetMemberService.addMeetMember(meet, user);
+		meet.addMember(meetMember);	// 객체 그래프 동기화
 
 		// 뱃지 설정
 		badgeRepository.findByUser(user).createMeet();
@@ -90,28 +77,20 @@ public class MeetService {
 	public SingleMeetRes join(JoinMeetReq joinMeetReq, Long userId) {
 
 		// 존재하는 사용자인지 검증
-		User user = userRepository.findById(userId)
-			.orElseThrow(UserNotFoundException::new);
+		User user = validationFacade.validateUserExists(userId);
 
 		// 참여코드로 존재하는 약속인지 검증
-		Meet meet = meetRepository.findByCode(joinMeetReq.getJoinCode())
-			.orElseThrow(JoinCodeInvalidException::new);
+		Meet meet = validationFacade.validateMeetExistsByCode(joinMeetReq.getJoinCode());
 
 		// 이미 등록된 약속원인지 확인
-		if (meetMemberRepository.existsByMeetAndUser(meet, user)) {
-			throw new UserAlreadyRegisteredException();
-		}
+		validationFacade.validateUserNotAlreadyInMeet(meet, user);
 
-		// 진행 중인 약속은 최대 4개까지 생성되도록 검증
-		Long activeMeetCount = meetRepository.countActiveMeetsByUserId(userId);
-		if (activeMeetCount >= 4) {
-			throw new MaxActiveMeetsExceededException();
-		}
+		// 진행 중인 약속 개수 검증
+		validationFacade.validateUserCanCreateMoreMeets(userId);
 
 		// 약속원 등록
-		MeetMember meetMember = meetMemberConverter.toMeetMember(meet, user);
-		meetMemberRepository.save(meetMember);
-		meet.addMember(meetMember);
+		MeetMember meetMember = meetMemberService.addMeetMember(meet, user);
+		meet.addMember(meetMember);	// 객체 그래프 동기화
 
 		return getSingle(meet.getId(), userId);
 	}
@@ -123,22 +102,18 @@ public class MeetService {
 	public SingleMeetRes getSingle(Long meetId, Long userId) {
 
 		// 존재하는 사용자인지 검증
-		User user = userRepository.findById(userId)
-			.orElseThrow(UserNotFoundException::new);
+		User user = validationFacade.validateUserExists(userId);
 
 		// 존재하는 약속인지 검증
-		Meet meet = meetRepository.findById(meetId)
-			.orElseThrow(MeetNotFoundException::new);
+		Meet meet = validationFacade.validateMeetExists(meetId);
 
 		// 사용자가 해당 약속의 약속원인지 검증
-		meetMemberRepository.findByUserAndMeet(user, meet)
-			.orElseThrow(NotMeetMemberException::new);
+		validationFacade.validateUserIsMeetMember(user, meet);
 
 		// 해당 약속에 소속된 모든 약속원 조회
 		List<MeetMemberRes> members = meetMemberRepository.findMeetMembersWithUserInfo(meetId, userId);
 
 		return meetConverter.toMeetSingleResponse(meet, members);
-
 	}
 
 	/**
@@ -147,8 +122,7 @@ public class MeetService {
 	public TotalMeetManageRes getAll(Long userId, int offset, int limit) {
 
 		// 존재하는 사용자인지 검증
-		userRepository.findById(userId)
-			.orElseThrow(UserNotFoundException::new);
+		validationFacade.validateUserExists(userId);
 
 		// 사용자가 속한 모든 약속(meet) 가져오기 (페이징 적용)
 		List<Meet> meets = meetRepository.findMeetsByUserId(userId, offset, limit);
@@ -169,7 +143,6 @@ public class MeetService {
 			.hasNext(hasNext)
 			.pageSize(meetList.size())
 			.build();
-
 	}
 
 	/**
@@ -178,16 +151,13 @@ public class MeetService {
 	public SingleMeetRes update(Long meetId, MeetNameReq meetNameReq, Long userId) {
 
 		// 존재하는 사용자인지 검증
-		User user = userRepository.findById(userId)
-			.orElseThrow(UserNotFoundException::new);
+		User user = validationFacade.validateUserExists(userId);
 
 		// 아이디에 해당하는 약속 존재 유무 검증
-		Meet meet = meetRepository.findById(meetId)
-			.orElseThrow(MeetNotFoundException::new);
+		Meet meet = validationFacade.validateMeetExists(meetId);
 
 		// 사용자가 해당 약속의 약속원인지 검증
-		meetMemberRepository.findByUserAndMeet(user, meet)
-			.orElseThrow(NotMeetMemberException::new);
+		validationFacade.validateUserIsMeetMember(user, meet);
 
 		// Dirty Checking(변경 감지)로 약속명 수정
 		meet.changeName(meetNameReq.getMeetName());
@@ -204,16 +174,13 @@ public class MeetService {
 	public void delete(Long meetId, Long userId) {
 
 		// 존재하는 사용자인지 검증
-		User user = userRepository.findById(userId)
-			.orElseThrow(UserNotFoundException::new);
+		User user = validationFacade.validateUserExists(userId);
 
 		// 약속이 존재하는지 확인
-		Meet meet = meetRepository.findById(meetId)
-			.orElseThrow(MeetNotFoundException::new);
+		Meet meet = validationFacade.validateMeetExists(meetId);
 
 		// 사용자가 해당 약속의 약속원인지 검증
-		meetMemberRepository.findByUserAndMeet(user, meet)
-			.orElseThrow(NotMeetMemberException::new);
+		validationFacade.validateUserIsMeetMember(user, meet);
 
 		// 약속 삭제시 모든 약속원들 데이터도 삭제된다.
 		meetRepository.delete(meet);
@@ -222,16 +189,16 @@ public class MeetService {
 	public MeetHomeRes getHome(Long userId) {
 
 		// 존재하는 사용자인지 검증
-		User user = userRepository.findById(userId)
-			.orElseThrow(UserNotFoundException::new);
+		User user = validationFacade.validateUserExists(userId);
 
 		// 사용자의 모든 약속(Meet) 조회
 		List<Meet> meets = meetMemberRepository.findMeetsByUserId(userId);
 
-		// meets 가 없는 경우 MeetNotFoundException 커스텀 예외 던지기
-		if (meets == null || meets.isEmpty()) {
-			throw new MeetNotFoundException();
+		// 사용자가 참여한 약속이 없다면 빈 리스트 반환
+		if (meets.isEmpty()) {
+			return new MeetHomeRes(Collections.emptyList(), Collections.emptyList());
 		}
+
 		// 현재 날짜
 		LocalDate today = LocalDate.now();
 
@@ -282,7 +249,6 @@ public class MeetService {
 
 		// 결과를 Response 객체로 반환
 		return new MeetHomeRes(upcomingMeets, pastMeets);
-
 	}
 
 
@@ -294,7 +260,7 @@ public class MeetService {
 		int code;
 		do {
 			code = RandomCodeGenerator.generateCode(); // 난수 생성 호출
-		} while (meetRepository.existsByCode(code)); // 중복 확인
+		} while (validationFacade.validateMeetCodeDuplicate(code)); // 중복 여부 검증을 Validator 에 위임
 		return code;
 	}
 }

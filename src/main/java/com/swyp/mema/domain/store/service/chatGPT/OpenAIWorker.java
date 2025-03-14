@@ -1,4 +1,4 @@
-package com.swyp.mema.domain.midloc.service;
+package com.swyp.mema.domain.store.service.chatGPT;
 
 import com.swyp.mema.global.config.env.EnvConfig;
 import lombok.RequiredArgsConstructor;

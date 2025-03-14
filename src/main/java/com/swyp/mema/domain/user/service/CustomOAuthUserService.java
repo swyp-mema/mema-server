@@ -5,9 +5,9 @@ import com.swyp.mema.domain.user.converter.UserConverter;
 import com.swyp.mema.domain.user.dto.CustomOAuthUser;
 import com.swyp.mema.domain.user.dto.response.oauth2.NaverRes;
 import com.swyp.mema.domain.user.dto.response.oauth2.OAuthRes;
-import com.swyp.mema.domain.user.dto.converter.UserDtoConverter;
 import com.swyp.mema.domain.user.model.User;
 import com.swyp.mema.domain.user.repository.UserRepository;
+import com.swyp.mema.global.validation.ValidationFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -19,8 +19,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CustomOAuthUserService extends DefaultOAuth2UserService {
 
+    private final ValidationFacade validationFacade;
     private final UserRepository userRepository;
-    private final UserDtoConverter userDtoConverter;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -36,13 +36,16 @@ public class CustomOAuthUserService extends DefaultOAuth2UserService {
         }
 
         // 이메일로 사용자 검색
-        User user = userRepository.findByEmail(oAuthResponse.getEmail());
-        if(user == null) {
-            user = createNewUser(oAuthResponse);
-            System.out.println(user.getUserId());
-            System.out.println(user.getUsername());
-            System.out.println(user.getEmail());
-        }
+        validationFacade.checkEmailNotExists(oAuthResponse.getEmail());
+        User user = createNewUser(oAuthResponse);
+
+//        User user = validationFacade.findByEmail(oAuthResponse.getEmail());
+//        if(user == null) {
+//            user = createNewUser(oAuthResponse);
+//            System.out.println(user.getUserId());
+//            System.out.println(user.getUsername());
+//            System.out.println(user.getEmail());
+//        }
 
         // UserDTO로 변환 및 반환
         UserReq userReq = UserConverter.convertUserEntityToUserDTO(user);

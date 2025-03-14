@@ -1,4 +1,4 @@
-package com.swyp.mema.domain.station.dto.response.subwayTime;
+package com.swyp.mema.database.station.dto.response.subwayTime;
 
 import lombok.Builder;
 import lombok.Getter;

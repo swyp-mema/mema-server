@@ -1,7 +1,5 @@
 package com.swyp.mema.database.station.model;
 
-import com.swyp.mema.domain.midloc.service.structures.NextStation;
-import com.swyp.mema.domain.midloc.service.structures.TransferStation;
 import com.swyp.mema.global.base.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;

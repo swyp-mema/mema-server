@@ -1,10 +1,9 @@
-package com.swyp.mema.domain.station.dto.response.nearSubway;
-
-import java.util.List;
+package com.swyp.mema.database.station.dto.response.nearSubway;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Data;
+
+import java.util.List;
 
 /*
 	실시간 조회
