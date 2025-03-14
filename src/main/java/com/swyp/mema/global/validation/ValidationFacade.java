@@ -6,6 +6,8 @@ import com.swyp.mema.domain.meetMember.model.MeetMember;
 import com.swyp.mema.domain.meetMember.validator.MeetMemberValidator;
 import com.swyp.mema.domain.user.model.User;
 import com.swyp.mema.domain.user.validator.UserValidator;
+import com.swyp.mema.domain.voteLocation.model.Location;
+import com.swyp.mema.domain.voteLocation.validator.LocationValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +18,7 @@ public class ValidationFacade {
     private final UserValidator userValidator;
     private final MeetValidator meetValidator;
     private final MeetMemberValidator meetMemberValidator;
+    private final LocationValidator locationValidator;
 
     /**
      * User 기반 Validate
@@ -40,7 +43,7 @@ public class ValidationFacade {
      */
     // 약속 존재 여부 검증
     public Meet validateMeetExists(Long meetId) {
-        return meetValidator.validateMeetExists(meetId);
+        return meetValidator.validateExists(meetId);
     }
 
     // 참여 코드로 약속 존재 여부 검증 후 Meet 반환
@@ -58,6 +61,10 @@ public class ValidationFacade {
         meetValidator.validateUserCanCreateMoreMeets(userId);
     }
 
+    // 만남 장소가 있는지 검증
+    public void validateMeetHasLocation(Meet meet) {
+        meetValidator.validateMeetHasLocation(meet);
+    }
 
     /**
      * MeetMeber 관련 Validate
@@ -71,4 +78,22 @@ public class ValidationFacade {
     public void validateUserNotAlreadyInMeet(Meet meet, User user) {
         meetMemberValidator.validateUserNotAlreadyInMeet(meet, user);
     }
+
+    public void validateMeetMemberBelongToMeet(MeetMember meetMember, Long meetId) {
+        meetMemberValidator.validateMeetMemberBelongToMeet(meetMember, meetId);
+    }
+
+    /**
+     * 위치 투표 관련 Validate
+     */
+    // 사용자가 이미 위치 투표를 했는지 검증
+    public void validateUserHasNotVoted(User user, Meet meet) {
+        locationValidator.validateUserHasNotVoted(user, meet);
+    }
+
+    // 사용자의 위치 투표가 존재하는지 검증
+    public Location validateUserLocationExists(User user, Meet meet) {
+        return locationValidator.validateUserLocationExists(user, meet);
+    }
+
 }
