@@ -1,6 +1,6 @@
 package com.swyp.mema.domain.voteLocation.dto.response;
 
-import com.swyp.mema.domain.station.dto.response.subwayInfo.SingleStationRes;
+import com.swyp.mema.database.station.dto.response.subwayInfo.SingleStationRes;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;

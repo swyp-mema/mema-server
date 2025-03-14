@@ -13,7 +13,6 @@ import com.swyp.mema.database.openapi.location.converter.StationMasterConverter;
 import com.swyp.mema.database.openapi.location.response.SubwayMasterBasicResponse;
 import com.swyp.mema.database.openapi.location.response.SubwayMasterResponse;
 import com.swyp.mema.database.openapi.location.response.TotalSubwayMasterResponse;
-import com.swyp.mema.domain.station.model.Station;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -57,14 +56,6 @@ public class StationMasterService {
 		log.info("result : {}", result);
 
 		List<SubwayMasterResponse> responses = converter.toSubwayMasterListResponse(result);
-
-		List<Station> stations = responses.stream()
-			.map(m -> new Station(
-				m.getStationName(),
-				m.getLine(),
-				m.getLat(),
-				m.getLot()
-			)).toList();
 
 		return converter.toTotalSubwayMasterResponse(responses);
 

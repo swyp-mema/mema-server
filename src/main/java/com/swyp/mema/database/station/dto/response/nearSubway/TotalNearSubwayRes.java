@@ -1,10 +1,9 @@
-package com.swyp.mema.domain.station.dto.response.nearSubway;
-
-import java.util.List;
-
+package com.swyp.mema.database.station.dto.response.nearSubway;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+
+import java.util.List;
 
 @Getter
 @AllArgsConstructor

@@ -1,6 +1,5 @@
 package com.swyp.mema.database.station.model;
 
-import com.swyp.mema.domain.station.model.Station;
 import jakarta.persistence.*;
 import lombok.*;
 

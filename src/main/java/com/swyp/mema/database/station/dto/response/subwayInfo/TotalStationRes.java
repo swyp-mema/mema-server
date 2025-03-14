@@ -1,10 +1,9 @@
-package com.swyp.mema.domain.station.dto.response.subwayInfo;
-
-import java.util.List;
-
+package com.swyp.mema.database.station.dto.response.subwayInfo;
 
 import lombok.Builder;
 import lombok.Getter;
+
+import java.util.List;
 
 @Getter
 public class TotalStationRes {

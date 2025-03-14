@@ -1,4 +1,4 @@
-package com.swyp.mema.domain.station.dto.response.nearSubway;
+package com.swyp.mema.database.station.dto.response.nearSubway;
 
 import lombok.Builder;
 import lombok.Getter;

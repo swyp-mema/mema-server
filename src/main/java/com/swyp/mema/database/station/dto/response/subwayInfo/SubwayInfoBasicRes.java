@@ -1,10 +1,9 @@
-package com.swyp.mema.domain.station.dto.response.subwayInfo;
-
-import java.util.List;
+package com.swyp.mema.database.station.dto.response.subwayInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 public class SubwayInfoBasicRes {
