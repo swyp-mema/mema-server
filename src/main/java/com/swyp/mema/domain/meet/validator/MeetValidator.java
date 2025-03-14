@@ -5,17 +5,20 @@ import com.swyp.mema.domain.meet.exception.MaxActiveMeetsExceededException;
 import com.swyp.mema.domain.meet.exception.MeetNotFoundException;
 import com.swyp.mema.domain.meet.model.Meet;
 import com.swyp.mema.domain.meet.repository.MeetRepository;
+import com.swyp.mema.domain.store.exception.NotRecommendStore;
+import com.swyp.mema.global.validation.EntityValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class MeetValidator {
+public class MeetValidator implements EntityValidator<Meet, Long> {
 
     private final MeetRepository meetRepository;
 
     // ID 기반 약속 존재 여부 검증
-    public Meet validateMeetExists(Long meetId) {
+    @Override
+    public Meet validateExists(Long meetId) {
         return meetRepository.findById(meetId)
                 .orElseThrow(MeetNotFoundException::new);
     }
@@ -38,4 +41,12 @@ public class MeetValidator {
             throw new MaxActiveMeetsExceededException();
         }
     }
+
+    // 최종 약속 장소가 있는지 검증
+    public void validateMeetHasLocation(Meet meet) {
+        if (meet.getMeetLocation() == null) {
+            throw new NotRecommendStore();
+        }
+    }
+
 }
